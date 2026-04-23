@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaSMS — Tableau de bord marchand</title>
+
+<!-- ============================================================
+     NOVASMS DASHBOARD — Version 1.0 — Avril 2026
+     Fichier livrable HTML/CSS standalone
+     
+     ╔══════════════════════════════════════════════════════════╗
+     ║  POUR REBRANDER : modifiez uniquement les variables      ║
+     ║  CSS dans la section :root ci-dessous                    ║
+     ╚══════════════════════════════════════════════════════════╝
+     
+     Composants inclus :
+     - Sidebar navigation (5 modules + compte)
+     - Header bar avec crédits
+     - Onboarding checklist (dismissible)
+     - 4 KPI cards
+     - Graphique évolution (Chart.js) avec toggle 7j/30j/90j
+     - Donut répartition par canal
+     - Top 5 campagnes
+     - Automatisations actives
+     - Carte de chaleur d'engagement
+     
+     Dépendances : Chart.js 4.4.1 (CDN)
+     ============================================================ -->
+
+<style>
+
+/* ============================================================
+   1. DESIGN TOKENS — NOVASEND BRAND COLORS (extrait du logo)
+   ============================================================ */
+:root {
+  /* --- Couleurs Novasend extraites du logo --- */
+  --brand-primary:        #2EC80A;   /* Vert vif principal (bloc gauche logo) */
+  --brand-primary-dark:   #25A208;   /* Hover / état foncé                   */
+  --brand-primary-light:  #EDFCE8;   /* Fond léger brand                     */
+  --brand-primary-text:   #145C04;   /* Texte sur fond brand light           */
+  --brand-lime:           #AAEE22;   /* Vert lime (extrémité gradient logo)  */
+  --brand-teal:           #0C5460;   /* Teal sombre (fond du logo)           */
+  --brand-gradient:       linear-gradient(135deg, #2EC80A 0%, #AAEE22 100%);
+
+  /* --- Palette secondaire --- */
+  --color-blue:           #0EA5E9;
+  --color-green:          #22C55E;
+  --color-green-bg:       #DCFCE7;
+  --color-red:            #EF4444;
+  --color-red-bg:         #FEE2E2;
+
+  /* --- Neutrals --- */
+  --color-bg:             #F7F9F7;   /* Légèrement teinté vert Novasend     */
+  --color-surface:        #FFFFFF;
+  --color-surface-muted:  #F0F7F0;   /* Muted teinté brand                  */
+  --color-border:         rgba(0,0,0,0.08);
+  --color-border-strong:  rgba(0,0,0,0.14);
+
+  /* --- Typographie --- */
+  --color-text-primary:   #1A1A1A;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary:  #9CA3AF;
+  --color-text-success:   #16A34A;
+  --color-text-danger:    #DC2626;
+
+  /* --- Layout --- */
+  --sidebar-width:        200px;
+  --header-height:        56px;
+  --radius-sm:            6px;
+  --radius-md:            8px;
+  --radius-lg:            12px;
+
+  /* --- Typography --- */
+  --font:                 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ============================================================
+   2. RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font);
+  font-size: 14px;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+button { font-family: var(--font); cursor: pointer; }
+table { border-collapse: collapse; width: 100%; }
+
+/* ============================================================
+   3. LAYOUT
+   ============================================================ */
+.app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ============================================================
+   4. SIDEBAR
+   ============================================================ */
+.sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border-right: 0.5px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 18px 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 0.5px solid var(--color-border);
+}
+
+.logo-mark {
+  width: 30px;
+  height: 30px;
+  background: var(--brand-teal);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.sidebar-section {
+  padding: 14px 10px 6px;
+}
+
+.sidebar-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: var(--color-text-tertiary);
+  padding: 0 6px 6px;
+  text-transform: uppercase;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background 0.12s, color 0.12s;
+  text-decoration: none;
+}
+
+.nav-item:hover { background: var(--color-surface-muted); color: var(--color-text-primary); }
+
+.nav-item.active {
+  background: var(--color-surface-muted);
+  color: var(--brand-teal);
+  font-weight: 500;
+}
+
+.nav-item svg { flex-shrink: 0; opacity: 0.7; }
+.nav-item.active svg { opacity: 1; }
+
+.nav-badge {
+  margin-left: auto;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+}
+
+.nav-badge.brand {
+  background: var(--brand-primary-light);
+  color: var(--brand-primary-text);
+}
+.sidebar-divider {
+  height: 0.5px;
+  background: var(--color-border);
+  margin: 8px 12px;
+}
+
+/* ============================================================
+   5. MAIN CONTENT AREA
+   ============================================================ */
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ============================================================
+   6. HEADER BAR
+   ============================================================ */
+.header {
+  height: var(--header-height);
+  background: var(--color-surface);
+  border-bottom: 0.5px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.header-title { min-width: 0; }
+.header-title h1 { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.header-title p  { font-size: 11px; color: var(--color-text-secondary); margin-top: 1px; }
+
+/* Credits block in header */
+.credits-block {
+  flex: 1;
+  max-width: 340px;
+  background: var(--color-surface-muted);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+}
+
+.credits-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.credits-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.credits-recharge {
+  font-size: 10.5px;
+  color: var(--brand-primary);
+  background: none;
+  border: none;
+  font-weight: 500;
+  padding: 0;
+}
+
+.credits-recharge:hover { color: var(--brand-primary-dark); text-decoration: underline; }
+
+.credits-bottom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.credits-amount {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+}
+
+.credits-bar-wrap { flex: 1; }
+
+.credits-bar {
+  height: 4px;
+  background: var(--color-border-strong);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 3px;
+}
+
+.credits-bar-fill {
+  height: 100%;
+  background: var(--brand-gradient);
+  border-radius: 2px;
+  width: 38%; /* dynamique */
+}
+
+.credits-hint { font-size: 9.5px; color: var(--color-text-tertiary); }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.btn-notif {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 4px;
+  color: var(--color-text-secondary);
+}
+
+.btn-notif-dot {
+  position: absolute;
+  top: 2px; right: 2px;
+  width: 7px; height: 7px;
+  background: var(--brand-primary);
+  border-radius: 50%;
+  border: 1.5px solid var(--color-surface);
+}
+.btn-primary {
+  padding: 7px 16px;
+  font-size: 13px;
+  background: var(--brand-gradient);
+  color: #0C5460;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: opacity 0.12s;
+}
+
+.btn-primary:hover { opacity: 0.88; }
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--brand-teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #AAEE22;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   7. SCROLLABLE CONTENT
+   ============================================================ */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ============================================================
+   8. ONBOARDING BANNER
+   ============================================================ */
+.onboarding-banner {
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 13px 16px;
+}
+
+.onboarding-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.onboarding-title {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.btn-dismiss {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--color-text-tertiary);
+  line-height: 1;
+  padding: 0;
+}
+
+.onboarding-steps {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+}
+
+.step-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.step-icon.done {
+  background: var(--color-green-bg);
+  color: var(--color-text-success);
+}
+
+.step-icon.pending {
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-secondary);
+}
+
+.step-item.done span { color: var(--color-text-success); }
+.step-item.pending span { color: var(--color-text-secondary); }
+
+.onboarding-progress {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.progress-bar-sm {
+  width: 80px;
+  height: 3px;
+  background: var(--color-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-sm-fill {
+  height: 100%;
+  background: var(--brand-primary);
+  width: 25%;
+  border-radius: 2px;
+}
+/* ============================================================
+   9. KPI CARDS
+   ============================================================ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.kpi-card {
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.kpi-label {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-bottom: 5px;
+}
+
+.kpi-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+}
+
+.kpi-delta {
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.kpi-delta.up   { color: var(--color-text-success); }
+.kpi-delta.down { color: var(--color-text-danger); }
+
+/* ============================================================
+   10. CHART SECTION
+   ============================================================ */
+.chart-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.card-subtitle {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+/* Period toggle */
+.period-toggle {
+  display: flex;
+  gap: 3px;
+}
+
+.period-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 4px;
+  border: 0.5px solid var(--color-border-strong);
+  background: transparent;
+  color: var(--color-text-secondary);
+  transition: all 0.1s;
+}
+
+.period-btn.active {
+  background: var(--color-surface-muted);
+  color: var(--color-text-primary);
+  font-weight: 500;
+  border-color: var(--color-border-strong);
+}
+
+/* Chart legend */
+.chart-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.legend-line {
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+/* Chart canvas wrapper */
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-top: 12px;
+}
+
+/* Donut card */
+.donut-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.donut-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 14px;
+}
+
+.canal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.canal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.canal-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--color-text-secondary);
+}
+
+.canal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.canal-value {
+  text-align: right;
+}
+
+.canal-value strong { color: var(--color-text-primary); }
+.canal-value span   { color: var(--color-text-secondary); font-size: 10.5px; margin-left: 4px; }
+
+.divider { height: 0.5px; background: var(--color-border); margin: 4px 0; }
+
+/* ============================================================
+   11. CAMPAIGNS TABLE
+   ============================================================ */
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.btn-link {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.btn-link:hover { color: var(--color-text-primary); text-decoration: underline; }
+
+.data-table th {
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  padding: 7px 0;
+  border-bottom: 0.5px solid var(--color-border);
+}
+
+.data-table td {
+  font-size: 12.5px;
+  padding: 10px 0;
+  border-bottom: 0.5px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.data-table th:not(:first-child),
+.data-table td:not(:first-child) { text-align: right; }
+
+.data-table td:first-child {
+  font-weight: 500;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.status-tag {
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   12. BOTTOM ROW
+   ============================================================ */
+.bottom-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 12px;
+  padding-bottom: 20px;
+}
+
+/* Automation items */
+.automation-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 13px;
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+}
+
+.automation-name {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.automation-meta {
+  font-size: 10.5px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+.toggle-switch {
+  width: 28px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.toggle-switch.on  { background: var(--brand-primary); justify-content: flex-end; }
+.toggle-switch.off { background: var(--color-border-strong); justify-content: flex-start; }
+
+.toggle-knob {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* Heatmap */
+.heatmap-grid {
+  display: grid;
+  gap: 2px;
+  align-items: center;
+}
+
+.heatmap-cell {
+  height: 16px;
+  border-radius: 2px;
+}
+
+.hm-label {
+  font-size: 9.5px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.hm-day-label {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}
+
+.heatmap-legend-steps {
+  display: flex;
+  gap: 2px;
+}
+
+.heatmap-legend-steps div {
+  width: 13px;
+  height: 13px;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   13. UTILITIES
+   ============================================================ */
+.automations-list { display: flex; flex-direction: column; gap: 8px; }
+
+.card-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ═══════════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════════ -->
+  <aside class="sidebar">
+
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <!-- Logo Novasend : lettre N stylisée bicolore -->
+        <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
+          <rect x="0" y="2" width="6" height="14" rx="1.5" fill="#2EC80A"/>
+          <path d="M6 2h6a4 4 0 014 4v6a2 2 0 01-2 2H6V2z" fill="url(#ng)"/>
+          <defs>
+            <linearGradient id="ng" x1="6" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#2EC80A"/>
+              <stop offset="100%" stop-color="#AAEE22"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">NovaSMS</span>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Principal</div>
+
+      <a href="#" class="nav-item active">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+          <rect x="1" y="1" width="5" height="5" rx="1"/>
+          <rect x="8" y="1" width="5" height="5" rx="1"/>
+          <rect x="1" y="8" width="5" height="5" rx="1"/>
+          <rect x="8" y="8" width="5" height="5" rx="1"/>
+        </svg>
+        Tableau de bord
+      </a>
+
+      <a href="#" class="nav-item">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <circle cx="7" cy="4.5" r="2.5"/>
+          <path d="M1.5 12.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/>
+        </svg>
+        Contacts
+        <span class="nav-badge">12 k</span>
+      </a>
+
+      <a href="#" class="nav-item">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="3" width="12" height="9" rx="1"/>
+          <polyline points="1,4 7,9 13,4"/>
+        </svg>
+        Campagnes
+      </a>
+
+      <a href="#" class="nav-item">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="8,1 4,8 7,8 6,13 11,6 7,6"/>
+        </svg>
+        Automatisations
+        <span class="nav-badge brand">3</span>
+      </a>
+
+      <a href="#" class="nav-item">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+          <rect x="1" y="7" width="3" height="6"/>
+          <rect x="5.5" y="4" width="3" height="9"/>
+          <rect x="10" y="1" width="3" height="12"/>
+        </svg>
+        Analytics
+      </a>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Compte</div>
+
+      <a href="#" class="nav-item">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <circle cx="5.5" cy="4" r="2.5"/>
+          <path d="M1 12c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5"/>
+          <line x1="10.5" y1="4.5" x2="10.5" y2="8.5"/>
+          <line x1="8.5" y1="6.5" x2="12.5" y2="6.5"/>
+        </svg>
+        Équipe
+      </a>
+
+      <a href="#" class="nav-item">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <circle cx="7" cy="7" r="2.5"/>
+          <path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13"/>
+        </svg>
+        Paramètres
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN
+  ═══════════════════════════════════════════ -->
+  <div class="main">
+
+    <!-- HEADER BAR -->
+    <header class="header">
+
+      <div class="header-title">
+        <h1>Tableau de bord</h1>
+        <p id="date-label">Jeudi 16 avril 2026</p>
+      </div>
+
+      <!-- CRÉDITS — zone centrale -->
+      <div class="credits-block">
+        <div class="credits-top">
+          <div class="credits-label">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="7" cy="7" r="5.5"/>
+              <line x1="7" y1="4.5" x2="7" y2="9.5"/>
+              <line x1="4.5" y1="7" x2="9.5" y2="7"/>
+            </svg>
+            Crédits disponibles
+          </div>
+          <button class="credits-recharge" onclick="alert('Redirection vers la page de rechargement Mobile Money / Visa')">
+            Recharger ↗
+          </button>
+        </div>
+        <div class="credits-bottom">
+          <div class="credits-amount">47 500 FCFA</div>
+          <div class="credits-bar-wrap">
+            <div class="credits-bar">
+              <div class="credits-bar-fill" style="width:38%"></div>
+            </div>
+            <div class="credits-hint">38% restant · Alerte sous 20 000 FCFA</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-notif" title="Notifications">
+          <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+            <path d="M8 2a5 5 0 015 5v2l1 2H2l1-2V7a5 5 0 015-5z"/>
+            <path d="M6.5 13.5a1.5 1.5 0 003 0"/>
+          </svg>
+          <div class="btn-notif-dot"></div>
+        </button>
+        <button class="btn-primary" onclick="alert('Redirection vers le créateur de campagne')">
+          + Nouvelle campagne
+        </button>
+        <div class="avatar" title="Kofi M.">KM</div>
+      </div>
+
+    </header>
+
+    <!-- SCROLLABLE CONTENT -->
+    <div class="content">
+
+      <!-- ONBOARDING BANNER -->
+      <div class="onboarding-banner" id="onboarding-banner">
+        <div class="onboarding-header">
+          <div class="card-title">Démarrage rapide — complétez votre configuration</div>
+          <button class="btn-dismiss" onclick="document.getElementById('onboarding-banner').style.display='none'" title="Fermer">&#215;</button>
+        </div>
+        <div class="onboarding-steps">
+          <div class="step-item done">
+            <div class="step-icon done">
+              <svg width="9" height="9" viewBox="0 0 9 9">
+                <polyline points="1.5,4.5 3.5,6.5 7.5,2.5" fill="none" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span>Profil complété</span>
+          </div>
+          <div class="step-item pending">
+            <div class="step-icon pending">2</div>
+            <span>Importer des contacts</span>
+          </div>
+          <div class="step-item pending">
+            <div class="step-icon pending">3</div>
+            <span>Configurer un canal</span>
+          </div>
+          <div class="step-item pending">
+            <div class="step-icon pending">4</div>
+            <span>Lancer votre 1ère campagne</span>
+          </div>
+          <div class="onboarding-progress">
+            <div class="progress-bar-sm">
+              <div class="progress-bar-sm-fill"></div>
+            </div>
+            1 / 4 étapes
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Messages envoyés</div>
+          <div class="kpi-value" id="kpi-sent">45 230</div>
+          <div class="kpi-delta up" id="kpi-sent-delta">↑ +12% vs période préc.</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Taux d'ouverture</div>
+          <div class="kpi-value" id="kpi-open">23.4%</div>
+          <div class="kpi-delta up" id="kpi-open-delta">↑ +1.2 pt vs période préc.</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Taux de clic</div>
+          <div class="kpi-value" id="kpi-click">4.2%</div>
+          <div class="kpi-delta down" id="kpi-click-delta">↓ −0.3 pt vs période préc.</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Désabonnements</div>
+          <div class="kpi-value" id="kpi-unsub">0.3%</div>
+          <div class="kpi-delta up" id="kpi-unsub-delta">↓ −0.1 pt vs période préc.</div>
+        </div>
+      </div>
+
+      <!-- CHART ROW -->
+      <div class="chart-row">
+
+        <!-- Line chart -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Évolution des performances</div>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-line" style="background:var(--brand-primary)"></div>
+                  Envois
+                </div>
+                <div class="legend-item">
+                  <div class="legend-line" style="border-top:2px dashed var(--brand-teal)"></div>
+                  Taux d'ouverture %
+                </div>
+              </div>
+            </div>
+            <div class="period-toggle">
+              <button class="period-btn active" onclick="setPeriod('7j', this)">7j</button>
+              <button class="period-btn" onclick="setPeriod('30j', this)">30j</button>
+              <button class="period-btn" onclick="setPeriod('90j', this)">90j</button>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="trendChart"
+              role="img"
+              aria-label="Graphique linéaire de l'évolution des messages envoyés et du taux d'ouverture selon la période sélectionnée">
+              Données d'évolution des envois et du taux d'ouverture.
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Donut chart -->
+        <div class="card donut-card">
+          <div class="card-title">Répartition par canal</div>
+          <div class="donut-wrap">
+            <canvas id="donutChart" width="120" height="120"
+              role="img"
+              aria-label="Graphique donut: SMS 48%, Email 36%, WhatsApp 16%">
+              SMS 48%, Email 36%, WhatsApp 16%.
+            </canvas>
+          </div>
+          <div class="canal-list">
+            <div class="canal-row">
+              <div class="canal-label">
+                <div class="canal-dot" style="background:var(--brand-primary)"></div>
+                SMS
+              </div>
+              <div class="canal-value"><strong>48%</strong><span>21 710 envois</span></div>
+            </div>
+            <div class="canal-row">
+              <div class="canal-label">
+                <div class="canal-dot" style="background:var(--brand-teal)"></div>
+                Email
+              </div>
+              <div class="canal-value"><strong>36%</strong><span>16 283 envois</span></div>
+            </div>
+            <div class="canal-row">
+              <div class="canal-label">
+                <div class="canal-dot" style="background:var(--brand-lime)"></div>
+                WhatsApp
+              </div>
+              <div class="canal-value"><strong>16%</strong><span>7 237 envois</span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="canal-row">
+              <div class="canal-label" style="color:var(--color-text-secondary);font-weight:500;">Total</div>
+              <div class="canal-value"><strong>45 230</strong></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TOP CAMPAIGNS TABLE -->
+      <div class="card">
+        <div class="table-header">
+          <div class="card-title">Top 5 campagnes — 30 derniers jours</div>
+          <button class="btn-link">Voir tout →</button>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Campagne</th>
+              <th>Canal</th>
+              <th>Envois</th>
+              <th>Ouverture</th>
+              <th>Clic</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody id="campaigns-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- BOTTOM ROW -->
+      <div class="bottom-row">
+
+        <!-- Automatisations -->
+        <div class="card">
+          <div class="card-header-actions">
+            <div class="card-title">Automatisations actives</div>
+            <button class="btn-link">+ Créer</button>
+          </div>
+          <div class="automations-list">
+            <div class="automation-item">
+              <div>
+                <div class="automation-name">Message de bienvenue</div>
+                <div class="automation-meta">Nouvel inscrit · SMS · 1 243 envois</div>
+              </div>
+              <div class="toggle-switch on" onclick="this.classList.toggle('on');this.classList.toggle('off')">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+            <div class="automation-item">
+              <div>
+                <div class="automation-name">Panier abandonné J+1</div>
+                <div class="automation-meta">Abandon panier · Email · 892 envois</div>
+              </div>
+              <div class="toggle-switch on" onclick="this.classList.toggle('on');this.classList.toggle('off')">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+            <div class="automation-item">
+              <div>
+                <div class="automation-name">Réactivation inactifs</div>
+                <div class="automation-meta">30j inactif · Email · 310 envois</div>
+              </div>
+              <div class="toggle-switch off" onclick="this.classList.toggle('on');this.classList.toggle('off')">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Heatmap -->
+        <div class="card">
+          <div class="card-title">Carte de chaleur d'engagement</div>
+          <div class="card-subtitle" style="margin-bottom:12px;">Taux d'ouverture moyen par heure et jour de la semaine</div>
+          <div id="heatmap-root"></div>
+          <div class="heatmap-legend">
+            <span>Faible</span>
+            <div class="heatmap-legend-steps">
+              <div style="background:#F0F7F0"></div>
+              <div style="background:#C8F0B0"></div>
+              <div style="background:#8EE060"></div>
+              <div style="background:#52CC22"></div>
+              <div style="background:var(--brand-primary)"></div>
+            </div>
+            <span>Fort</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app-shell -->
+
+<!-- ============================================================
+     CHART.JS
+     ============================================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+
+/* ── Period data ─────────────────────────────────────────── */
+const PERIODS = {
+  '7j': {
+    labels: ['10 avr','11 avr','12 avr','13 avr','14 avr','15 avr','16 avr'],
+    sent:   [5800, 6200, 4900, 7100, 6500, 8300, 6430],
+    open:   [21, 24, 20, 26, 23, 25, 23],
+    kpi: { sent:'45 230', sentDelta:'↑ +12%', open:'23.4%', openDelta:'↑ +1.2 pt', click:'4.2%', clickDelta:'↓ −0.3 pt', unsub:'0.3%', unsubDelta:'↓ −0.1 pt' }
+  },
+  '30j': {
+    labels: ['19/03','22/03','25/03','28/03','31/03','03/04','06/04','09/04','12/04','15/04'],
+    sent:   [12000, 15000, 8500, 18000, 14000, 16500, 11000, 19000, 13000, 17200],
+    open:   [21, 23, 20, 25, 22, 24, 21, 26, 23, 24],
+    kpi: { sent:'183 400', sentDelta:'↑ +18%', open:'24.1%', openDelta:'↑ +0.7 pt', click:'4.8%', clickDelta:'↑ +0.6 pt', unsub:'0.4%', unsubDelta:'↑ +0.1 pt' }
+  },
+  '90j': {
+    labels: ['Jan','Fév','Mar S1','Mar S2','Mar S3','Mar S4','Avr S1','Avr S2'],
+    sent:   [45000, 62000, 52000, 71000, 68000, 78000, 84000, 72000],
+    open:   [20, 22, 21, 24, 23, 25, 24, 23],
+    kpi: { sent:'524 600', sentDelta:'↑ +31%', open:'22.5%', openDelta:'↓ −0.9 pt', click:'4.5%', clickDelta:'↑ +0.3 pt', unsub:'0.5%', unsubDelta:'↑ +0.2 pt' }
+  }
+};
+
+/* ── Campaigns ───────────────────────────────────────────── */
+const CAMPAIGNS = [
+  { name: 'Flash Soldes Ramadan',    canal: 'Email',    envois: 12450, ouverture: '34.2%', clic: '6.8%',  statut: 'Terminée',  sc: '#6B7280' },
+  { name: 'Bienvenue Nouveaux clients', canal: 'Email', envois: 3210,  ouverture: '58.3%', clic: '12.4%', statut: 'Active',    sc: '#16A34A' },
+  { name: 'Promo Weekend SMS',       canal: 'SMS',      envois: 8920,  ouverture: '—',     clic: '8.1%',  statut: 'Terminée',  sc: '#6B7280' },
+  { name: 'Newsletter Avril 2026',   canal: 'Email',    envois: 15600, ouverture: '26.1%', clic: '3.9%',  statut: 'Planifiée', sc: '#D97706' },
+  { name: 'Récupération paniers',    canal: 'SMS',      envois: 5230,  ouverture: '—',     clic: '11.2%', statut: 'Active',    sc: '#16A34A' },
+];
+
+const CANAL_COLORS = { 'Email': '#0C5460', 'SMS': '#2EC80A', 'WhatsApp': '#AAEE22' };
+
+/* ── Render campaign table ───────────────────────────────── */
+const tbody = document.getElementById('campaigns-tbody');
+CAMPAIGNS.forEach(c => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${c.name}</td>
+    <td><span class="chip" style="background:${CANAL_COLORS[c.canal]}18;color:${CANAL_COLORS[c.canal]}">${c.canal}</span></td>
+    <td>${c.envois.toLocaleString('fr-FR')}</td>
+    <td>${c.ouverture}</td>
+    <td>${c.clic}</td>
+    <td><span class="status-tag" style="color:${c.sc}">${c.statut}</span></td>
+  `;
+  tbody.appendChild(tr);
+});
+
+/* ── Trend chart ─────────────────────────────────────────── */
+let trendChartInstance;
+
+function createTrendChart(period) {
+  const d = PERIODS[period];
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  if (trendChartInstance) trendChartInstance.destroy();
+  trendChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: d.labels,
+      datasets: [
+        {
+          label: 'Envois',
+          data: d.sent,
+          borderColor: '#2EC80A',
+          backgroundColor: 'rgba(46,200,10,0.08)',
+          borderWidth: 1.5,
+          tension: 0.4,
+          fill: true,
+          yAxisID: 'y',
+          pointRadius: 3,
+          pointBackgroundColor: '#2EC80A',
+        },
+        {
+          label: "Taux d'ouverture (%)",
+          data: d.open,
+          borderColor: '#0C5460',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          tension: 0.4,
+          fill: false,
+          yAxisID: 'y2',
+          pointRadius: 3,
+          pointBackgroundColor: '#0C5460',
+          borderDash: [4, 4],
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: {
+          ticks: { font: { size: 10 }, maxRotation: 30, color: '#9CA3AF' },
+          grid: { display: false },
+          border: { display: false }
+        },
+        y: {
+          position: 'left',
+          ticks: { font: { size: 10 }, color: '#9CA3AF', callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v },
+          grid: { color: 'rgba(128,128,128,0.07)' },
+          border: { display: false }
+        },
+        y2: {
+          position: 'right',
+          ticks: { font: { size: 10 }, color: '#9CA3AF', callback: v => v + '%' },
+          grid: { display: false },
+          border: { display: false }
+        }
+      }
+    }
+  });
+}
+
+/* ── Donut chart ─────────────────────────────────────────── */
+new Chart(document.getElementById('donutChart').getContext('2d'), {
+  type: 'doughnut',
+  data: {
+    labels: ['SMS', 'Email', 'WhatsApp'],
+    datasets: [{
+      data: [48, 36, 16],
+      backgroundColor: ['#2EC80A', '#0C5460', '#AAEE22'],
+      borderWidth: 0,
+      hoverOffset: 4
+    }]
+  },
+  options: {
+    responsive: false,
+    cutout: '72%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.raw + '%' } }
+    }
+  }
+});
+
+/* ── Period switcher ─────────────────────────────────────── */
+function setPeriod(period, btn) {
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = PERIODS[period].kpi;
+  document.getElementById('kpi-sent').textContent  = d.sent;
+  document.getElementById('kpi-open').textContent  = d.open;
+  document.getElementById('kpi-click').textContent = d.click;
+  document.getElementById('kpi-unsub').textContent = d.unsub;
+  document.getElementById('kpi-sent-delta').textContent  = d.sentDelta  + ' vs période préc.';
+  document.getElementById('kpi-open-delta').textContent  = d.openDelta  + ' vs période préc.';
+  document.getElementById('kpi-click-delta').textContent = d.clickDelta + ' vs période préc.';
+  document.getElementById('kpi-unsub-delta').textContent = d.unsubDelta + ' vs période préc.';
+  createTrendChart(period);
+}
+
+createTrendChart('7j');
+
+/* ── Heatmap ─────────────────────────────────────────────── */
+const DAYS  = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+const HOURS = ['6h','8h','10h','12h','14h','16h','18h','20h','22h'];
+const HEAT_DATA = [
+  [5,  8, 22, 18, 12, 15, 20, 10,  4],
+  [6, 10, 25, 20, 14, 17, 22, 12,  5],
+  [4,  9, 20, 17, 11, 14, 19,  9,  3],
+  [7, 12, 28, 24, 16, 19, 25, 14,  6],
+  [8, 14, 30, 26, 18, 22, 27, 16,  7],
+  [3,  5, 10,  8,  6,  7,  9, 12,  8],
+  [2,  4,  8,  6,  5,  6,  7, 10,  6]
+];
+const MAX_HEAT = Math.max(...HEAT_DATA.flat());
+const AMBER_STOPS = ['#F0F7F0', '#C8F0B0', '#8EE060', '#52CC22', '#2EC80A'];
+
+const heatRoot = document.getElementById('heatmap-root');
+const cols = HOURS.length + 1;
+heatRoot.innerHTML = `
+  <div class="heatmap-grid" style="grid-template-columns: 28px ${HOURS.map(() => '1fr').join(' ')};">
+    <div></div>
+    ${HOURS.map(h => `<div class="hm-label">${h}</div>`).join('')}
+    ${DAYS.map((d, i) =>
+      `<div class="hm-day-label">${d}</div>` +
+      HEAT_DATA[i].map(v =>
+        `<div class="heatmap-cell" style="background:${AMBER_STOPS[Math.round((v/MAX_HEAT)*4)]}" title="${v}% ouverture"></div>`
+      ).join('')
+    ).join('')}
+  </div>
+`;
+
+/* ── Dynamic date ────────────────────────────────────────── */
+document.getElementById('date-label').textContent =
+  new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaSMS — Toutes les maquettes · Figma Ready</title>
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  NOVASMS — FICHIER MAQUETTE COMPLET · FIGMA READY           ║
+  ║  Version 1.0 · Avril 2026                                    ║
+  ║                                                              ║
+  ║  Import Figma : Plugins → html.to.design → coller l'URL     ║
+  ║  ou ouvrir localement et sélectionner chaque écran          ║
+  ║                                                              ║
+  ║  Écrans inclus :                                             ║
+  ║  1. Dashboard                                                ║
+  ║  2. Contacts & Segmentation                                  ║
+  ║  3. Créateur de Campagne                                     ║
+  ║  4. Automatisations & Workflow                               ║
+  ║  5. Analytics & Rapports                                     ║
+  ║  6. Rechargement Mobile Money / Visa                         ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<style>
+/* ── TOKENS NOVASEND ─────────────────────────────────────── */
+:root {
+  --brand-primary:      #2EC80A;
+  --brand-dark:         #25A208;
+  --brand-lime:         #AAEE22;
+  --brand-teal:         #0C5460;
+  --brand-light:        #EDFCE8;
+  --brand-text:         #145C04;
+  --brand-gradient:     linear-gradient(135deg, #2EC80A 0%, #AAEE22 100%);
+
+  --bg:                 #F7F9F7;
+  --surface:            #FFFFFF;
+  --muted:              #F0F7F0;
+  --border:             rgba(0,0,0,0.08);
+  --border-md:          rgba(0,0,0,0.14);
+
+  --text-1:             #1A1A1A;
+  --text-2:             #6B7280;
+  --text-3:             #9CA3AF;
+  --success:            #16A34A;
+  --danger:             #DC2626;
+  --warning:            #D97706;
+  --info:               #0C5460;
+
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --sidebar: 200px;
+  --header:  56px;
+}
+
+/* ── RESET ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+body { font-family: var(--font); background: #1A1A2E; color: var(--text-1); font-size:14px; }
+button { font-family: var(--font); cursor:pointer; }
+a { text-decoration:none; color:inherit; }
+table { border-collapse:collapse; width:100%; }
+
+/* ── CANVAS WRAPPER ──────────────────────────────────────── */
+.canvas {
+  display: flex;
+  gap: 60px;
+  padding: 60px;
+  overflow-x: auto;
+  align-items: flex-start;
+}
+
+/* ── SCREEN FRAME ────────────────────────────────────────── */
+.screen {
+  width: 1280px;
+  min-width: 1280px;
+  background: var(--bg);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.screen-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: rgba(255,255,255,.45);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* ── SCREEN NAV (tab bar) ────────────────────────────────── */
+.screen-nav {
+  display:flex; gap:8px; padding: 0 60px 0;
+  margin-bottom: 0;
+  background: #1A1A2E;
+}
+.snav-btn {
+  padding:8px 16px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.04em;
+  border-radius:6px 6px 0 0;
+  border:none;
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.45);
+  cursor:pointer;
+  transition: all .15s;
+}
+.snav-btn.active { background:var(--brand-primary); color:#145C04; }
+
+/* ── SHARED LAYOUT ───────────────────────────────────────── */
+.app { display:flex; height:768px; }
+
+/* SIDEBAR */
+.sidebar {
+  width: var(--sidebar);
+  flex-shrink:0;
+  background: var(--surface);
+  border-right: 0.5px solid var(--border);
+  display:flex;
+  flex-direction:column;
+}
+.sb-logo {
+  padding:16px 14px 18px;
+  display:flex; align-items:center; gap:9px;
+  border-bottom:0.5px solid var(--border);
+}
+.sb-logomark {
+  width:28px; height:28px;
+  background:var(--brand-teal);
+  border-radius:var(--r-md);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.sb-nav { flex:1; padding:12px 8px 0; }
+.sb-section-label {
+  font-size:10px; font-weight:600; letter-spacing:.07em;
+  color:var(--text-3); text-transform:uppercase;
+  padding:0 6px 5px; margin-bottom:2px;
+}
+.nav-item {
+  display:flex; align-items:center; gap:8px;
+  padding:7px 10px; font-size:12.5px;
+  color:var(--text-2); border-radius:var(--r-sm);
+  margin-bottom:1px;
+}
+.nav-item svg { flex-shrink:0; opacity:.7; }
+.nav-item.active {
+  background:var(--muted);
+  color:var(--brand-teal);
+  font-weight:500;
+}
+.nav-item.active svg { opacity:1; }
+.nav-badge {
+  margin-left:auto; font-size:10px;
+  padding:1px 6px; border-radius:10px;
+  background:var(--muted); color:var(--text-2);
+}
+.nav-badge.green {
+  background:var(--brand-light); color:var(--brand-text);
+}
+.sb-divider { height:.5px; background:var(--border); margin:8px 10px; }
+.sb-credits {
+  margin:10px 10px 14px;
+  background:var(--muted);
+  border-radius:var(--r-md);
+  padding:11px 12px;
+}
+
+/* HEADER */
+.header {
+  height:var(--header);
+  background:var(--surface);
+  border-bottom:.5px solid var(--border);
+  display:flex; align-items:center;
+  padding:0 20px; gap:14px;
+  flex-shrink:0;
+}
+.hdr-title h1 { font-size:14px; font-weight:500; }
+.hdr-title p  { font-size:11px; color:var(--text-2); margin-top:1px; }
+.credits-pill {
+  flex:1; max-width:320px;
+  background:var(--muted);
+  border:.5px solid var(--border);
+  border-radius:var(--r-md);
+  padding:7px 13px;
+}
+.credits-pill-top {
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;
+}
+.credits-label { font-size:10.5px; color:var(--text-2); font-weight:500; }
+.credits-recharge { font-size:10.5px; color:var(--brand-primary); font-weight:600; background:none; border:none; }
+.credits-amount { font-size:17px; font-weight:600; letter-spacing:-.02em; color:var(--text-1); }
+.credits-bar { height:3px; background:var(--border-md); border-radius:2px; overflow:hidden; margin:5px 0 2px; }
+.credits-bar-fill { height:100%; background:var(--brand-gradient); width:38%; border-radius:2px; }
+.credits-hint { font-size:9.5px; color:var(--text-3); }
+.hdr-actions { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; }
+.btn-primary {
+  padding:7px 15px; font-size:12.5px; font-weight:600;
+  background:var(--brand-gradient); color:#0C5460;
+  border:none; border-radius:var(--r-md); white-space:nowrap;
+}
+.avatar {
+  width:28px; height:28px; border-radius:50%;
+  background:var(--brand-teal);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; font-weight:700; color:#AAEE22;
+}
+.notif-btn { position:relative; background:none; border:none; color:var(--text-2); padding:3px; }
+.notif-dot {
+  position:absolute; top:1px; right:1px;
+  width:6px; height:6px; background:var(--brand-primary);
+  border-radius:50%; border:1.5px solid var(--surface);
+}
+
+/* MAIN + CONTENT */
+.main { flex:1; min-width:0; display:flex; flex-direction:column; }
+.content { flex:1; overflow:hidden; padding:18px 20px; display:flex; flex-direction:column; gap:12px; }
+
+/* CARDS */
+.card {
+  background:var(--surface);
+  border:.5px solid var(--border);
+  border-radius:var(--r-lg);
+  padding:16px;
+}
+.card-title { font-size:13px; font-weight:500; color:var(--text-1); }
+.card-subtitle { font-size:11px; color:var(--text-2); margin-top:3px; }
+
+/* CHIPS & BADGES */
+.chip {
+  display:inline-flex; align-items:center;
+  padding:2px 8px; border-radius:4px;
+  font-size:11px; font-weight:500;
+}
+.status { font-size:11.5px; font-weight:500; }
+
+/* KPI cards */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+.kpi { background:var(--muted); border-radius:var(--r-md); padding:14px 16px; }
+.kpi-label { font-size:10.5px; color:var(--text-2); margin-bottom:4px; }
+.kpi-value { font-size:21px; font-weight:600; letter-spacing:-.02em; }
+.kpi-delta { font-size:10.5px; margin-top:4px; }
+.up { color:var(--success); }
+.down { color:var(--danger); }
+
+/* TABLES */
+.data-table th {
+  font-size:11px; font-weight:500; color:var(--text-2);
+  padding:7px 0; border-bottom:.5px solid var(--border); text-align:left;
+}
+.data-table td {
+  font-size:12.5px; padding:9px 0;
+  border-bottom:.5px solid var(--border); vertical-align:middle;
+}
+.data-table th:not(:first-child),
+.data-table td:not(:first-child) { text-align:right; }
+
+/* FORM ELEMENTS */
+.form-label { font-size:11.5px; font-weight:500; color:var(--text-1); margin-bottom:6px; display:block; }
+.form-input {
+  width:100%; padding:9px 12px;
+  border:.5px solid var(--border-md);
+  border-radius:var(--r-md);
+  font-size:13px; color:var(--text-1);
+  background:var(--surface);
+  font-family:var(--font);
+  outline:none;
+}
+.form-input:focus { border-color:var(--brand-primary); }
+.form-select {
+  width:100%; padding:9px 12px;
+  border:.5px solid var(--border-md);
+  border-radius:var(--r-md);
+  font-size:13px; color:var(--text-1);
+  background:var(--surface);
+  font-family:var(--font);
+  appearance:none;
+}
+.form-textarea {
+  width:100%; padding:10px 12px;
+  border:.5px solid var(--border-md);
+  border-radius:var(--r-md);
+  font-size:13px; color:var(--text-1);
+  background:var(--surface);
+  font-family:var(--font);
+  resize:none;
+  outline:none;
+}
+.form-group { margin-bottom:14px; }
+
+/* TOGGLE */
+.toggle { width:28px; height:16px; border-radius:8px; display:flex; align-items:center; padding:2px; flex-shrink:0; }
+.toggle.on  { background:var(--brand-primary); justify-content:flex-end; }
+.toggle.off { background:var(--border-md); justify-content:flex-start; }
+.toggle-knob { width:12px; height:12px; background:white; border-radius:50%; }
+
+/* BTN variants */
+.btn-outline {
+  padding:7px 14px; font-size:12.5px;
+  background:transparent; color:var(--text-2);
+  border:.5px solid var(--border-md);
+  border-radius:var(--r-md);
+}
+.btn-teal {
+  padding:7px 14px; font-size:12.5px; font-weight:600;
+  background:var(--brand-teal); color:#AAEE22;
+  border:none; border-radius:var(--r-md);
+}
+.btn-ghost {
+  background:none; border:none; font-size:12px;
+  color:var(--text-2); padding:0;
+}
+.btn-sm {
+  padding:5px 10px; font-size:11.5px;
+  border-radius:var(--r-sm);
+  border:.5px solid var(--border-md);
+  background:var(--surface); color:var(--text-2);
+}
+
+/* DIVIDER */
+.divider { height:.5px; background:var(--border); margin:4px 0; }
+
+/* PILL TAG */
+.tag {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:3px 9px; border-radius:20px;
+  font-size:11px; font-weight:500;
+  background:var(--muted); color:var(--text-2);
+}
+.tag.green { background:var(--brand-light); color:var(--brand-text); }
+.tag.teal  { background:#E0EDEF; color:var(--brand-teal); }
+
+/* STEP WIZARD */
+.wizard-steps {
+  display:flex; align-items:center; gap:0;
+  margin-bottom:20px;
+}
+.wstep {
+  display:flex; align-items:center; gap:8px;
+  font-size:12px; color:var(--text-3); flex:1;
+}
+.wstep.active { color:var(--brand-teal); font-weight:500; }
+.wstep.done   { color:var(--success); }
+.wstep-num {
+  width:22px; height:22px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; font-weight:700; flex-shrink:0;
+  background:var(--muted); color:var(--text-3);
+  border:.5px solid var(--border-md);
+}
+.wstep.active .wstep-num { background:var(--brand-teal); color:#AAEE22; border-color:var(--brand-teal); }
+.wstep.done .wstep-num   { background:var(--brand-light); color:var(--brand-text); border-color:var(--brand-primary); }
+.wstep-line { flex:1; height:.5px; background:var(--border-md); margin:0 8px; max-width:40px; }
+.wstep.done + .wstep-line { background:var(--brand-primary); }
+
+/* WORKFLOW CANVAS */
+.wf-canvas {
+  background:var(--bg);
+  border:.5px solid var(--border);
+  border-radius:var(--r-lg);
+  position:relative;
+  overflow:hidden;
+}
+.wf-node {
+  position:absolute;
+  background:var(--surface);
+  border:.5px solid var(--border-md);
+  border-radius:var(--r-md);
+  padding:10px 14px;
+  min-width:160px;
+  text-align:center;
+}
+.wf-node.trigger { border-color:var(--brand-teal); background:#E0EDEF; }
+.wf-node.action  { border-color:var(--brand-primary); background:var(--brand-light); }
+.wf-node.condition { border-color:var(--warning); background:#FEF3C7; }
+.wf-node.end { border-color:var(--border-md); background:var(--muted); }
+.wf-node-icon { font-size:18px; margin-bottom:4px; }
+.wf-node-label { font-size:11.5px; font-weight:500; color:var(--text-1); }
+.wf-node-sub { font-size:10px; color:var(--text-2); margin-top:2px; }
+.wf-connector {
+  position:absolute;
+  background:var(--border-md);
+  width:1.5px;
+}
+
+/* PHONE MOCKUP */
+.phone-mock {
+  width:180px; flex-shrink:0;
+  background:#1A1A1A;
+  border-radius:20px;
+  padding:12px 0;
+  display:flex; flex-direction:column; align-items:center;
+}
+.phone-screen {
+  width:156px; background:#F0F0F0;
+  border-radius:10px; overflow:hidden;
+  flex:1; padding:10px 10px;
+}
+.sms-bubble {
+  background:#2EC80A; color:white;
+  border-radius:12px 12px 2px 12px;
+  padding:8px 12px; font-size:11px;
+  line-height:1.5; margin-bottom:4px;
+  max-width:90%;
+  margin-left:auto;
+}
+.sms-time { font-size:9px; color:var(--text-3); text-align:right; }
+
+/* ANALYTICS */
+.analytics-stat {
+  background:var(--muted); border-radius:var(--r-md);
+  padding:14px; text-align:center;
+}
+.analytics-stat .big { font-size:28px; font-weight:700; letter-spacing:-.03em; }
+.analytics-stat .lbl { font-size:10.5px; color:var(--text-2); margin-top:4px; }
+.progress-track {
+  background:var(--border-md); height:6px;
+  border-radius:3px; overflow:hidden; margin-top:4px;
+}
+.progress-fill { height:100%; border-radius:3px; }
+
+/* PAYMENT TABS */
+.pay-tab {
+  flex:1; padding:10px; font-size:13px; font-weight:500;
+  border:none; background:var(--muted); color:var(--text-2);
+  cursor:pointer;
+}
+.pay-tab.active { background:var(--brand-gradient); color:#0C5460; }
+.pay-tab:first-child { border-radius:var(--r-md) 0 0 var(--r-md); }
+.pay-tab:last-child  { border-radius:0 var(--r-md) var(--r-md) 0; }
+
+.amount-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
+.amount-btn {
+  padding:9px; font-size:12.5px; font-weight:500;
+  border:.5px solid var(--border-md);
+  border-radius:var(--r-md);
+  background:var(--surface); color:var(--text-1);
+  cursor:pointer; text-align:center;
+}
+.amount-btn.selected { border-color:var(--brand-primary); background:var(--brand-light); color:var(--brand-teal); }
+
+.card-field {
+  display:grid; grid-template-columns:2fr 1fr 1fr; gap:8px;
+}
+
+/* SEGMENT builder */
+.filter-row {
+  display:flex; align-items:center; gap:8px;
+  background:var(--muted); border-radius:var(--r-md);
+  padding:9px 12px; margin-bottom:6px;
+}
+.filter-chip {
+  padding:3px 10px; border-radius:4px;
+  font-size:11px; font-weight:600;
+  background:#E0EDEF; color:var(--brand-teal);
+}
+
+/* CONTACT CARD */
+.contact-row {
+  display:flex; align-items:center; gap:12px;
+  padding:9px 0; border-bottom:.5px solid var(--border);
+}
+.contact-avatar {
+  width:30px; height:30px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; flex-shrink:0;
+  background:var(--brand-light); color:var(--brand-teal);
+}
+
+/* HEATMAP */
+.hm-cell { height:15px; border-radius:2px; }
+.hm-grid { display:grid; gap:2px; align-items:center; }
+
+/* MISC */
+.flex { display:flex; }
+.flex-1 { flex:1; }
+.items-center { align-items:center; }
+.justify-between { justify-content:space-between; }
+.gap-8 { gap:8px; }
+.gap-12 { gap:12px; }
+.gap-16 { gap:16px; }
+.mb-8  { margin-bottom:8px; }
+.mb-12 { margin-bottom:12px; }
+.mb-16 { margin-bottom:16px; }
+.text-sm { font-size:12px; }
+.text-xs { font-size:10.5px; }
+.text-muted { color:var(--text-2); }
+.font-medium { font-weight:500; }
+.font-semibold { font-weight:600; }
+.grid-2 { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.col-span-2 { grid-column:span 2; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     NAVIGATION ENTRE ÉCRANS
+══════════════════════════════════════════════════════════ -->
+<div style="background:#0D0D1F; padding:20px 60px 0; position:sticky; top:0; z-index:100;">
+  <div style="font-size:13px; font-weight:700; color:#AAEE22; letter-spacing:.05em; margin-bottom:14px;">
+    NOVASMS · MAQUETTES FIGMA — 6 ÉCRANS
+  </div>
+  <div style="display:flex; gap:6px; flex-wrap:wrap;">
+    <button class="snav-btn active" onclick="showScreen(0, this)">1 · Dashboard</button>
+    <button class="snav-btn" onclick="showScreen(1, this)">2 · Contacts</button>
+    <button class="snav-btn" onclick="showScreen(2, this)">3 · Campagnes</button>
+    <button class="snav-btn" onclick="showScreen(3, this)">4 · Automatisations</button>
+    <button class="snav-btn" onclick="showScreen(4, this)">5 · Analytics</button>
+    <button class="snav-btn" onclick="showScreen(5, this)">6 · Rechargement</button>
+  </div>
+</div>
+
+<div style="padding:30px 60px 60px; background:#0D0D1F; min-height:100vh;">
+
+<!-- ══ SCREEN CONTAINERS ══════════════════════════════════ -->
+
+<!-- ══════════════════ ÉCRAN 1 : DASHBOARD ══════════════════ -->
+<div class="screen" id="sc-0">
+<div class="app">
+  <!-- sidebar -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logomark">
+        <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
+          <rect x="0" y="2" width="6" height="14" rx="1.5" fill="#2EC80A"/>
+          <path d="M6 2h6a4 4 0 014 4v6a2 2 0 01-2 2H6V2z" fill="url(#g1)"/>
+          <defs><linearGradient id="g1" x1="6" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#2EC80A"/><stop offset="100%" stop-color="#AAEE22"/></linearGradient></defs>
+        </svg>
+      </div>
+      <span style="font-size:14px; font-weight:700; color:var(--text-1);">NovaSMS</span>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-section-label">Principal</div>
+      <div class="nav-item active">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>
+        Tableau de bord
+      </div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 12.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>Contacts<span class="nav-badge">12k</span></div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="12" height="9" rx="1"/><polyline points="1,4 7,9 13,4"/></svg>Campagnes</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,1 4,8 7,8 6,13 11,6 7,6"/></svg>Automatisations<span class="nav-badge green">3</span></div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="7" width="3" height="6"/><rect x="5.5" y="4" width="3" height="9"/><rect x="10" y="1" width="3" height="12"/></svg>Analytics</div>
+      <div class="sb-divider"></div>
+      <div class="sb-section-label">Compte</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="5.5" cy="4" r="2.5"/><path d="M1 12c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5"/><line x1="10.5" y1="4.5" x2="10.5" y2="8.5"/><line x1="8.5" y1="6.5" x2="12.5" y2="6.5"/></svg>Équipe</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="2.5"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13"/></svg>Paramètres</div>
+    </div>
+  </aside>
+
+  <!-- main -->
+  <div class="main">
+    <div class="header">
+      <div class="hdr-title"><h1>Tableau de bord</h1><p>Jeudi 16 avril 2026 · Bonjour, Kofi</p></div>
+      <div class="credits-pill">
+        <div class="credits-pill-top">
+          <span class="credits-label">Crédits disponibles</span>
+          <button class="credits-recharge">Recharger ↗</button>
+        </div>
+        <div class="flex items-center gap-8">
+          <span class="credits-amount">47 500 FCFA</span>
+          <div style="flex:1">
+            <div class="credits-bar"><div class="credits-bar-fill"></div></div>
+            <div class="credits-hint">38% restant · Alerte sous 20 000 FCFA</div>
+          </div>
+        </div>
+      </div>
+      <div class="hdr-actions">
+        <button class="notif-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M8 2a5 5 0 015 5v2l1 2H2l1-2V7a5 5 0 015-5z"/><path d="M6.5 13.5a1.5 1.5 0 003 0"/></svg><div class="notif-dot"></div></button>
+        <button class="btn-primary">+ Nouvelle campagne</button>
+        <div class="avatar">KM</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Onboarding -->
+      <div class="card" style="padding:12px 16px">
+        <div class="flex items-center justify-between mb-8">
+          <span class="card-title">Démarrage rapide — 3 étapes restantes</span>
+          <span style="font-size:18px; color:var(--text-3); cursor:pointer;">×</span>
+        </div>
+        <div class="flex gap-16 items-center">
+          <div class="flex items-center gap-8 text-sm"><div style="width:16px;height:16px;border-radius:50%;background:var(--brand-light);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="9" height="9" viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,6.5 7.5,2.5" fill="none" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span style="color:var(--success)">Profil complété</span></div>
+          <div class="flex items-center gap-8 text-sm text-muted"><div style="width:16px;height:16px;border-radius:50%;border:.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">2</div>Importer des contacts</div>
+          <div class="flex items-center gap-8 text-sm text-muted"><div style="width:16px;height:16px;border-radius:50%;border:.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">3</div>Configurer un canal</div>
+          <div class="flex items-center gap-8 text-sm text-muted"><div style="width:16px;height:16px;border-radius:50%;border:.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">4</div>Lancer votre 1ère campagne</div>
+          <div class="flex items-center gap-8" style="margin-left:auto">
+            <div style="width:70px;height:3px;background:var(--border-md);border-radius:2px;overflow:hidden"><div style="width:25%;height:100%;background:var(--brand-gradient)"></div></div>
+            <span class="text-xs text-muted">1/4</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">Messages envoyés</div><div class="kpi-value">45 230</div><div class="kpi-delta up">↑ +12% vs période préc.</div></div>
+        <div class="kpi"><div class="kpi-label">Taux d'ouverture</div><div class="kpi-value">23.4%</div><div class="kpi-delta up">↑ +1.2 pt vs période préc.</div></div>
+        <div class="kpi"><div class="kpi-label">Taux de clic</div><div class="kpi-value">4.2%</div><div class="kpi-delta down">↓ −0.3 pt vs période préc.</div></div>
+        <div class="kpi"><div class="kpi-label">Désabonnements</div><div class="kpi-value">0.3%</div><div class="kpi-delta up">↓ −0.1 pt vs période préc.</div></div>
+      </div>
+
+      <!-- Charts row -->
+      <div style="display:grid; grid-template-columns:minmax(0,1.65fr) minmax(0,1fr); gap:12px; flex:1;">
+        <div class="card">
+          <div class="flex items-center justify-between mb-12">
+            <div>
+              <div class="card-title">Évolution des performances</div>
+              <div class="flex gap-12" style="margin-top:5px">
+                <div class="flex items-center gap-8 text-xs text-muted"><span style="width:18px;height:2px;background:var(--brand-primary);display:inline-block;border-radius:1px"></span>Envois</div>
+                <div class="flex items-center gap-8 text-xs text-muted"><span style="width:18px;border-top:2px dashed var(--brand-teal);display:inline-block"></span>Ouverture %</div>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <button class="btn-sm" style="background:var(--muted);border-color:var(--border-md);color:var(--brand-teal);font-weight:600">7j</button>
+              <button class="btn-sm">30j</button>
+              <button class="btn-sm">90j</button>
+            </div>
+          </div>
+          <!-- Chart placeholder -->
+          <div style="height:160px; background:var(--muted); border-radius:var(--r-md); display:flex; align-items:flex-end; padding:10px 10px 0; gap:6px; overflow:hidden">
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%">
+              <div style="flex:1; width:100%; display:flex; align-items:flex-end">
+                <div style="width:100%; height:70%; background:rgba(46,200,10,0.15); border-radius:3px 3px 0 0; position:relative">
+                  <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div>
+                </div>
+              </div>
+              <span style="font-size:9px;color:var(--text-3)">10/04</span>
+            </div>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:78%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">11/04</span></div>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:60%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">12/04</span></div>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:90%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">13/04</span></div>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:82%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">14/04</span></div>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:100%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">15/04</span></div>
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:80%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">16/04</span></div>
+          </div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="card-title mb-12">Répartition par canal</div>
+          <div style="display:flex;justify-content:center;margin-bottom:14px">
+            <div style="width:90px;height:90px;border-radius:50%;background:conic-gradient(#2EC80A 0% 48%, #0C5460 48% 84%, #AAEE22 84% 100%);position:relative;display:flex;align-items:center;justify-content:center">
+              <div style="width:56px;height:56px;background:white;border-radius:50%"></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1">
+            <div class="flex items-center justify-between text-sm"><span class="flex items-center gap-8 text-muted"><span style="width:8px;height:8px;border-radius:2px;background:var(--brand-primary);display:inline-block"></span>SMS</span><div><strong>48%</strong><span class="text-xs text-muted" style="margin-left:4px">21 710</span></div></div>
+            <div class="flex items-center justify-between text-sm"><span class="flex items-center gap-8 text-muted"><span style="width:8px;height:8px;border-radius:2px;background:var(--brand-teal);display:inline-block"></span>Email</span><div><strong>36%</strong><span class="text-xs text-muted" style="margin-left:4px">16 283</span></div></div>
+            <div class="flex items-center justify-between text-sm"><span class="flex items-center gap-8 text-muted"><span style="width:8px;height:8px;border-radius:2px;background:var(--brand-lime);display:inline-block"></span>WhatsApp</span><div><strong>16%</strong><span class="text-xs text-muted" style="margin-left:4px">7 237</span></div></div>
+            <div class="divider"></div>
+            <div class="flex items-center justify-between text-sm font-medium"><span class="text-muted">Total</span><span>45 230</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /sc-0 -->
+
+
+<!-- ══════════════════ ÉCRAN 2 : CONTACTS ══════════════════ -->
+<div class="screen" id="sc-1" style="display:none">
+<div class="app">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logomark"><svg width="18" height="16" viewBox="0 0 18 16" fill="none"><rect x="0" y="2" width="6" height="14" rx="1.5" fill="#2EC80A"/><path d="M6 2h6a4 4 0 014 4v6a2 2 0 01-2 2H6V2z" fill="url(#g2)"/><defs><linearGradient id="g2" x1="6" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#2EC80A"/><stop offset="100%" stop-color="#AAEE22"/></linearGradient></defs></svg></div>
+      <span style="font-size:14px;font-weight:700;color:var(--text-1)">NovaSMS</span>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-section-label">Principal</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>Tableau de bord</div>
+      <div class="nav-item active"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 12.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>Contacts<span class="nav-badge">12k</span></div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="12" height="9" rx="1"/><polyline points="1,4 7,9 13,4"/></svg>Campagnes</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,1 4,8 7,8 6,13 11,6 7,6"/></svg>Automatisations<span class="nav-badge green">3</span></div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="7" width="3" height="6"/><rect x="5.5" y="4" width="3" height="9"/><rect x="10" y="1" width="3" height="12"/></svg>Analytics</div>
+    </div>
+    <!-- Segments panel -->
+    <div class="sb-divider"></div>
+    <div style="padding:0 8px; flex:1">
+      <div class="sb-section-label">Mes segments</div>
+      <div class="nav-item active" style="color:var(--brand-teal)"><svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/></svg>Tous les contacts<span class="nav-badge" style="background:var(--brand-light);color:var(--brand-teal)">12 480</span></div>
+      <div class="nav-item"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6" cy="6" r="5"/></svg>Clients actifs<span class="nav-badge">4 230</span></div>
+      <div class="nav-item"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6" cy="6" r="5"/></svg>VIP (>3 achats)<span class="nav-badge">892</span></div>
+      <div class="nav-item"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6" cy="6" r="5"/></svg>Inactifs 30j<span class="nav-badge">1 540</span></div>
+      <div class="nav-item"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6" cy="6" r="5"/></svg>Abidjan<span class="nav-badge">3 200</span></div>
+      <div style="padding:6px 10px"><button style="width:100%;padding:7px;font-size:12px;border:.5px dashed var(--border-md);border-radius:var(--r-sm);background:transparent;color:var(--text-2)">+ Nouveau segment</button></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="header">
+      <div class="hdr-title"><h1>Contacts</h1><p>12 480 contacts · Dernier import il y a 2 jours</p></div>
+      <div class="credits-pill">
+        <div class="credits-pill-top"><span class="credits-label">Crédits disponibles</span><button class="credits-recharge">Recharger ↗</button></div>
+        <div class="flex items-center gap-8"><span class="credits-amount">47 500 FCFA</span><div style="flex:1"><div class="credits-bar"><div class="credits-bar-fill"></div></div><div class="credits-hint">38% restant</div></div></div>
+      </div>
+      <div class="hdr-actions">
+        <button class="btn-outline" style="display:flex;align-items:center;gap:6px;font-size:12.5px">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M7 1v9M3 6l4 4 4-4"/><path d="M1 11v1a1 1 0 001 1h10a1 1 0 001-1v-1"/></svg>
+          Importer CSV / XLS
+        </button>
+        <button class="btn-primary">+ Ajouter un contact</button>
+        <div class="avatar">KM</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Filters -->
+      <div class="flex items-center gap-8">
+        <div style="flex:1;position:relative">
+          <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%)" width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="var(--text-3)" stroke-width="1.4"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+          <input class="form-input" style="padding-left:30px" placeholder="Rechercher par nom, email, téléphone…" readonly>
+        </div>
+        <button class="btn-outline flex items-center gap-8"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><line x1="1" y1="3" x2="11" y2="3"/><line x1="3" y1="6" x2="9" y2="6"/><line x1="5" y1="9" x2="7" y2="9"/></svg>Filtres</button>
+        <div class="flex gap-8">
+          <span class="tag teal">Localisation : Abidjan ×</span>
+          <span class="tag green">Tag : VIP ×</span>
+        </div>
+      </div>
+
+      <!-- Segment builder -->
+      <div class="card" style="padding:14px 16px">
+        <div class="flex items-center justify-between mb-12">
+          <div class="card-title">Créer un segment dynamique</div>
+          <div class="flex gap-8">
+            <span class="text-xs text-muted" style="background:var(--brand-light);color:var(--brand-teal);padding:3px 10px;border-radius:20px;font-weight:600">4 230 contacts correspondent</span>
+            <button class="btn-teal" style="padding:5px 12px;font-size:12px">Sauvegarder</button>
+          </div>
+        </div>
+        <div>
+          <div class="filter-row">
+            <span class="filter-chip">ET</span>
+            <select class="form-select" style="width:160px;padding:5px 10px;font-size:12px">
+              <option>Localisation</option><option>Tag</option><option>Date ajout</option><option>Dernier achat</option>
+            </select>
+            <select class="form-select" style="width:120px;padding:5px 10px;font-size:12px"><option>est égal à</option><option>contient</option></select>
+            <input class="form-input" style="width:140px;padding:5px 10px;font-size:12px" value="Abidjan" readonly>
+            <button style="background:none;border:none;color:var(--text-3);font-size:18px;line-height:1">×</button>
+          </div>
+          <div class="filter-row">
+            <span class="filter-chip">ET</span>
+            <select class="form-select" style="width:160px;padding:5px 10px;font-size:12px"><option>Tag</option></select>
+            <select class="form-select" style="width:120px;padding:5px 10px;font-size:12px"><option>contient</option></select>
+            <input class="form-input" style="width:140px;padding:5px 10px;font-size:12px" value="VIP" readonly>
+            <button style="background:none;border:none;color:var(--text-3);font-size:18px;line-height:1">×</button>
+          </div>
+          <button style="font-size:12px;color:var(--brand-primary);background:none;border:none;margin-top:6px;font-weight:500">+ Ajouter un critère</button>
+        </div>
+      </div>
+
+      <!-- Contacts table -->
+      <div class="card" style="flex:1;overflow:hidden">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width:20px"><input type="checkbox" style="accent-color:var(--brand-primary)"></th>
+              <th>Nom</th><th style="text-align:left">Email</th><th style="text-align:left">Téléphone</th><th style="text-align:left">Tags</th><th>Ajouté le</th><th>Statut</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" style="accent-color:var(--brand-primary)" checked></td>
+              <td><div class="flex items-center gap-8"><div class="contact-avatar">AK</div><div><div class="font-medium text-sm">Aminata Koné</div><div class="text-xs text-muted">Abidjan</div></div></div></td>
+              <td style="text-align:left" class="text-sm text-muted">aminata.kone@email.com</td>
+              <td style="text-align:left" class="text-sm">+225 07 12 34 56 78</td>
+              <td style="text-align:left"><span class="tag green" style="font-size:10px;padding:2px 7px">VIP</span></td>
+              <td class="text-sm text-muted">12 jan. 2026</td>
+              <td><span class="chip" style="background:#DCFCE7;color:#16A34A">Actif</span></td>
+              <td><button class="btn-ghost" style="color:var(--text-3)">···</button></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" style="accent-color:var(--brand-primary)"></td>
+              <td><div class="flex items-center gap-8"><div class="contact-avatar" style="background:#E0EDEF;color:var(--brand-teal)">KM</div><div><div class="font-medium text-sm">Kofi Mensah</div><div class="text-xs text-muted">Bouaké</div></div></div></td>
+              <td style="text-align:left" class="text-sm text-muted">kofi.mensah@gmail.com</td>
+              <td style="text-align:left" class="text-sm">+225 05 89 12 34 56</td>
+              <td style="text-align:left"><span class="tag" style="font-size:10px;padding:2px 7px">Newsletter</span></td>
+              <td class="text-sm text-muted">03 fév. 2026</td>
+              <td><span class="chip" style="background:#DCFCE7;color:#16A34A">Actif</span></td>
+              <td><button class="btn-ghost" style="color:var(--text-3)">···</button></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" style="accent-color:var(--brand-primary)"></td>
+              <td><div class="flex items-center gap-8"><div class="contact-avatar" style="background:#FEF3C7;color:#92400E">SD</div><div><div class="font-medium text-sm">Sara Diallo</div><div class="text-xs text-muted">Abidjan</div></div></div></td>
+              <td style="text-align:left" class="text-sm text-muted">sara.diallo@corp.ci</td>
+              <td style="text-align:left" class="text-sm">+225 01 23 45 67 89</td>
+              <td style="text-align:left"><span class="tag green" style="font-size:10px;padding:2px 7px">VIP</span><span class="tag" style="font-size:10px;padding:2px 7px;margin-left:3px">Pro</span></td>
+              <td class="text-sm text-muted">28 mar. 2026</td>
+              <td><span class="chip" style="background:#DCFCE7;color:#16A34A">Actif</span></td>
+              <td><button class="btn-ghost" style="color:var(--text-3)">···</button></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" style="accent-color:var(--brand-primary)"></td>
+              <td><div class="flex items-center gap-8"><div class="contact-avatar" style="background:var(--muted);color:var(--text-2)">OT</div><div><div class="font-medium text-sm">Oumar Touré</div><div class="text-xs text-muted">Yamoussoukro</div></div></div></td>
+              <td style="text-align:left" class="text-sm text-muted">o.toure@mail.com</td>
+              <td style="text-align:left" class="text-sm">+225 07 78 90 12 34</td>
+              <td style="text-align:left"><span class="tag" style="font-size:10px;padding:2px 7px">Inactif</span></td>
+              <td class="text-sm text-muted">15 jan. 2026</td>
+              <td><span class="chip" style="background:#F3F4F6;color:var(--text-2)">Inactif</span></td>
+              <td><button class="btn-ghost" style="color:var(--text-3)">···</button></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" style="accent-color:var(--brand-primary)"></td>
+              <td><div class="flex items-center gap-8"><div class="contact-avatar" style="background:var(--brand-light);color:var(--brand-teal)">FA</div><div><div class="font-medium text-sm">Fatou Awa</div><div class="text-xs text-muted">Abidjan</div></div></div></td>
+              <td style="text-align:left" class="text-sm text-muted">fatou.awa@shop.ci</td>
+              <td style="text-align:left" class="text-sm">+225 05 67 89 01 23</td>
+              <td style="text-align:left"><span class="tag green" style="font-size:10px;padding:2px 7px">VIP</span></td>
+              <td class="text-sm text-muted">09 avr. 2026</td>
+              <td><span class="chip" style="background:#DCFCE7;color:#16A34A">Actif</span></td>
+              <td><button class="btn-ghost" style="color:var(--text-3)">···</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="flex items-center justify-between" style="margin-top:14px;padding-top:10px;border-top:.5px solid var(--border)">
+          <span class="text-xs text-muted">Affichage 1–5 sur 12 480</span>
+          <div class="flex gap-8">
+            <button class="btn-sm">← Préc.</button>
+            <button class="btn-sm" style="background:var(--brand-light);border-color:var(--brand-primary);color:var(--brand-teal)">1</button>
+            <button class="btn-sm">2</button><button class="btn-sm">3</button><button class="btn-sm">···</button>
+            <button class="btn-sm">Suiv. →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /sc-1 -->
+
+
+<!-- ══════════════════ ÉCRAN 3 : CAMPAGNES ══════════════════ -->
+<div class="screen" id="sc-2" style="display:none">
+<div class="app">
+  <aside class="sidebar">
+    <div class="sb-logo"><div class="sb-logomark"><svg width="18" height="16" viewBox="0 0 18 16" fill="none"><rect x="0" y="2" width="6" height="14" rx="1.5" fill="#2EC80A"/><path d="M6 2h6a4 4 0 014 4v6a2 2 0 01-2 2H6V2z" fill="url(#g3)"/><defs><linearGradient id="g3" x1="6" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#2EC80A"/><stop offset="100%" stop-color="#AAEE22"/></linearGradient></defs></svg></div><span style="font-size:14px;font-weight:700">NovaSMS</span></div>
+    <div class="sb-nav">
+      <div class="sb-section-label">Principal</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>Tableau de bord</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 12.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>Contacts<span class="nav-badge">12k</span></div>
+      <div class="nav-item active"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="12" height="9" rx="1"/><polyline points="1,4 7,9 13,4"/></svg>Campagnes</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,1 4,8 7,8 6,13 11,6 7,6"/></svg>Automatisations<span class="nav-badge green">3</span></div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="7" width="3" height="6"/><rect x="5.5" y="4" width="3" height="9"/><rect x="10" y="1" width="3" height="12"/></svg>Analytics</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="header">
+      <div class="hdr-title"><h1>Nouvelle campagne</h1><p>Étape 2 sur 4 · Sélection du contenu</p></div>
+      <div class="credits-pill"><div class="credits-pill-top"><span class="credits-label">Crédits disponibles</span><button class="credits-recharge">Recharger ↗</button></div><div class="flex items-center gap-8"><span class="credits-amount">47 500 FCFA</span><div style="flex:1"><div class="credits-bar"><div class="credits-bar-fill"></div></div><div class="credits-hint">Coût estimé campagne : ~1 200 FCFA</div></div></div></div>
+      <div class="hdr-actions"><button class="btn-outline">Annuler</button><button class="btn-primary">Continuer →</button><div class="avatar">KM</div></div>
+    </div>
+
+    <div class="content">
+      <!-- Wizard steps -->
+      <div class="wizard-steps" style="background:var(--surface);border:.5px solid var(--border);border-radius:var(--r-lg);padding:14px 20px">
+        <div class="wstep done"><div class="wstep-num">✓</div><span>Canal</span></div>
+        <div class="wstep-line"></div>
+        <div class="wstep active"><div class="wstep-num">2</div><span>Contenu</span></div>
+        <div class="wstep-line"></div>
+        <div class="wstep"><div class="wstep-num">3</div><span>Audience</span></div>
+        <div class="wstep-line"></div>
+        <div class="wstep"><div class="wstep-num">4</div><span>Planification</span></div>
+      </div>
+
+      <!-- Canal selection recap + content -->
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,0.7fr);gap:14px;flex:1">
+
+        <!-- Left: SMS editor -->
+        <div class="card">
+          <div class="flex items-center gap-8 mb-16">
+            <div style="width:28px;height:28px;background:var(--brand-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--brand-teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="2" width="12" height="10" rx="2"/><path d="M5 12v1a1 1 0 001 1h2a1 1 0 001-1v-1"/></svg>
+            </div>
+            <div><div class="card-title">SMS</div><div class="text-xs text-muted">Canal sélectionné</div></div>
+            <button class="btn-sm" style="margin-left:auto;font-size:11px">Changer</button>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nom de l'expéditeur</label>
+            <input class="form-input" value="NovaSend" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-textarea" rows="5" readonly>Bonjour {{prénom}},
+
+Profitez de -20% sur toute la boutique ce weekend ! 🎉
+Code : NOVA20
+
+Valable jusqu'au 20 avr. Voir offre : novasend.ci/promo
+
+STOP au 30020</textarea>
+            <div class="flex items-center justify-between" style="margin-top:5px">
+              <span class="text-xs text-muted">148 / 160 caractères · 1 SMS</span>
+              <span class="text-xs" style="color:var(--brand-primary);font-weight:500">Coût : 0.08 FCFA/SMS</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Variables dynamiques</label>
+            <div class="flex gap-8 flex-wrap">
+              <span class="tag teal" style="cursor:pointer">{{prénom}}</span>
+              <span class="tag teal" style="cursor:pointer">{{boutique}}</span>
+              <span class="tag teal" style="cursor:pointer">{{code_promo}}</span>
+              <span class="tag teal" style="cursor:pointer">{{lien}}</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Lien raccourci tracké</label>
+            <div class="flex gap-8">
+              <input class="form-input" style="flex:1" value="https://novasend.ci/promo-avril" readonly>
+              <button class="btn-teal" style="padding:7px 12px;font-size:12px;white-space:nowrap">Raccourcir</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle: Template gallery -->
+        <div class="card">
+          <div class="flex items-center justify-between mb-12">
+            <div class="card-title">Templates SMS</div>
+            <input class="form-input" style="width:140px;padding:5px 10px;font-size:12px" placeholder="Rechercher…" readonly>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="border:.5px solid var(--brand-primary);border-radius:var(--r-md);padding:10px;cursor:pointer;background:var(--brand-light)">
+              <div style="font-size:10px;font-weight:700;color:var(--brand-teal);margin-bottom:4px">PROMO</div>
+              <div style="font-size:10.5px;color:var(--text-1);line-height:1.4">Bonjour {{prénom}}, profitez de -20%…</div>
+              <div style="margin-top:6px;font-size:9.5px;color:var(--brand-primary);font-weight:600">● Sélectionné</div>
+            </div>
+            <div style="border:.5px solid var(--border-md);border-radius:var(--r-md);padding:10px;cursor:pointer">
+              <div style="font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:4px">BIENVENUE</div>
+              <div style="font-size:10.5px;color:var(--text-1);line-height:1.4">Bienvenue {{prénom}} ! Votre compte est actif…</div>
+            </div>
+            <div style="border:.5px solid var(--border-md);border-radius:var(--r-md);padding:10px;cursor:pointer">
+              <div style="font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:4px">PANIER</div>
+              <div style="font-size:10.5px;color:var(--text-1);line-height:1.4">Vous avez oublié des articles dans votre panier…</div>
+            </div>
+            <div style="border:.5px solid var(--border-md);border-radius:var(--r-md);padding:10px;cursor:pointer">
+              <div style="font-size:10px;font-weight:700;color:var(--text-2);margin-bottom:4px">RAPPEL</div>
+              <div style="font-size:10.5px;color:var(--text-1);line-height:1.4">Rappel : votre commande est prête à être retirée…</div>
+            </div>
+            <div style="border:.5px dashed var(--border-md);border-radius:var(--r-md);padding:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;grid-column:span 2">
+              <span style="font-size:12px;color:var(--text-2)">+ Nouveau template</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Phone preview -->
+        <div class="card" style="display:flex;flex-direction:column;align-items:center">
+          <div class="card-title mb-12" style="width:100%">Aperçu mobile</div>
+          <div class="phone-mock" style="flex:1;width:100%;max-width:180px;display:flex;flex-direction:column;padding:10px 8px">
+            <div style="width:40px;height:4px;background:rgba(255,255,255,.3);border-radius:2px;align-self:center;margin-bottom:10px"></div>
+            <div style="font-size:9px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:8px">NovaSend</div>
+            <div class="phone-screen" style="flex:1;padding:10px">
+              <div class="sms-bubble">Bonjour Aminata,<br><br>Profitez de -20% sur toute la boutique ce weekend !<br>Code : NOVA20<br><br>Valable jusqu'au 20 avr. Voir offre : bit.ly/nova20<br><br>STOP au 30020</div>
+              <div class="sms-time">16:42</div>
+            </div>
+          </div>
+          <div style="margin-top:10px;width:100%">
+            <div style="background:var(--muted);border-radius:var(--r-md);padding:10px;text-align:center">
+              <div class="text-xs text-muted">Destinataires estimés</div>
+              <div style="font-size:20px;font-weight:700;color:var(--text-1);margin-top:2px">4 230</div>
+              <div class="text-xs" style="color:var(--brand-primary);font-weight:500;margin-top:2px">Coût total : ~338 FCFA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /sc-2 -->
+
+
+<!-- ══════════════════ ÉCRAN 4 : AUTOMATISATIONS ══════════════════ -->
+<div class="screen" id="sc-3" style="display:none">
+<div class="app">
+  <aside class="sidebar">
+    <div class="sb-logo"><div class="sb-logomark"><svg width="18" height="16" viewBox="0 0 18 16" fill="none"><rect x="0" y="2" width="6" height="14" rx="1.5" fill="#2EC80A"/><path d="M6 2h6a4 4 0 014 4v6a2 2 0 01-2 2H6V2z" fill="url(#g4)"/><defs><linearGradient id="g4" x1="6" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#2EC80A"/><stop offset="100%" stop-color="#AAEE22"/></linearGradient></defs></svg></div><span style="font-size:14px;font-weight:700">NovaSMS</span></div>
+    <div class="sb-nav">
+      <div class="sb-section-label">Principal</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>Tableau de bord</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 12.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>Contacts<span class="nav-badge">12k</span></div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="12" height="9" rx="1"/><polyline points="1,4 7,9 13,4"/></svg>Campagnes</div>
+      <div class="nav-item active"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,1 4,8 7,8 6,13 11,6 7,6"/></svg>Automatisations<span class="nav-badge green">3</span></div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="7" width="3" height="6"/><rect x="5.5" y="4" width="3" height="9"/><rect x="10" y="1" width="3" height="12"/></svg>Analytics</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="header">
+      <div class="hdr-title"><h1>Automatisations</h1><p>Workflow · Panier abandonné — séquence 3 étapes</p></div>
+      <div class="credits-pill"><div class="credits-pill-top"><span class="credits-label">Crédits disponibles</span><button class="credits-recharge">Recharger ↗</button></div><div class="flex items-center gap-8"><span class="credits-amount">47 500 FCFA</span><div style="flex:1"><div class="credits-bar"><div class="credits-bar-fill"></div></div></div></div></div>
+      <div class="hdr-actions">
+        <button class="btn-outline">Tester</button>
+        <button class="btn-primary">Activer le workflow</button>
+        <div class="avatar">KM</div>
+      </div>
+    </div>
+
+    <div class="content" style="flex-direction:row;padding:0">
+
+      <!-- Sidebar panel workflows list -->
+      <div style="width:260px;flex-shrink:0;background:var(--surface);border-right:.5px solid var(--border);padding:16px;overflow-y:auto">
+        <div class="flex items-center justify-between mb-12">
+          <span class="card-title">Workflows</span>
+          <button class="btn-sm">+ Créer</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="border:.5px solid var(--brand-primary);border-radius:var(--r-md);padding:10px 12px;background:var(--brand-light);cursor:pointer">
+            <div class="font-medium text-sm" style="color:var(--brand-teal)">Panier abandonné</div>
+            <div class="text-xs text-muted" style="margin-top:2px">3 nœuds · 892 entrées</div>
+            <div class="flex items-center gap-8" style="margin-top:6px"><div class="toggle on" style="width:22px;height:12px"><div class="toggle-knob" style="width:9px;height:9px"></div></div><span class="text-xs" style="color:var(--success);font-weight:500">Actif</span></div>
+          </div>
+          <div style="border:.5px solid var(--border-md);border-radius:var(--r-md);padding:10px 12px;cursor:pointer">
+            <div class="font-medium text-sm">Message bienvenue</div>
+            <div class="text-xs text-muted" style="margin-top:2px">2 nœuds · 1 243 entrées</div>
+            <div class="flex items-center gap-8" style="margin-top:6px"><div class="toggle on" style="width:22px;height:12px"><div class="toggle-knob" style="width:9px;height:9px"></div></div><span class="text-xs" style="color:var(--success);font-weight:500">Actif</span></div>
+          </div>
+          <div style="border:.5px solid var(--border-md);border-radius:var(--r-md);padding:10px 12px;cursor:pointer">
+            <div class="font-medium text-sm">Réactivation inactifs</div>
+            <div class="text-xs text-muted" style="margin-top:2px">4 nœuds · 310 entrées</div>
+            <div class="flex items-center gap-8" style="margin-top:6px"><div class="toggle off" style="width:22px;height:12px"><div class="toggle-knob" style="width:9px;height:9px"></div></div><span class="text-xs text-muted">Inactif</span></div>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:.5px solid var(--border)">
+          <div class="text-xs text-muted mb-8" style="font-weight:600;text-transform:uppercase;letter-spacing:.05em">Stats workflow sélectionné</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="flex items-center justify-between text-sm"><span class="text-muted">Entrées totales</span><strong>892</strong></div>
+            <div class="flex items-center justify-between text-sm"><span class="text-muted">En cours</span><strong style="color:var(--brand-teal)">124</strong></div>
+            <div class="flex items-center justify-between text-sm"><span class="text-muted">Convertis</span><strong style="color:var(--success)">318</strong></div>
+            <div class="flex items-center justify-between text-sm"><span class="text-muted">Taux conversion</span><strong style="color:var(--brand-primary)">35.6%</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workflow canvas -->
+      <div style="flex:1;background:var(--bg);position:relative;overflow:hidden;padding:30px 40px">
+        <!-- Grid dots background -->
+        <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(12,84,96,0.12) 1px,transparent 1px);background-size:24px 24px;pointer-events:none"></div>
+
+        <!-- Nodes -->
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:0;height:100%">
+
+          <!-- Trigger -->
+          <div style="background:var(--surface);border:.5px solid var(--brand-teal);border-radius:var(--r-md);padding:12px 18px;min-width:200px;text-align:center;box-shadow:0 2px 8px rgba(12,84,96,0.1)">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--brand-teal);text-transform:uppercase;margin-bottom:4px">Déclencheur</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text-1)">Panier abandonné</div>
+            <div style="font-size:11px;color:var(--text-2);margin-top:2px">Contact n'a pas finalisé l'achat</div>
+          </div>
+
+          <!-- Connector 1 -->
+          <div style="width:1.5px;height:32px;background:var(--border-md);position:relative">
+            <div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--border-md)"></div>
+          </div>
+
+          <!-- Wait node -->
+          <div style="background:var(--surface);border:.5px solid var(--warning);border-radius:var(--r-md);padding:12px 18px;min-width:200px;text-align:center;background:#FFFBF0">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--warning);text-transform:uppercase;margin-bottom:4px">Attente</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text-1)">1 heure</div>
+            <div style="font-size:11px;color:var(--text-2);margin-top:2px">Délai avant premier message</div>
+          </div>
+
+          <!-- Connector 2 -->
+          <div style="width:1.5px;height:32px;background:var(--border-md);position:relative">
+            <div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--border-md)"></div>
+          </div>
+
+          <!-- SMS action -->
+          <div style="background:var(--brand-light);border:.5px solid var(--brand-primary);border-radius:var(--r-md);padding:12px 18px;min-width:200px;text-align:center">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--brand-teal);text-transform:uppercase;margin-bottom:4px">Envoi SMS</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text-1)">Rappel panier J+0</div>
+            <div style="font-size:11px;color:var(--text-2);margin-top:2px">"Vous avez oublié des articles…"</div>
+          </div>
+
+          <!-- Connector 3 with branches -->
+          <div style="width:1.5px;height:30px;background:var(--border-md);position:relative">
+            <div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--border-md)"></div>
+          </div>
+
+          <!-- Condition -->
+          <div style="background:#FFFBF0;border:.5px solid var(--warning);border-radius:var(--r-md);padding:12px 18px;min-width:200px;text-align:center">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--warning);text-transform:uppercase;margin-bottom:4px">Condition</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text-1)">A cliqué le lien ?</div>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
+              <span style="padding:3px 10px;border-radius:4px;font-size:10.5px;font-weight:600;background:var(--brand-light);color:var(--brand-teal)">OUI → Fin</span>
+              <span style="padding:3px 10px;border-radius:4px;font-size:10.5px;font-weight:600;background:#FEE2E2;color:var(--danger)">NON → J+1 Email</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div><!-- /sc-3 -->
+
+
+<!-- ══════════════════ ÉCRAN 5 : ANALYTICS ══════════════════ -->
+<div class="screen" id="sc-4" style="display:none">
+<div class="app">
+  <aside class="sidebar">
+    <div class="sb-logo"><div class="sb-logomark"><svg width="18" height="16" viewBox="0 0 18 16" fill="none"><rect x="0" y="2" width="6" height="14" rx="1.5" fill="#2EC80A"/><path d="M6 2h6a4 4 0 014 4v6a2 2 0 01-2 2H6V2z" fill="url(#g5)"/><defs><linearGradient id="g5" x1="6" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#2EC80A"/><stop offset="100%" stop-color="#AAEE22"/></linearGradient></defs></svg></div><span style="font-size:14px;font-weight:700">NovaSMS</span></div>
+    <div class="sb-nav">
+      <div class="sb-section-label">Principal</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>Tableau de bord</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 12.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>Contacts</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="12" height="9" rx="1"/><polyline points="1,4 7,9 13,4"/></svg>Campagnes</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,1 4,8 7,8 6,13 11,6 7,6"/></svg>Automatisations</div>
+      <div class="nav-item active"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="7" width="3" height="6"/><rect x="5.5" y="4" width="3" height="9"/><rect x="10" y="1" width="3" height="12"/></svg>Analytics</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="header">
+      <div class="hdr-title"><h1>Analytics</h1><p>Rapport — Flash Soldes Ramadan · Email · Envoyé le 14 avr. 2026</p></div>
+      <div class="credits-pill"><div class="credits-pill-top"><span class="credits-label">Crédits disponibles</span><button class="credits-recharge">Recharger ↗</button></div><div class="flex items-center gap-8"><span class="credits-amount">47 500 FCFA</span><div style="flex:1"><div class="credits-bar"><div class="credits-bar-fill"></div></div></div></div></div>
+      <div class="hdr-actions">
+        <button class="btn-outline flex items-center gap-8"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 1v7M2 5l4 4 4-4"/><path d="M1 10v1h10v-1"/></svg>Exporter CSV</button>
+        <div class="avatar">KM</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Header campaign info -->
+      <div class="card" style="padding:13px 16px">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-12">
+            <div style="width:36px;height:36px;background:#E0EDEF;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="var(--brand-teal)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="12" height="9" rx="1"/><polyline points="1,4 7,9 13,4"/></svg></div>
+            <div>
+              <div class="font-semibold" style="font-size:14px">Flash Soldes Ramadan</div>
+              <div class="text-xs text-muted" style="margin-top:2px">Email · 12 450 destinataires · Envoyé le 14 avr. 2026 à 10:00</div>
+            </div>
+          </div>
+          <div class="flex gap-8">
+            <span class="chip" style="background:#DCFCE7;color:#16A34A">Terminée</span>
+            <button class="btn-sm">Dupliquer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI stats -->
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px">
+        <div class="analytics-stat">
+          <div class="big" style="color:var(--brand-teal)">12 450</div>
+          <div class="lbl">Envoyés</div>
+          <div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--brand-teal)"></div></div>
+        </div>
+        <div class="analytics-stat">
+          <div class="big" style="color:var(--brand-primary)">34.2%</div>
+          <div class="lbl">Taux ouverture</div>
+          <div class="progress-track"><div class="progress-fill" style="width:34.2%;background:var(--brand-gradient)"></div></div>
+        </div>
+        <div class="analytics-stat">
+          <div class="big" style="color:var(--brand-lime)">6.8%</div>
+          <div class="lbl">Taux de clic</div>
+          <div class="progress-track"><div class="progress-fill" style="width:6.8%;background:var(--brand-lime)"></div></div>
+        </div>
+        <div class="analytics-stat">
+          <div class="big" style="color:var(--danger)">2.1%</div>
+          <div class="lbl">Rebonds</div>
+          <div class="progress-track"><div class="progress-fill" style="width:2.1%;background:var(--danger)"></div></div>
+        </div>
+        <div class="analytics-stat">
+          <div class="big" style="color:var(--text-2)">0.4%</div>
+          <div class="lbl">Désabonnements</div>
+          <div class="progress-track"><div class="progress-fill" style="width:0.4%;background:var(--text-3)"></div></div>
+        </div>
+      </div>
+
+      <!-- Charts row -->
+      <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px;flex:1">
+        <!-- Ouvertures timeline -->
+        <div class="card">
+          <div class="flex items-center justify-between mb-12">
+            <div class="card-title">Courbe des ouvertures dans le temps</div>
+            <span class="text-xs text-muted">4 261 ouvertures uniques</span>
+          </div>
+          <div style="height:160px;background:var(--muted);border-radius:var(--r-md);display:flex;align-items:flex-end;padding:10px 12px 0;gap:4px;overflow:hidden;position:relative">
+            <!-- Simulated area chart -->
+            <svg style="position:absolute;inset:10px;overflow:visible" viewBox="0 0 400 140" preserveAspectRatio="none">
+              <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2EC80A" stop-opacity=".3"/><stop offset="100%" stop-color="#2EC80A" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0,120 C30,110 50,40 80,20 C110,5 130,30 160,60 C190,90 210,95 240,90 C270,85 300,100 330,110 C360,118 390,122 400,124 L400,140 L0,140 Z" fill="url(#ag)"/>
+              <path d="M0,120 C30,110 50,40 80,20 C110,5 130,30 160,60 C190,90 210,95 240,90 C270,85 300,100 330,110 C360,118 390,122 400,124" fill="none" stroke="#2EC80A" stroke-width="2"/>
+            </svg>
+            <div class="flex items-center justify-between" style="position:absolute;bottom:6px;left:12px;right:12px">
+              <span style="font-size:9px;color:var(--text-3)">10:00</span>
+              <span style="font-size:9px;color:var(--text-3)">12:00</span>
+              <span style="font-size:9px;color:var(--text-3)">14:00</span>
+              <span style="font-size:9px;color:var(--text-3)">16:00</span>
+              <span style="font-size:9px;color:var(--text-3)">18:00</span>
+              <span style="font-size:9px;color:var(--text-3)">20:00</span>
+            </div>
+          </div>
+          <div class="flex gap-16" style="margin-top:10px">
+            <div class="text-xs text-muted">Pic : <strong style="color:var(--text-1)">11h30</strong> · 842 ouvertures</div>
+            <div class="text-xs text-muted">Moy. campagnes préc. : <strong style="color:var(--text-1)">22.1%</strong></div>
+            <div class="text-xs" style="color:var(--success);font-weight:600">+12.1 pt au-dessus de la moyenne</div>
+          </div>
+        </div>
+
+        <!-- Top links + contacts -->
+        <div class="card" style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div class="card-title mb-8">Top liens cliqués</div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <div style="background:var(--muted);border-radius:var(--r-sm);padding:7px 10px">
+                <div class="flex items-center justify-between text-xs mb-4"><span class="text-muted" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">https://novasend.ci/promo-ramadan</span><strong style="color:var(--brand-primary)">487 clics</strong></div>
+                <div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--brand-gradient)"></div></div>
+              </div>
+              <div style="background:var(--muted);border-radius:var(--r-sm);padding:7px 10px">
+                <div class="flex items-center justify-between text-xs mb-4"><span class="text-muted">https://novasend.ci/boutique</span><strong>234 clics</strong></div>
+                <div class="progress-track"><div class="progress-fill" style="width:48%;background:var(--brand-teal)"></div></div>
+              </div>
+              <div style="background:var(--muted);border-radius:var(--r-sm);padding:7px 10px">
+                <div class="flex items-center justify-between text-xs mb-4"><span class="text-muted">https://novasend.ci/contact</span><strong>89 clics</strong></div>
+                <div class="progress-track"><div class="progress-fill" style="width:18%;background:var(--brand-lime)"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div>
+            <div class="card-title mb-8">Derniers contacts ayant ouvert</div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <div class="contact-row" style="padding:5px 0"><div class="contact-avatar" style="width:24px;height:24px;font-size:9px">AK</div><div style="flex:1"><div class="text-sm font-medium">Aminata Koné</div></div><span class="text-xs text-muted">Il y a 2h</span><span class="chip" style="font-size:10px;background:var(--brand-light);color:var(--brand-teal);padding:1px 6px">Cliqué</span></div>
+              <div class="contact-row" style="padding:5px 0"><div class="contact-avatar" style="width:24px;height:24px;font-size:9px;background:#E0EDEF;color:var(--brand-teal)">KM</div><div style="flex:1"><div class="text-sm font-medium">Kofi Mensah</div></div><span class="text-xs text-muted">Il y a 3h</span><span class="chip" style="font-size:10px;background:var(--muted);color:var(--text-2);padding:1px 6px">Ouvert</span></div>
+              <div class="contact-row" style="padding:5px 0;border:none"><div class="contact-avatar" style="width:24px;height:24px;font-size:9px;background:#FEF3C7;color:#92400E">FA</div><div style="flex:1"><div class="text-sm font-medium">Fatou Awa</div></div><span class="text-xs text-muted">Il y a 4h</span><span class="chip" style="font-size:10px;background:var(--brand-light);color:var(--brand-teal);padding:1px 6px">Cliqué</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /sc-4 -->
+
+
+<!-- ══════════════════ ÉCRAN 6 : RECHARGEMENT ══════════════════ -->
+<div class="screen" id="sc-5" style="display:none">
+<div class="app">
+  <aside class="sidebar">
+    <div class="sb-logo"><div class="sb-logomark"><svg width="18" height="16" viewBox="0 0 18 16" fill="none"><rect x="0" y="2" width="6" height="14" rx="1.5" fill="#2EC80A"/><path d="M6 2h6a4 4 0 014 4v6a2 2 0 01-2 2H6V2z" fill="url(#g6)"/><defs><linearGradient id="g6" x1="6" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#2EC80A"/><stop offset="100%" stop-color="#AAEE22"/></linearGradient></defs></svg></div><span style="font-size:14px;font-weight:700">NovaSMS</span></div>
+    <div class="sb-nav">
+      <div class="sb-section-label">Principal</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>Tableau de bord</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 12.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>Contacts</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="12" height="9" rx="1"/><polyline points="1,4 7,9 13,4"/></svg>Campagnes</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,1 4,8 7,8 6,13 11,6 7,6"/></svg>Automatisations</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="7" width="3" height="6"/><rect x="5.5" y="4" width="3" height="9"/><rect x="10" y="1" width="3" height="12"/></svg>Analytics</div>
+      <div class="sb-divider"></div>
+      <div class="sb-section-label">Compte</div>
+      <div class="nav-item active"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><line x1="7" y1="4.5" x2="7" y2="9.5"/><line x1="4.5" y1="7" x2="9.5" y2="7"/></svg>Recharger</div>
+      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1" y="3" width="12" height="9" rx="1"/><line x1="1" y1="6" x2="13" y2="6"/></svg>Facturation</div>
+    </div>
+  </aside>
+
+  <div class="main" style="background:var(--bg)">
+    <div class="header">
+      <div class="hdr-title"><h1>Recharger mes crédits</h1><p>Solde actuel : 47 500 FCFA</p></div>
+      <div class="credits-pill"><div class="credits-pill-top"><span class="credits-label">Crédits disponibles</span><button class="credits-recharge">Recharger ↗</button></div><div class="flex items-center gap-8"><span class="credits-amount">47 500 FCFA</span><div style="flex:1"><div class="credits-bar"><div class="credits-bar-fill"></div></div><div class="credits-hint" style="color:var(--danger)">⚠ Attention : solde bas</div></div></div></div>
+      <div class="hdr-actions"><div class="avatar">KM</div></div>
+    </div>
+
+    <div class="content" style="justify-content:center;align-items:center">
+      <div style="width:100%;max-width:680px;display:flex;flex-direction:column;gap:16px">
+
+        <!-- Payment card -->
+        <div class="card" style="padding:24px">
+          <div style="text-align:center;margin-bottom:20px">
+            <div style="font-size:16px;font-weight:700;color:var(--text-1)">Choisissez votre mode de paiement</div>
+            <div style="font-size:12px;color:var(--text-2);margin-top:4px">Paiement sécurisé · Créditage instantané</div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="flex" style="border-radius:var(--r-md);overflow:hidden;margin-bottom:20px">
+            <button class="pay-tab active" id="tab-mm">
+              <div style="font-size:18px;margin-bottom:2px">📱</div>
+              Mobile Money
+            </button>
+            <button class="pay-tab" id="tab-visa" onclick="switchPayTab()">
+              <div style="font-size:18px;margin-bottom:2px">💳</div>
+              Carte Visa
+            </button>
+          </div>
+
+          <!-- Mobile Money Form -->
+          <div id="form-mm">
+            <!-- Operators -->
+            <div class="form-group">
+              <label class="form-label">Opérateur</label>
+              <div class="flex gap-8">
+                <div style="flex:1;border:.5px solid var(--brand-primary);border-radius:var(--r-md);padding:12px;text-align:center;cursor:pointer;background:var(--brand-light)">
+                  <div style="font-size:20px;margin-bottom:4px">🟠</div>
+                  <div style="font-size:12px;font-weight:600;color:var(--brand-teal)">Orange Money</div>
+                  <div style="font-size:10px;color:var(--success);margin-top:2px">● Sélectionné</div>
+                </div>
+                <div style="flex:1;border:.5px solid var(--border-md);border-radius:var(--r-md);padding:12px;text-align:center;cursor:pointer">
+                  <div style="font-size:20px;margin-bottom:4px">🟡</div>
+                  <div style="font-size:12px;font-weight:600">MTN MoMo</div>
+                </div>
+                <div style="flex:1;border:.5px solid var(--border-md);border-radius:var(--r-md);padding:12px;text-align:center;cursor:pointer">
+                  <div style="font-size:20px;margin-bottom:4px">🔵</div>
+                  <div style="font-size:12px;font-weight:600">Wave</div>
+                </div>
+                <div style="flex:1;border:.5px solid var(--border-md);border-radius:var(--r-md);padding:12px;text-align:center;cursor:pointer">
+                  <div style="font-size:20px;margin-bottom:4px">🟢</div>
+                  <div style="font-size:12px;font-weight:600">Moov Money</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Numéro de téléphone Mobile Money</label>
+              <div style="position:relative">
+                <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:600;color:var(--text-2)">+225</div>
+                <input class="form-input" style="padding-left:52px" value="07 12 34 56 78" readonly>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Montant à recharger</label>
+              <div class="amount-grid">
+                <div class="amount-btn">5 000 FCFA</div>
+                <div class="amount-btn selected">10 000 FCFA</div>
+                <div class="amount-btn">25 000 FCFA</div>
+                <div class="amount-btn">50 000 FCFA</div>
+              </div>
+              <div style="position:relative">
+                <input class="form-input" value="10 000" style="padding-right:52px" readonly>
+                <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-2);font-weight:600">FCFA</div>
+              </div>
+              <div style="margin-top:6px;padding:10px 12px;background:var(--brand-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:space-between">
+                <span class="text-xs" style="color:var(--brand-teal)">Crédits reçus après paiement</span>
+                <strong style="color:var(--brand-teal);font-size:15px">57 500 FCFA</strong>
+              </div>
+            </div>
+
+            <!-- OTP confirmation -->
+            <div style="background:var(--muted);border-radius:var(--r-lg);padding:16px;margin-bottom:16px;border:.5px solid var(--border-md)">
+              <div style="font-size:12.5px;font-weight:600;color:var(--text-1);margin-bottom:4px">Confirmation par code OTP</div>
+              <div style="font-size:11.5px;color:var(--text-2);margin-bottom:12px">Un code à 6 chiffres sera envoyé au +225 07 12 34 56 78 par votre opérateur Orange.</div>
+              <div class="flex gap-8">
+                <input class="form-input" style="width:44px;text-align:center;font-size:18px;font-weight:700;padding:8px 0" value="•" readonly>
+                <input class="form-input" style="width:44px;text-align:center;font-size:18px;font-weight:700;padding:8px 0" value="•" readonly>
+                <input class="form-input" style="width:44px;text-align:center;font-size:18px;font-weight:700;padding:8px 0" value="•" readonly>
+                <input class="form-input" style="width:44px;text-align:center;font-size:18px;font-weight:700;padding:8px 0" value="•" readonly>
+                <input class="form-input" style="width:44px;text-align:center;font-size:18px;font-weight:700;padding:8px 0" value="•" readonly>
+                <input class="form-input" style="width:44px;text-align:center;font-size:18px;font-weight:700;padding:8px 0" value="•" readonly>
+                <button class="btn-sm" style="margin-left:8px;white-space:nowrap">Renvoyer</button>
+              </div>
+            </div>
+
+            <button class="btn-primary" style="width:100%;padding:12px;font-size:14px;font-weight:700;letter-spacing:.02em">
+              Confirmer le paiement de 10 000 FCFA →
+            </button>
+          </div>
+        </div>
+
+        <!-- Security badges -->
+        <div class="flex gap-12 justify-between" style="padding:0 4px">
+          <div class="flex items-center gap-8 text-xs text-muted"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--success)" stroke-width="1.4"><path d="M7 1l5 2v5c0 3-2.5 5-5 6C4.5 13 2 11 2 8V3z"/><polyline points="4.5,7 6.5,9 9.5,5"/></svg>Paiement sécurisé TLS 1.3</div>
+          <div class="flex items-center gap-8 text-xs text-muted"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--success)" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><polyline points="4.5,7 6.5,9 9.5,5"/></svg>Créditage instantané</div>
+          <div class="flex items-center gap-8 text-xs text-muted"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--success)" stroke-width="1.4"><rect x="1" y="4" width="12" height="9" rx="1"/><polyline points="5,4 5,2 9,2 9,4"/></svg>Reçu PDF disponible</div>
+          <div class="flex items-center gap-8 text-xs text-muted"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="var(--success)" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><line x1="7" y1="4.5" x2="7" y2="7.5"/><line x1="7" y1="9" x2="7" y2="9.5"/></svg>Conformité PCI-DSS</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /sc-5 -->
+
+</div><!-- /padding wrapper -->
+
+<script>
+function showScreen(idx, btn) {
+  for (let i = 0; i < 6; i++) {
+    const sc = document.getElementById('sc-' + i);
+    if (sc) sc.style.display = i === idx ? 'block' : 'none';
+  }
+  document.querySelectorAll('.snav-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
+}
+function switchPayTab() {
+  const mm = document.getElementById('tab-mm');
+  const visa = document.getElementById('tab-visa');
+  if (mm && visa) {
+    mm.classList.remove('active');
+    visa.classList.add('active');
+  }
+}
+</script>
+</body>
+</html>

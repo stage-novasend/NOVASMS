@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NovaSMS - Marketing Automation de Précision</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#2EC80A",
+                        "on-primary": "#FFFFFF",
+                        "secondary": "#0C5460",
+                        "on-secondary": "#FFFFFF",
+                        "surface": "#FDFDFD",
+                        "background": "#F7F9F6",
+                        "surface-variant": "#F0F4EF",
+                        "on-surface": "#0C1409",
+                        "on-surface-variant": "#434D40",
+                        "outline": "#D1D9CD",
+                        "outline-variant": "#E1E9DD"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "4px",
+                        "lg": "8px",
+                        "xl": "12px",
+                        "2xl": "24px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-header {
+            background: rgba(253, 253, 253, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 70% 30%, rgba(46, 200, 10, 0.08) 0%, transparent 70%);
+        }
+        .precision-border {
+            border-left: 3px solid #2EC80A;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body antialiased selection:bg-primary selection:text-on-primary">
+<!-- Header -->
+<nav class="h-20 w-full fixed top-0 left-0 z-50 glass-header border-b border-outline-variant/30 px-6 lg:px-12 flex items-center justify-between">
+<div class="flex items-center gap-12">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl" style="font-variation-settings: 'FILL' 1">bolt</span>
+</div>
+<span class="font-headline font-extrabold text-2xl tracking-tight text-secondary">NovaSMS</span>
+</div>
+<div class="hidden lg:flex gap-8">
+<a class="text-sm font-semibold text-secondary/70 hover:text-primary transition-colors" href="#">Produit</a>
+<a class="text-sm font-semibold text-secondary/70 hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="text-sm font-semibold text-secondary/70 hover:text-primary transition-colors" href="#">Tarifs</a>
+<a class="text-sm font-semibold text-secondary/70 hover:text-primary transition-colors" href="#">Ressources</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<a class="text-sm font-bold text-secondary hover:bg-surface-variant/50 px-5 py-2.5 rounded-lg transition-all" href="#">Connexion</a>
+<button class="bg-primary text-white text-sm font-bold px-6 py-2.5 rounded-lg hover:brightness-110 transition-all shadow-lg shadow-primary/20">Inscription</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<main class="relative pt-32 lg:pt-48 pb-24 px-6 lg:px-12 hero-gradient overflow-hidden">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+<!-- Left Content -->
+<div class="lg:col-span-7 space-y-10">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 border border-primary/20 rounded-full">
+<span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+<span class="text-[10px] uppercase font-bold tracking-[0.2em] text-primary">Marketing de Précision 2.0</span>
+</div>
+<div class="space-y-6">
+<h1 class="font-headline text-5xl lg:text-7xl font-extrabold text-secondary leading-[1.1] tracking-tight">
+                    Convertissez chaque <span class="text-primary italic">clic</span> en client fidèle.
+                </h1>
+<p class="text-lg lg:text-xl text-on-surface-variant max-w-2xl leading-relaxed">
+                    Plateforme unifiée pour SMS, Email et WhatsApp. Automatisez vos workflows avec une intelligence de données chirurgicale pour un ROI maximal.
+                </p>
+</div>
+<div class="flex flex-col sm:flex-row gap-5">
+<button class="bg-secondary text-white font-bold py-4 px-10 rounded-xl hover:bg-secondary/90 transition-all shadow-xl shadow-secondary/10 flex items-center justify-center gap-3">
+                    Démarrer gratuitement
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-white border border-outline text-secondary font-bold py-4 px-8 rounded-xl hover:bg-surface-variant/30 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-primary">play_circle</span>
+                    Regarder la démo
+                </button>
+</div>
+<div class="flex items-center gap-6 pt-6 grayscale opacity-60">
+<span class="text-xs font-bold text-secondary/40 uppercase tracking-widest">Utilisé par</span>
+<div class="flex gap-8 items-center">
+<div class="font-black text-lg italic tracking-tighter">VOLT</div>
+<div class="font-black text-lg italic tracking-tighter">ZENITH</div>
+<div class="font-black text-lg italic tracking-tighter">ORION</div>
+</div>
+</div>
+</div>
+<!-- Right Content: Interactive Mockup -->
+<div class="lg:col-span-5 relative">
+<div class="bg-white rounded-3xl shadow-2xl border border-outline-variant/40 p-8 space-y-8 relative z-10">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest mb-1">Délivrabilité Moyenne</p>
+<h4 class="text-4xl font-black text-secondary">99.8%</h4>
+</div>
+<div class="bg-primary/10 text-primary px-3 py-1 rounded text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                        +4.2%
+                    </div>
+</div>
+<div class="space-y-4">
+<div class="p-4 bg-surface-variant/40 rounded-xl flex items-center justify-between border border-outline/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">sms</span>
+</div>
+<div>
+<p class="text-xs font-bold text-secondary">Promo Flash</p>
+<p class="text-[10px] text-on-surface-variant">Envoyé il y a 2m</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-primary">82% Clics</p>
+</div>
+</div>
+<div class="p-4 bg-surface-variant/20 rounded-xl flex items-center justify-between opacity-60">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-xl">mail</span>
+</div>
+<div>
+<p class="text-xs font-bold text-secondary">Newsletter</p>
+<p class="text-[10px] text-on-surface-variant">Planifié</p>
+</div>
+</div>
+</div>
+</div>
+<div class="h-32 w-full flex items-end justify-between gap-1">
+<div class="w-2 bg-primary/20 h-1/2 rounded-full"></div>
+<div class="w-2 bg-primary/20 h-2/3 rounded-full"></div>
+<div class="w-2 bg-primary/20 h-1/3 rounded-full"></div>
+<div class="w-2 bg-primary/20 h-3/4 rounded-full"></div>
+<div class="w-2 bg-primary h-full rounded-full"></div>
+<div class="w-2 bg-primary/40 h-2/3 rounded-full"></div>
+<div class="w-2 bg-primary/20 h-1/2 rounded-full"></div>
+</div>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute -top-12 -right-12 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-0"></div>
+<div class="absolute -bottom-8 -left-8 w-48 h-48 bg-secondary/5 rounded-full blur-2xl -z-0"></div>
+</div>
+</div>
+</main>
+<!-- Features / Value Props -->
+<section class="py-24 px-6 lg:px-12 bg-white relative">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col lg:flex-row justify-between items-end gap-8 mb-20">
+<div class="max-w-2xl space-y-4">
+<h2 class="font-headline text-4xl lg:text-5xl font-extrabold text-secondary tracking-tight">Une ingénierie dédiée à votre croissance</h2>
+<p class="text-lg text-on-surface-variant">Oubliez les outils de masse. Nous avons construit une plateforme de haute précision pour les marketeurs exigeants.</p>
+</div>
+<a class="text-primary font-bold flex items-center gap-2 hover:gap-3 transition-all mb-2" href="#">
+                Voir toutes les fonctionnalités
+                <span class="material-symbols-outlined">arrow_right_alt</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- SMS -->
+<div class="space-y-6 group">
+<div class="w-16 h-16 rounded-2xl bg-surface-variant flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">sms</span>
+</div>
+<div class="space-y-3">
+<h3 class="font-headline text-2xl font-bold text-secondary">Canal SMS Ultra-Rapide</h3>
+<p class="text-on-surface-variant leading-relaxed">98% de taux d'ouverture. Idéal pour les communications critiques, les OTP et les ventes flash de dernière minute.</p>
+</div>
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-sm font-semibold text-secondary/70">
+<span class="material-symbols-outlined text-primary text-lg">check</span> Délivrance &lt; 5 sec
+                    </li>
+<li class="flex items-center gap-3 text-sm font-semibold text-secondary/70">
+<span class="material-symbols-outlined text-primary text-lg">check</span> Liens trackés courts
+                    </li>
+</ul>
+</div>
+<!-- Email -->
+<div class="space-y-6 group">
+<div class="w-16 h-16 rounded-2xl bg-surface-variant flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">mail</span>
+</div>
+<div class="space-y-3">
+<h3 class="font-headline text-2xl font-bold text-secondary">Automatisation Email</h3>
+<p class="text-on-surface-variant leading-relaxed">Créez des parcours complexes basés sur le comportement. Récupération de panier, onboarding et fidélisation.</p>
+</div>
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-sm font-semibold text-secondary/70">
+<span class="material-symbols-outlined text-primary text-lg">check</span> IA de prédiction d'heure
+                    </li>
+<li class="flex items-center gap-3 text-sm font-semibold text-secondary/70">
+<span class="material-symbols-outlined text-primary text-lg">check</span> Éditeur No-Code 2.0
+                    </li>
+</ul>
+</div>
+<!-- WhatsApp -->
+<div class="space-y-6 group">
+<div class="w-16 h-16 rounded-2xl bg-surface-variant flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">chat</span>
+</div>
+<div class="space-y-3">
+<h3 class="font-headline text-2xl font-bold text-secondary">WhatsApp Business Pro</h3>
+<p class="text-on-surface-variant leading-relaxed">Engagez une conversation bidirectionnelle riche. Envoyez des médias et automatisez le support avec nos bots.</p>
+</div>
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-sm font-semibold text-secondary/70">
+<span class="material-symbols-outlined text-primary text-lg">check</span> API Officielle Business
+                    </li>
+<li class="flex items-center gap-3 text-sm font-semibold text-secondary/70">
+<span class="material-symbols-outlined text-primary text-lg">check</span> Boutons interactifs
+                    </li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust Section / Social Proof -->
+<section class="py-24 px-6 lg:px-12 bg-surface-variant/30 border-y border-outline-variant/20">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<h2 class="font-headline text-4xl font-extrabold text-secondary tracking-tight">Plus de 8,000 entreprises nous font confiance.</h2>
+<div class="grid grid-cols-2 gap-8">
+<div class="precision-border pl-6 space-y-1">
+<p class="text-3xl font-black text-secondary">15M+</p>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Messages/mois</p>
+</div>
+<div class="precision-border pl-6 space-y-1">
+<p class="text-3xl font-black text-secondary">2.4x</p>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Augmentation ROI</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-8 rounded-2xl shadow-sm border border-outline-variant/30 relative">
+<div class="flex items-center gap-1 text-primary mb-6">
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+<span class="material-symbols-outlined fill-1">star</span>
+</div>
+<p class="text-lg italic text-secondary leading-relaxed mb-8">
+                "NovaSMS a radicalement changé notre façon de communiquer. Leur précision sur le ciblage nous a permis de doubler nos conversions en moins de 3 mois."
+            </p>
+<div class="flex items-center gap-4">
+<img alt="User profile" class="w-12 h-12 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_O3NqO3FxECcvR0jdmkISabGx8qwA3zY24qIKbsVcOIznxwg2zx2ogIyPznUCIINHF-J8sNTSfHxtuInA7uOTC81o5fl2eQm5rTnXmGcQKMhdO11ot6chFsfLFOfidI60y5s3nX7HjtVcTu1LWWr5YUgLwS5A79ixkpmKhNAqxwIqoiGGY0uUt7hIkTxSBzpph1Zw6X0s2L4Qg1oiLxD793I6eF-M4PzdJ7ADPJpoaSl0q1hzSXg35IiP6xJOEvRxOfzK0NJijnCM"/>
+<div>
+<p class="font-bold text-secondary">Sarah Benali</p>
+<p class="text-xs text-on-surface-variant font-medium">Head of Growth, LuxDigital</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-24 px-6 lg:px-12">
+<div class="max-w-7xl mx-auto bg-secondary rounded-[32px] p-12 lg:p-24 text-center space-y-10 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-96 h-96 bg-primary/20 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
+<div class="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 blur-[80px] rounded-full -translate-x-1/2 translate-y-1/2"></div>
+<div class="relative z-10 space-y-6">
+<h2 class="font-headline text-4xl lg:text-6xl font-extrabold text-white tracking-tight">Prêt à passer à la précision ?</h2>
+<p class="text-white/70 text-lg lg:text-xl max-w-2xl mx-auto">Rejoignez les leaders du marché et commencez à envoyer des campagnes qui comptent vraiment.</p>
+</div>
+<div class="relative z-10 flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-primary text-white font-bold py-5 px-12 rounded-xl text-lg hover:brightness-110 transition-all shadow-2xl shadow-primary/30">Créer mon compte gratuit</button>
+<button class="bg-white/10 text-white font-bold py-5 px-10 rounded-xl text-lg hover:bg-white/20 transition-all backdrop-blur-sm border border-white/20">Parler à un expert</button>
+</div>
+<p class="relative z-10 text-white/40 text-sm font-medium">Pas de carte de crédit requise. 14 jours d'essai gratuit.</p>
+</div>
+</section>
+<!-- Simple Footer -->
+<footer class="py-12 px-6 lg:px-12 border-t border-outline-variant/20 bg-white">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" style="font-variation-settings: 'FILL' 1">bolt</span>
+</div>
+<span class="font-headline font-extrabold text-xl tracking-tight text-secondary">NovaSMS</span>
+</div>
+<div class="flex gap-8 text-sm font-semibold text-secondary/60">
+<a class="hover:text-primary transition-colors" href="#">Politique de Confidentialité</a>
+<a class="hover:text-primary transition-colors" href="#">Conditions d'Utilisation</a>
+<a class="hover:text-primary transition-colors" href="#">Support</a>
+</div>
+<p class="text-sm text-secondary/40">© 2026 NovaSMS Inc. Tous droits réservés.</p>
+</div>
+</footer>
+</body></html>
