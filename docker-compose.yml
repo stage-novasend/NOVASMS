@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U novasms"]
       interval: 10s
@@ -22,7 +22,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redis_/data
+      - redis_data:/data
     command: redis-server --appendonly yes
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -40,5 +40,5 @@ services:
       postgres:
         condition: service_healthy
 volumes:
-  postgres_
-  redis_
+  postgres_data:
+  redis_data:
