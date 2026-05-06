@@ -1,386 +1,601 @@
-<!DOCTYPE html>
+<!doctype html>
 
-<html class="light" lang="fr"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Historique de Facturation - NovaSMS</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
+<html class="light" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Historique de Facturation - NovaSMS</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
       tailwind.config = {
-        darkMode: "class",
+        darkMode: 'class',
         theme: {
           extend: {
-            "colors": {
-                    "background": "#f3fde9",
-                    "on-tertiary": "#ffffff",
-                    "on-secondary": "#ffffff",
-                    "on-background": "#161e12",
-                    "on-primary-fixed-variant": "#0c5300",
-                    "outline-variant": "#bccbb2",
-                    "on-error-container": "#93000a",
-                    "on-tertiary-fixed-variant": "#80214e",
-                    "on-tertiary-container": "#791a49",
-                    "surface-dim": "#d3ddca",
-                    "on-secondary-fixed": "#001f25",
-                    "on-primary-container": "#0a4c00",
-                    "surface": "#f3fde9",
-                    "secondary-container": "#ade9f8",
-                    "surface-container-lowest": "#ffffff",
-                    "tertiary": "#9f3967",
-                    "surface-container-low": "#edf7e3",
-                    "secondary-fixed-dim": "#94d0de",
-                    "error-container": "#ffdad6",
-                    "on-primary-fixed": "#022100",
-                    "inverse-primary": "#4ee330",
-                    "error": "#ba1a1a",
-                    "surface-container-high": "#e2ebd8",
-                    "primary-container": "#2ec80a",
-                    "primary": "#136e00",
-                    "surface-variant": "#dce6d3",
-                    "surface-tint": "#136e00",
-                    "primary-fixed": "#79ff59",
-                    "on-error": "#ffffff",
-                    "surface-container-highest": "#dce6d3",
-                    "on-tertiary-fixed": "#3e0020",
-                    "inverse-on-surface": "#eaf4e1",
-                    "on-surface": "#161e12",
-                    "secondary-fixed": "#b0ecfb",
-                    "inverse-surface": "#2a3326",
-                    "surface-bright": "#f3fde9",
-                    "primary-fixed-dim": "#4ee330",
-                    "on-secondary-container": "#2c6b77",
-                    "tertiary-fixed": "#ffd9e4",
-                    "secondary": "#276673",
-                    "on-primary": "#ffffff",
-                    "on-secondary-fixed-variant": "#004e5a",
-                    "tertiary-fixed-dim": "#ffb0cc",
-                    "on-surface-variant": "#3d4a37",
-                    "outline": "#6d7b65",
-                    "tertiary-container": "#ff87b7",
-                    "surface-container": "#e7f1de"
+            colors: {
+              background: '#f3fde9',
+              'on-tertiary': '#ffffff',
+              'on-secondary': '#ffffff',
+              'on-background': '#161e12',
+              'on-primary-fixed-variant': '#0c5300',
+              'outline-variant': '#bccbb2',
+              'on-error-container': '#93000a',
+              'on-tertiary-fixed-variant': '#80214e',
+              'on-tertiary-container': '#791a49',
+              'surface-dim': '#d3ddca',
+              'on-secondary-fixed': '#001f25',
+              'on-primary-container': '#0a4c00',
+              surface: '#f3fde9',
+              'secondary-container': '#ade9f8',
+              'surface-container-lowest': '#ffffff',
+              tertiary: '#9f3967',
+              'surface-container-low': '#edf7e3',
+              'secondary-fixed-dim': '#94d0de',
+              'error-container': '#ffdad6',
+              'on-primary-fixed': '#022100',
+              'inverse-primary': '#4ee330',
+              error: '#ba1a1a',
+              'surface-container-high': '#e2ebd8',
+              'primary-container': '#2ec80a',
+              primary: '#136e00',
+              'surface-variant': '#dce6d3',
+              'surface-tint': '#136e00',
+              'primary-fixed': '#79ff59',
+              'on-error': '#ffffff',
+              'surface-container-highest': '#dce6d3',
+              'on-tertiary-fixed': '#3e0020',
+              'inverse-on-surface': '#eaf4e1',
+              'on-surface': '#161e12',
+              'secondary-fixed': '#b0ecfb',
+              'inverse-surface': '#2a3326',
+              'surface-bright': '#f3fde9',
+              'primary-fixed-dim': '#4ee330',
+              'on-secondary-container': '#2c6b77',
+              'tertiary-fixed': '#ffd9e4',
+              secondary: '#276673',
+              'on-primary': '#ffffff',
+              'on-secondary-fixed-variant': '#004e5a',
+              'tertiary-fixed-dim': '#ffb0cc',
+              'on-surface-variant': '#3d4a37',
+              outline: '#6d7b65',
+              'tertiary-container': '#ff87b7',
+              'surface-container': '#e7f1de',
             },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
+            borderRadius: {
+              DEFAULT: '0.125rem',
+              lg: '0.25rem',
+              xl: '0.5rem',
+              full: '0.75rem',
             },
-            "fontFamily": {
-                    "headline": ["Manrope"],
-                    "display": ["Manrope"],
-                    "body": ["Inter"],
-                    "label": ["Inter"]
-            }
+            fontFamily: {
+              headline: ['Manrope'],
+              display: ['Manrope'],
+              body: ['Inter'],
+              label: ['Inter'],
+            },
           },
         },
-      }
+      };
     </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3fde9;
-        }
-        .editorial-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 24px;
-        }
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3fde9;
+      }
+      .editorial-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 24px;
+      }
     </style>
-</head>
-<body class="text-on-surface">
-<!-- SideNavBar (Shared Component) -->
-<aside class="h-screen w-64 fixed left-0 top-0 bg-[#EDF7E3] dark:bg-slate-900 flex flex-col py-8 space-y-2 font-['Manrope'] text-sm tracking-wide">
-<div class="px-6 mb-8 flex items-center gap-3">
-<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-<span class="material-symbols-outlined text-white text-sm" style="font-variation-settings: 'FILL' 1;">bolt</span>
-</div>
-<div>
-<h1 class="text-xl font-extrabold text-[#136E00] dark:text-[#2EC80A]">NovaSMS</h1>
-<p class="text-[10px] text-[#161E12]/60 uppercase tracking-[0.2em]">Marketing Precision</p>
-</div>
-</div>
-<nav class="flex-1">
-<a class="flex items-center px-6 py-3 text-[#161E12]/60 dark:text-slate-400 font-medium hover:bg-[#F3FDE9] dark:hover:bg-slate-800 transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
-<span>Dashboard</span>
-</a>
-<a class="flex items-center px-6 py-3 text-[#161E12]/60 dark:text-slate-400 font-medium hover:bg-[#F3FDE9] dark:hover:bg-slate-800 transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined mr-3" data-icon="group">group</span>
-<span>Contacts</span>
-</a>
-<a class="flex items-center px-6 py-3 text-[#161E12]/60 dark:text-slate-400 font-medium hover:bg-[#F3FDE9] dark:hover:bg-slate-800 transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined mr-3" data-icon="send">send</span>
-<span>Campagnes</span>
-</a>
-<a class="flex items-center px-6 py-3 border-l-4 border-[#136E00] text-[#161E12] dark:text-white font-bold bg-[#F3FDE9]/50 scale-x-105 origin-left transition-transform" href="#">
-<span class="material-symbols-outlined mr-3" data-icon="receipt_long" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
-<span>Facturation</span>
-</a>
-<a class="flex items-center px-6 py-3 text-[#161E12]/60 dark:text-slate-400 font-medium hover:bg-[#F3FDE9] dark:hover:bg-slate-800 transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined mr-3" data-icon="analytics">analytics</span>
-<span>Analytics</span>
-</a>
-</nav>
-<div class="px-6 mt-auto">
-<div class="bg-surface-container rounded-xl p-4 flex flex-col gap-3">
-<div class="flex items-center justify-between">
-<span class="text-xs font-semibold text-on-surface-variant uppercase">Crédits</span>
-<span class="text-xs font-bold text-primary">2,450</span>
-</div>
-<div class="w-full bg-outline-variant/30 h-1 rounded-full overflow-hidden">
-<div class="bg-primary h-full w-[65%]"></div>
-</div>
-</div>
-</div>
-</aside>
-<!-- Main Content Area -->
-<main class="ml-64 min-h-screen">
-<!-- TopAppBar (Shared Component) -->
-<header class="sticky top-0 w-full h-16 z-40 bg-[#F3FDE9]/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-sm shadow-[#161E12]/5 flex items-center justify-between px-12 ml-0">
-<div class="flex items-center gap-4">
-<div class="relative">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg">search</span>
-<input class="bg-surface-container-highest/30 border-none rounded-lg pl-10 pr-4 py-2 font-['Inter'] text-[11px] font-semibold tracking-wider focus:ring-1 focus:ring-primary w-64" placeholder="RECHERCHER UNE FACTURE..." type="text"/>
-</div>
-</div>
-<div class="flex items-center gap-8">
-<div class="flex items-center gap-2">
-<span class="font-['Inter'] text-[13px] font-semibold uppercase tracking-tighter text-[#161E12]/40">Solde: 2,450 crédits</span>
-</div>
-<button class="bg-gradient-to-br from-primary to-primary-container text-white px-5 py-2 rounded-md font-['Inter'] text-[11px] font-bold uppercase tracking-widest hover:scale-95 transition-all duration-150">
-                    Upgrade Plan
-                </button>
-<div class="flex items-center gap-4 text-on-surface-variant">
-<span class="material-symbols-outlined cursor-pointer hover:text-primary" data-icon="notifications">notifications</span>
-<span class="material-symbols-outlined cursor-pointer hover:text-primary" data-icon="settings">settings</span>
-<div class="w-8 h-8 rounded-full overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="professional portrait of a tech executive in a light-filled modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr-m1b9LxwOz_4MPR_ybzhPbwgU3FSsdT8dCndf5U5MfjLIQWgQa53cSdse9M4GBeZC9EWvHdfmydQ7Yy82jDShQLCYAE1hKVtjzUAAhniZwhGAzyGB89iA3iSkGiVnG44wWdCiLlStVfAW9nfXZNtYurSgSNytN6x1n1_ShlO3RJiCHHZ6Z37qspiyY_KmU1mL953ytmG_JdVjBcKp_nD77yE9H_htvlZq15wkfUBF3UOUN4vP2mCza4ne0mc-7XS1Bq7uInH2BkQ"/>
-</div>
-</div>
-</div>
-</header>
-<section class="p-12">
-<!-- Header Section -->
-<div class="mb-12 flex items-end justify-between">
-<div>
-<nav class="flex gap-2 mb-4">
-<span class="text-[10px] font-bold uppercase tracking-widest text-primary">Compte</span>
-<span class="text-[10px] font-bold uppercase tracking-widest text-outline-variant">/</span>
-<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Historique de Facturation</span>
-</nav>
-<h2 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface">Historique de Facturation <span class="text-primary/40 font-medium">RG-44/51</span></h2>
-<p class="mt-2 font-body text-on-surface-variant max-w-xl">Consultez et téléchargez l'ensemble de vos transactions passées pour une gestion précise de votre budget marketing.</p>
-</div>
-<div class="flex gap-3">
-<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface font-bold text-xs rounded-md border border-outline-variant/10">
-<span class="material-symbols-outlined text-sm">filter_list</span>
-                        FILTRER
-                    </button>
-<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface font-bold text-xs rounded-md border border-outline-variant/10">
-<span class="material-symbols-outlined text-sm">calendar_today</span>
-                        PERIODE
-                    </button>
-</div>
-</div>
-<!-- Bento Stats Grid -->
-<div class="grid grid-cols-4 gap-6 mb-12">
-<div class="col-span-1 bg-surface-container-low p-6 rounded-xl flex flex-col justify-between min-h-[140px]">
-<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Total Dépensé (Mois)</span>
-<div>
-<div class="text-3xl font-headline font-extrabold text-on-surface">45.000 FCFA</div>
-<div class="text-[10px] text-primary font-bold mt-1">+12.5% vs mois dernier</div>
-</div>
-</div>
-<div class="col-span-1 bg-surface-container p-6 rounded-xl flex flex-col justify-between min-h-[140px]">
-<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Dernier Rechargement</span>
-<div>
-<div class="text-3xl font-headline font-extrabold text-on-surface">25.000 FCFA</div>
-<div class="text-[10px] text-on-surface-variant/40 font-bold mt-1">14 Mars 2026</div>
-</div>
-</div>
-<div class="col-span-2 bg-gradient-to-br from-secondary to-on-secondary-fixed-variant p-6 rounded-xl flex items-center justify-between">
-<div>
-<span class="text-[10px] font-bold uppercase tracking-widest text-white/60">Prochain Prélèvement Estimé</span>
-<div class="text-3xl font-headline font-extrabold text-white mt-2">12.800 FCFA</div>
-</div>
-<div class="text-right">
-<span class="material-symbols-outlined text-white/20 text-5xl">insights</span>
-</div>
-</div>
-</div>
-<!-- Transactions Table Container -->
-<div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm shadow-on-surface/5">
-<div class="p-6 flex items-center justify-between bg-white">
-<h3 class="font-headline font-bold text-lg">Transactions Récentes</h3>
-<div class="flex gap-2">
-<span class="material-symbols-outlined text-on-surface-variant/40 cursor-pointer">chevron_left</span>
-<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">chevron_right</span>
-</div>
-</div>
-<table class="w-full text-left border-collapse">
-<thead class="bg-surface-container-low">
-<tr>
-<th class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Date</th>
-<th class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Description / ID</th>
-<th class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Type</th>
-<th class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Montant</th>
-<th class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">Statut</th>
-<th class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60 text-right">Actions</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-outline-variant/10">
-<tr class="hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-8 py-5">
-<span class="font-body text-sm font-semibold text-on-surface">24 Mar 2026</span>
-<span class="block text-[10px] text-on-surface-variant/40 font-medium">14:32</span>
-</td>
-<td class="px-8 py-5">
-<span class="font-body text-sm font-bold text-on-surface">Rechargement Crédits Orange Money</span>
-<span class="block text-[10px] text-on-surface-variant font-mono">TXN-49204-SMS</span>
-</td>
-<td class="px-8 py-5">
-<span class="px-2 py-1 bg-secondary-container/30 text-secondary text-[10px] font-bold rounded uppercase tracking-tighter">Rechargement</span>
-</td>
-<td class="px-8 py-5">
-<span class="font-headline font-bold text-sm text-on-surface">15.000 FCFA</span>
-</td>
-<td class="px-8 py-5">
-<div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-primary"></span>
-<span class="font-body text-xs font-bold text-on-surface-variant">Validé</span>
-</div>
-</td>
-<td class="px-8 py-5 text-right">
-<button class="inline-flex items-center gap-2 text-primary hover:text-on-primary-container transition-colors group/btn">
-<span class="text-[11px] font-bold uppercase tracking-widest">Reçu PDF</span>
-<span class="material-symbols-outlined text-sm group-hover/btn:translate-y-0.5 transition-transform">download</span>
-</button>
-</td>
-</tr>
-<tr class="bg-surface-container/10 hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-8 py-5">
-<span class="font-body text-sm font-semibold text-on-surface">21 Mar 2026</span>
-<span class="block text-[10px] text-on-surface-variant/40 font-medium">09:15</span>
-</td>
-<td class="px-8 py-5">
-<span class="font-body text-sm font-bold text-on-surface">Campagne SMS "Promo Ramadan"</span>
-<span class="block text-[10px] text-on-surface-variant font-mono">CMP-8812-PRO</span>
-</td>
-<td class="px-8 py-5">
-<span class="px-2 py-1 bg-tertiary-container/20 text-tertiary text-[10px] font-bold rounded uppercase tracking-tighter">Campagne</span>
-</td>
-<td class="px-8 py-5">
-<span class="font-headline font-bold text-sm text-on-surface">2.450 FCFA</span>
-</td>
-<td class="px-8 py-5">
-<div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-primary"></span>
-<span class="font-body text-xs font-bold text-on-surface-variant">Validé</span>
-</div>
-</td>
-<td class="px-8 py-5 text-right">
-<button class="inline-flex items-center gap-2 text-primary hover:text-on-primary-container transition-colors group/btn">
-<span class="text-[11px] font-bold uppercase tracking-widest">Reçu PDF</span>
-<span class="material-symbols-outlined text-sm group-hover/btn:translate-y-0.5 transition-transform">download</span>
-</button>
-</td>
-</tr>
-<tr class="hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-8 py-5">
-<span class="font-body text-sm font-semibold text-on-surface">18 Mar 2026</span>
-<span class="block text-[10px] text-on-surface-variant/40 font-medium">18:44</span>
-</td>
-<td class="px-8 py-5">
-<span class="font-body text-sm font-bold text-on-surface">Campagne Automatisée Fidélisation</span>
-<span class="block text-[10px] text-on-surface-variant font-mono">AUT-0034-FID</span>
-</td>
-<td class="px-8 py-5">
-<span class="px-2 py-1 bg-tertiary-container/20 text-tertiary text-[10px] font-bold rounded uppercase tracking-tighter">Campagne</span>
-</td>
-<td class="px-8 py-5">
-<span class="font-headline font-bold text-sm text-on-surface">1.200 FCFA</span>
-</td>
-<td class="px-8 py-5">
-<div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-primary"></span>
-<span class="font-body text-xs font-bold text-on-surface-variant">Validé</span>
-</div>
-</td>
-<td class="px-8 py-5 text-right">
-<button class="inline-flex items-center gap-2 text-primary hover:text-on-primary-container transition-colors group/btn">
-<span class="text-[11px] font-bold uppercase tracking-widest">Reçu PDF</span>
-<span class="material-symbols-outlined text-sm group-hover/btn:translate-y-0.5 transition-transform">download</span>
-</button>
-</td>
-</tr>
-<tr class="bg-surface-container/10 hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-8 py-5">
-<span class="font-body text-sm font-semibold text-on-surface">14 Mar 2026</span>
-<span class="block text-[10px] text-on-surface-variant/40 font-medium">11:20</span>
-</td>
-<td class="px-8 py-5">
-<span class="font-body text-sm font-bold text-on-surface">Rechargement Crédits Visa Card</span>
-<span class="block text-[10px] text-on-surface-variant font-mono">TXN-49001-VISA</span>
-</td>
-<td class="px-8 py-5">
-<span class="px-2 py-1 bg-secondary-container/30 text-secondary text-[10px] font-bold rounded uppercase tracking-tighter">Rechargement</span>
-</td>
-<td class="px-8 py-5">
-<span class="font-headline font-bold text-sm text-on-surface">25.000 FCFA</span>
-</td>
-<td class="px-8 py-5">
-<div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-primary"></span>
-<span class="font-body text-xs font-bold text-on-surface-variant">Validé</span>
-</div>
-</td>
-<td class="px-8 py-5 text-right">
-<button class="inline-flex items-center gap-2 text-primary hover:text-on-primary-container transition-colors group/btn">
-<span class="text-[11px] font-bold uppercase tracking-widest">Reçu PDF</span>
-<span class="material-symbols-outlined text-sm group-hover/btn:translate-y-0.5 transition-transform">download</span>
-</button>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="px-8 py-6 bg-white flex items-center justify-between">
-<span class="text-xs text-on-surface-variant/60 font-medium tracking-tight">Affichage de 1-4 sur 51 transactions</span>
-<div class="flex items-center gap-1">
-<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white text-xs font-bold">1</button>
-<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface text-xs font-bold hover:bg-surface-container">2</button>
-<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface text-xs font-bold hover:bg-surface-container">3</button>
-<span class="mx-1 text-on-surface-variant/30 text-xs">...</span>
-<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface text-xs font-bold hover:bg-surface-container">13</button>
-</div>
-</div>
-</div>
-<!-- Footer / Export CTA -->
-<div class="mt-12 p-8 bg-surface-container-low rounded-2xl flex items-center justify-between border border-primary/5">
-<div class="flex items-center gap-6">
-<div class="p-3 bg-white rounded-xl shadow-sm">
-<span class="material-symbols-outlined text-primary text-3xl">picture_as_pdf</span>
-</div>
-<div>
-<h4 class="font-headline font-bold text-on-surface">Exportation Comptable Annuelle</h4>
-<p class="text-sm text-on-surface-variant">Générez un rapport complet de toutes vos factures pour l'année fiscale 2025.</p>
-</div>
-</div>
-<button class="bg-on-surface text-surface px-6 py-3 rounded-md font-bold text-xs uppercase tracking-widest hover:bg-on-surface-variant transition-colors">
-                    Générer Rapport Annuel
-                </button>
-</div>
-<footer class="mt-24 pt-12 pb-8 border-t border-outline-variant/10 text-center">
-<div class="flex items-center justify-center gap-3 mb-4 opacity-40">
-<span class="text-xl font-extrabold text-[#136E00]">NovaSend</span>
-</div>
-<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/40">© Copyright 2026 NovaSend Precision Marketing Ecosystem. Tous droits réservés.</p>
-</footer>
-</section>
-</main>
-</body></html>
+  </head>
+  <body class="text-on-surface">
+    <!-- SideNavBar (Shared Component) -->
+    <aside
+      class="h-screen w-64 fixed left-0 top-0 bg-[#EDF7E3] dark:bg-slate-900 flex flex-col py-8 space-y-2 font-['Manrope'] text-sm tracking-wide"
+    >
+      <div class="px-6 mb-8 flex items-center gap-3">
+        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+          <span
+            class="material-symbols-outlined text-white text-sm"
+            style="font-variation-settings: 'FILL' 1"
+            >bolt</span
+          >
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold text-[#136E00] dark:text-[#2EC80A]">NovaSMS</h1>
+          <p class="text-[10px] text-[#161E12]/60 uppercase tracking-[0.2em]">
+            Marketing Precision
+          </p>
+        </div>
+      </div>
+      <nav class="flex-1">
+        <a
+          class="flex items-center px-6 py-3 text-[#161E12]/60 dark:text-slate-400 font-medium hover:bg-[#F3FDE9] dark:hover:bg-slate-800 transition-all duration-200 group"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+          <span>Dashboard</span>
+        </a>
+        <a
+          class="flex items-center px-6 py-3 text-[#161E12]/60 dark:text-slate-400 font-medium hover:bg-[#F3FDE9] dark:hover:bg-slate-800 transition-all duration-200 group"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="group">group</span>
+          <span>Contacts</span>
+        </a>
+        <a
+          class="flex items-center px-6 py-3 text-[#161E12]/60 dark:text-slate-400 font-medium hover:bg-[#F3FDE9] dark:hover:bg-slate-800 transition-all duration-200 group"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="send">send</span>
+          <span>Campagnes</span>
+        </a>
+        <a
+          class="flex items-center px-6 py-3 border-l-4 border-[#136E00] text-[#161E12] dark:text-white font-bold bg-[#F3FDE9]/50 scale-x-105 origin-left transition-transform"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined mr-3"
+            data-icon="receipt_long"
+            style="font-variation-settings: 'FILL' 1"
+            >receipt_long</span
+          >
+          <span>Facturation</span>
+        </a>
+        <a
+          class="flex items-center px-6 py-3 text-[#161E12]/60 dark:text-slate-400 font-medium hover:bg-[#F3FDE9] dark:hover:bg-slate-800 transition-all duration-200 group"
+          href="#"
+        >
+          <span class="material-symbols-outlined mr-3" data-icon="analytics">analytics</span>
+          <span>Analytics</span>
+        </a>
+      </nav>
+      <div class="px-6 mt-auto">
+        <div class="bg-surface-container rounded-xl p-4 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-on-surface-variant uppercase">Crédits</span>
+            <span class="text-xs font-bold text-primary">2,450</span>
+          </div>
+          <div class="w-full bg-outline-variant/30 h-1 rounded-full overflow-hidden">
+            <div class="bg-primary h-full w-[65%]"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="ml-64 min-h-screen">
+      <!-- TopAppBar (Shared Component) -->
+      <header
+        class="sticky top-0 w-full h-16 z-40 bg-[#F3FDE9]/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-sm shadow-[#161E12]/5 flex items-center justify-between px-12 ml-0"
+      >
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg"
+              >search</span
+            >
+            <input
+              class="bg-surface-container-highest/30 border-none rounded-lg pl-10 pr-4 py-2 font-['Inter'] text-[11px] font-semibold tracking-wider focus:ring-1 focus:ring-primary w-64"
+              placeholder="RECHERCHER UNE FACTURE..."
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="flex items-center gap-8">
+          <div class="flex items-center gap-2">
+            <span
+              class="font-['Inter'] text-[13px] font-semibold uppercase tracking-tighter text-[#161E12]/40"
+              >Solde: 2,450 crédits</span
+            >
+          </div>
+          <button
+            class="bg-gradient-to-br from-primary to-primary-container text-white px-5 py-2 rounded-md font-['Inter'] text-[11px] font-bold uppercase tracking-widest hover:scale-95 transition-all duration-150"
+          >
+            Upgrade Plan
+          </button>
+          <div class="flex items-center gap-4 text-on-surface-variant">
+            <span
+              class="material-symbols-outlined cursor-pointer hover:text-primary"
+              data-icon="notifications"
+              >notifications</span
+            >
+            <span
+              class="material-symbols-outlined cursor-pointer hover:text-primary"
+              data-icon="settings"
+              >settings</span
+            >
+            <div class="w-8 h-8 rounded-full overflow-hidden">
+              <img
+                class="w-full h-full object-cover"
+                data-alt="professional portrait of a tech executive in a light-filled modern office setting"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr-m1b9LxwOz_4MPR_ybzhPbwgU3FSsdT8dCndf5U5MfjLIQWgQa53cSdse9M4GBeZC9EWvHdfmydQ7Yy82jDShQLCYAE1hKVtjzUAAhniZwhGAzyGB89iA3iSkGiVnG44wWdCiLlStVfAW9nfXZNtYurSgSNytN6x1n1_ShlO3RJiCHHZ6Z37qspiyY_KmU1mL953ytmG_JdVjBcKp_nD77yE9H_htvlZq15wkfUBF3UOUN4vP2mCza4ne0mc-7XS1Bq7uInH2BkQ"
+              />
+            </div>
+          </div>
+        </div>
+      </header>
+      <section class="p-12">
+        <!-- Header Section -->
+        <div class="mb-12 flex items-end justify-between">
+          <div>
+            <nav class="flex gap-2 mb-4">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-primary"
+                >Compte</span
+              >
+              <span class="text-[10px] font-bold uppercase tracking-widest text-outline-variant"
+                >/</span
+              >
+              <span
+                class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60"
+                >Historique de Facturation</span
+              >
+            </nav>
+            <h2 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface">
+              Historique de Facturation <span class="text-primary/40 font-medium">RG-44/51</span>
+            </h2>
+            <p class="mt-2 font-body text-on-surface-variant max-w-xl">
+              Consultez et téléchargez l'ensemble de vos transactions passées pour une gestion
+              précise de votre budget marketing.
+            </p>
+          </div>
+          <div class="flex gap-3">
+            <button
+              class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface font-bold text-xs rounded-md border border-outline-variant/10"
+            >
+              <span class="material-symbols-outlined text-sm">filter_list</span>
+              FILTRER
+            </button>
+            <button
+              class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface font-bold text-xs rounded-md border border-outline-variant/10"
+            >
+              <span class="material-symbols-outlined text-sm">calendar_today</span>
+              PERIODE
+            </button>
+          </div>
+        </div>
+        <!-- Bento Stats Grid -->
+        <div class="grid grid-cols-4 gap-6 mb-12">
+          <div
+            class="col-span-1 bg-surface-container-low p-6 rounded-xl flex flex-col justify-between min-h-[140px]"
+          >
+            <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60"
+              >Total Dépensé (Mois)</span
+            >
+            <div>
+              <div class="text-3xl font-headline font-extrabold text-on-surface">45.000 FCFA</div>
+              <div class="text-[10px] text-primary font-bold mt-1">+12.5% vs mois dernier</div>
+            </div>
+          </div>
+          <div
+            class="col-span-1 bg-surface-container p-6 rounded-xl flex flex-col justify-between min-h-[140px]"
+          >
+            <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60"
+              >Dernier Rechargement</span
+            >
+            <div>
+              <div class="text-3xl font-headline font-extrabold text-on-surface">25.000 FCFA</div>
+              <div class="text-[10px] text-on-surface-variant/40 font-bold mt-1">14 Mars 2026</div>
+            </div>
+          </div>
+          <div
+            class="col-span-2 bg-gradient-to-br from-secondary to-on-secondary-fixed-variant p-6 rounded-xl flex items-center justify-between"
+          >
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-white/60"
+                >Prochain Prélèvement Estimé</span
+              >
+              <div class="text-3xl font-headline font-extrabold text-white mt-2">12.800 FCFA</div>
+            </div>
+            <div class="text-right">
+              <span class="material-symbols-outlined text-white/20 text-5xl">insights</span>
+            </div>
+          </div>
+        </div>
+        <!-- Transactions Table Container -->
+        <div
+          class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm shadow-on-surface/5"
+        >
+          <div class="p-6 flex items-center justify-between bg-white">
+            <h3 class="font-headline font-bold text-lg">Transactions Récentes</h3>
+            <div class="flex gap-2">
+              <span class="material-symbols-outlined text-on-surface-variant/40 cursor-pointer"
+                >chevron_left</span
+              >
+              <span class="material-symbols-outlined text-on-surface-variant cursor-pointer"
+                >chevron_right</span
+              >
+            </div>
+          </div>
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-container-low">
+              <tr>
+                <th
+                  class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60"
+                >
+                  Date
+                </th>
+                <th
+                  class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60"
+                >
+                  Description / ID
+                </th>
+                <th
+                  class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60"
+                >
+                  Type
+                </th>
+                <th
+                  class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60"
+                >
+                  Montant
+                </th>
+                <th
+                  class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60"
+                >
+                  Statut
+                </th>
+                <th
+                  class="px-8 py-4 font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60 text-right"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/10">
+              <tr class="hover:bg-surface-container-low/30 transition-colors group">
+                <td class="px-8 py-5">
+                  <span class="font-body text-sm font-semibold text-on-surface">24 Mar 2026</span>
+                  <span class="block text-[10px] text-on-surface-variant/40 font-medium"
+                    >14:32</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span class="font-body text-sm font-bold text-on-surface"
+                    >Rechargement Crédits Orange Money</span
+                  >
+                  <span class="block text-[10px] text-on-surface-variant font-mono"
+                    >TXN-49204-SMS</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span
+                    class="px-2 py-1 bg-secondary-container/30 text-secondary text-[10px] font-bold rounded uppercase tracking-tighter"
+                    >Rechargement</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span class="font-headline font-bold text-sm text-on-surface">15.000 FCFA</span>
+                </td>
+                <td class="px-8 py-5">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                    <span class="font-body text-xs font-bold text-on-surface-variant">Validé</span>
+                  </div>
+                </td>
+                <td class="px-8 py-5 text-right">
+                  <button
+                    class="inline-flex items-center gap-2 text-primary hover:text-on-primary-container transition-colors group/btn"
+                  >
+                    <span class="text-[11px] font-bold uppercase tracking-widest">Reçu PDF</span>
+                    <span
+                      class="material-symbols-outlined text-sm group-hover/btn:translate-y-0.5 transition-transform"
+                      >download</span
+                    >
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="bg-surface-container/10 hover:bg-surface-container-low/30 transition-colors group"
+              >
+                <td class="px-8 py-5">
+                  <span class="font-body text-sm font-semibold text-on-surface">21 Mar 2026</span>
+                  <span class="block text-[10px] text-on-surface-variant/40 font-medium"
+                    >09:15</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span class="font-body text-sm font-bold text-on-surface"
+                    >Campagne SMS "Promo Ramadan"</span
+                  >
+                  <span class="block text-[10px] text-on-surface-variant font-mono"
+                    >CMP-8812-PRO</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span
+                    class="px-2 py-1 bg-tertiary-container/20 text-tertiary text-[10px] font-bold rounded uppercase tracking-tighter"
+                    >Campagne</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span class="font-headline font-bold text-sm text-on-surface">2.450 FCFA</span>
+                </td>
+                <td class="px-8 py-5">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                    <span class="font-body text-xs font-bold text-on-surface-variant">Validé</span>
+                  </div>
+                </td>
+                <td class="px-8 py-5 text-right">
+                  <button
+                    class="inline-flex items-center gap-2 text-primary hover:text-on-primary-container transition-colors group/btn"
+                  >
+                    <span class="text-[11px] font-bold uppercase tracking-widest">Reçu PDF</span>
+                    <span
+                      class="material-symbols-outlined text-sm group-hover/btn:translate-y-0.5 transition-transform"
+                      >download</span
+                    >
+                  </button>
+                </td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/30 transition-colors group">
+                <td class="px-8 py-5">
+                  <span class="font-body text-sm font-semibold text-on-surface">18 Mar 2026</span>
+                  <span class="block text-[10px] text-on-surface-variant/40 font-medium"
+                    >18:44</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span class="font-body text-sm font-bold text-on-surface"
+                    >Campagne Automatisée Fidélisation</span
+                  >
+                  <span class="block text-[10px] text-on-surface-variant font-mono"
+                    >AUT-0034-FID</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span
+                    class="px-2 py-1 bg-tertiary-container/20 text-tertiary text-[10px] font-bold rounded uppercase tracking-tighter"
+                    >Campagne</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span class="font-headline font-bold text-sm text-on-surface">1.200 FCFA</span>
+                </td>
+                <td class="px-8 py-5">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                    <span class="font-body text-xs font-bold text-on-surface-variant">Validé</span>
+                  </div>
+                </td>
+                <td class="px-8 py-5 text-right">
+                  <button
+                    class="inline-flex items-center gap-2 text-primary hover:text-on-primary-container transition-colors group/btn"
+                  >
+                    <span class="text-[11px] font-bold uppercase tracking-widest">Reçu PDF</span>
+                    <span
+                      class="material-symbols-outlined text-sm group-hover/btn:translate-y-0.5 transition-transform"
+                      >download</span
+                    >
+                  </button>
+                </td>
+              </tr>
+              <tr
+                class="bg-surface-container/10 hover:bg-surface-container-low/30 transition-colors group"
+              >
+                <td class="px-8 py-5">
+                  <span class="font-body text-sm font-semibold text-on-surface">14 Mar 2026</span>
+                  <span class="block text-[10px] text-on-surface-variant/40 font-medium"
+                    >11:20</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span class="font-body text-sm font-bold text-on-surface"
+                    >Rechargement Crédits Visa Card</span
+                  >
+                  <span class="block text-[10px] text-on-surface-variant font-mono"
+                    >TXN-49001-VISA</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span
+                    class="px-2 py-1 bg-secondary-container/30 text-secondary text-[10px] font-bold rounded uppercase tracking-tighter"
+                    >Rechargement</span
+                  >
+                </td>
+                <td class="px-8 py-5">
+                  <span class="font-headline font-bold text-sm text-on-surface">25.000 FCFA</span>
+                </td>
+                <td class="px-8 py-5">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                    <span class="font-body text-xs font-bold text-on-surface-variant">Validé</span>
+                  </div>
+                </td>
+                <td class="px-8 py-5 text-right">
+                  <button
+                    class="inline-flex items-center gap-2 text-primary hover:text-on-primary-container transition-colors group/btn"
+                  >
+                    <span class="text-[11px] font-bold uppercase tracking-widest">Reçu PDF</span>
+                    <span
+                      class="material-symbols-outlined text-sm group-hover/btn:translate-y-0.5 transition-transform"
+                      >download</span
+                    >
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="px-8 py-6 bg-white flex items-center justify-between">
+            <span class="text-xs text-on-surface-variant/60 font-medium tracking-tight"
+              >Affichage de 1-4 sur 51 transactions</span
+            >
+            <div class="flex items-center gap-1">
+              <button
+                class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white text-xs font-bold"
+              >
+                1
+              </button>
+              <button
+                class="w-8 h-8 flex items-center justify-center rounded text-on-surface text-xs font-bold hover:bg-surface-container"
+              >
+                2
+              </button>
+              <button
+                class="w-8 h-8 flex items-center justify-center rounded text-on-surface text-xs font-bold hover:bg-surface-container"
+              >
+                3
+              </button>
+              <span class="mx-1 text-on-surface-variant/30 text-xs">...</span>
+              <button
+                class="w-8 h-8 flex items-center justify-center rounded text-on-surface text-xs font-bold hover:bg-surface-container"
+              >
+                13
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Footer / Export CTA -->
+        <div
+          class="mt-12 p-8 bg-surface-container-low rounded-2xl flex items-center justify-between border border-primary/5"
+        >
+          <div class="flex items-center gap-6">
+            <div class="p-3 bg-white rounded-xl shadow-sm">
+              <span class="material-symbols-outlined text-primary text-3xl">picture_as_pdf</span>
+            </div>
+            <div>
+              <h4 class="font-headline font-bold text-on-surface">
+                Exportation Comptable Annuelle
+              </h4>
+              <p class="text-sm text-on-surface-variant">
+                Générez un rapport complet de toutes vos factures pour l'année fiscale 2025.
+              </p>
+            </div>
+          </div>
+          <button
+            class="bg-on-surface text-surface px-6 py-3 rounded-md font-bold text-xs uppercase tracking-widest hover:bg-on-surface-variant transition-colors"
+          >
+            Générer Rapport Annuel
+          </button>
+        </div>
+        <footer class="mt-24 pt-12 pb-8 border-t border-outline-variant/10 text-center">
+          <div class="flex items-center justify-center gap-3 mb-4 opacity-40">
+            <span class="text-xl font-extrabold text-[#136E00]">NovaSend</span>
+          </div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/40">
+            © Copyright 2026 NovaSend Precision Marketing Ecosystem. Tous droits réservés.
+          </p>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NovaSMS — Toutes les maquettes · Figma Ready</title>
-<!--
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaSMS — Toutes les maquettes · Figma Ready</title>
+    <!--
   ╔══════════════════════════════════════════════════════════════╗
   ║  NOVASMS — FICHIER MAQUETTE COMPLET · FIGMA READY           ║
   ║  Version 1.0 · Avril 2026                                    ║
@@ -21,628 +21,1622 @@
   ║  6. Rechargement Mobile Money / Visa                         ║
   ╚══════════════════════════════════════════════════════════════╝
 -->
-<style>
-/* ── TOKENS NOVASEND ─────────────────────────────────────── */
-:root {
-  --brand-primary:      #2EC80A;
-  --brand-dark:         #25A208;
-  --brand-lime:         #AAEE22;
-  --brand-teal:         #0C5460;
-  --brand-light:        #EDFCE8;
-  --brand-text:         #145C04;
-  --brand-gradient:     linear-gradient(135deg, #2EC80A 0%, #AAEE22 100%);
+    <style>
+      /* ── TOKENS NOVASEND ─────────────────────────────────────── */
+      :root {
+        --brand-primary: #2ec80a;
+        --brand-dark: #25a208;
+        --brand-lime: #aaee22;
+        --brand-teal: #0c5460;
+        --brand-light: #edfce8;
+        --brand-text: #145c04;
+        --brand-gradient: linear-gradient(135deg, #2ec80a 0%, #aaee22 100%);
 
-  --bg:                 #F7F9F7;
-  --surface:            #FFFFFF;
-  --muted:              #F0F7F0;
-  --border:             rgba(0,0,0,0.08);
-  --border-md:          rgba(0,0,0,0.14);
+        --bg: #f7f9f7;
+        --surface: #ffffff;
+        --muted: #f0f7f0;
+        --border: rgba(0, 0, 0, 0.08);
+        --border-md: rgba(0, 0, 0, 0.14);
 
-  --text-1:             #1A1A1A;
-  --text-2:             #6B7280;
-  --text-3:             #9CA3AF;
-  --success:            #16A34A;
-  --danger:             #DC2626;
-  --warning:            #D97706;
-  --info:               #0C5460;
+        --text-1: #1a1a1a;
+        --text-2: #6b7280;
+        --text-3: #9ca3af;
+        --success: #16a34a;
+        --danger: #dc2626;
+        --warning: #d97706;
+        --info: #0c5460;
 
-  --r-sm: 6px;
-  --r-md: 8px;
-  --r-lg: 12px;
-  --r-xl: 16px;
+        --r-sm: 6px;
+        --r-md: 8px;
+        --r-lg: 12px;
+        --r-xl: 16px;
 
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  --sidebar: 200px;
-  --header:  56px;
-}
+        --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        --sidebar: 200px;
+        --header: 56px;
+      }
 
-/* ── RESET ───────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
-body { font-family: var(--font); background: #1A1A2E; color: var(--text-1); font-size:14px; }
-button { font-family: var(--font); cursor:pointer; }
-a { text-decoration:none; color:inherit; }
-table { border-collapse:collapse; width:100%; }
+      /* ── RESET ───────────────────────────────────────────────── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: var(--font);
+        background: #1a1a2e;
+        color: var(--text-1);
+        font-size: 14px;
+      }
+      button {
+        font-family: var(--font);
+        cursor: pointer;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
 
-/* ── CANVAS WRAPPER ──────────────────────────────────────── */
-.canvas {
-  display: flex;
-  gap: 60px;
-  padding: 60px;
-  overflow-x: auto;
-  align-items: flex-start;
-}
+      /* ── CANVAS WRAPPER ──────────────────────────────────────── */
+      .canvas {
+        display: flex;
+        gap: 60px;
+        padding: 60px;
+        overflow-x: auto;
+        align-items: flex-start;
+      }
 
-/* ── SCREEN FRAME ────────────────────────────────────────── */
-.screen {
-  width: 1280px;
-  min-width: 1280px;
-  background: var(--bg);
-  border-radius: var(--r-xl);
-  overflow: hidden;
-  flex-shrink: 0;
-  position: relative;
-}
+      /* ── SCREEN FRAME ────────────────────────────────────────── */
+      .screen {
+        width: 1280px;
+        min-width: 1280px;
+        background: var(--bg);
+        border-radius: var(--r-xl);
+        overflow: hidden;
+        flex-shrink: 0;
+        position: relative;
+      }
 
-.screen-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .08em;
-  color: rgba(255,255,255,.45);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
+      .screen-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.45);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
 
-/* ── SCREEN NAV (tab bar) ────────────────────────────────── */
-.screen-nav {
-  display:flex; gap:8px; padding: 0 60px 0;
-  margin-bottom: 0;
-  background: #1A1A2E;
-}
-.snav-btn {
-  padding:8px 16px;
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:.04em;
-  border-radius:6px 6px 0 0;
-  border:none;
-  background:rgba(255,255,255,.08);
-  color:rgba(255,255,255,.45);
-  cursor:pointer;
-  transition: all .15s;
-}
-.snav-btn.active { background:var(--brand-primary); color:#145C04; }
+      /* ── SCREEN NAV (tab bar) ────────────────────────────────── */
+      .screen-nav {
+        display: flex;
+        gap: 8px;
+        padding: 0 60px 0;
+        margin-bottom: 0;
+        background: #1a1a2e;
+      }
+      .snav-btn {
+        padding: 8px 16px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        border-radius: 6px 6px 0 0;
+        border: none;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.45);
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .snav-btn.active {
+        background: var(--brand-primary);
+        color: #145c04;
+      }
 
-/* ── SHARED LAYOUT ───────────────────────────────────────── */
-.app { display:flex; height:768px; }
+      /* ── SHARED LAYOUT ───────────────────────────────────────── */
+      .app {
+        display: flex;
+        height: 768px;
+      }
 
-/* SIDEBAR */
-.sidebar {
-  width: var(--sidebar);
-  flex-shrink:0;
-  background: var(--surface);
-  border-right: 0.5px solid var(--border);
-  display:flex;
-  flex-direction:column;
-}
-.sb-logo {
-  padding:16px 14px 18px;
-  display:flex; align-items:center; gap:9px;
-  border-bottom:0.5px solid var(--border);
-}
-.sb-logomark {
-  width:28px; height:28px;
-  background:var(--brand-teal);
-  border-radius:var(--r-md);
-  display:flex; align-items:center; justify-content:center;
-  flex-shrink:0;
-}
-.sb-nav { flex:1; padding:12px 8px 0; }
-.sb-section-label {
-  font-size:10px; font-weight:600; letter-spacing:.07em;
-  color:var(--text-3); text-transform:uppercase;
-  padding:0 6px 5px; margin-bottom:2px;
-}
-.nav-item {
-  display:flex; align-items:center; gap:8px;
-  padding:7px 10px; font-size:12.5px;
-  color:var(--text-2); border-radius:var(--r-sm);
-  margin-bottom:1px;
-}
-.nav-item svg { flex-shrink:0; opacity:.7; }
-.nav-item.active {
-  background:var(--muted);
-  color:var(--brand-teal);
-  font-weight:500;
-}
-.nav-item.active svg { opacity:1; }
-.nav-badge {
-  margin-left:auto; font-size:10px;
-  padding:1px 6px; border-radius:10px;
-  background:var(--muted); color:var(--text-2);
-}
-.nav-badge.green {
-  background:var(--brand-light); color:var(--brand-text);
-}
-.sb-divider { height:.5px; background:var(--border); margin:8px 10px; }
-.sb-credits {
-  margin:10px 10px 14px;
-  background:var(--muted);
-  border-radius:var(--r-md);
-  padding:11px 12px;
-}
+      /* SIDEBAR */
+      .sidebar {
+        width: var(--sidebar);
+        flex-shrink: 0;
+        background: var(--surface);
+        border-right: 0.5px solid var(--border);
+        display: flex;
+        flex-direction: column;
+      }
+      .sb-logo {
+        padding: 16px 14px 18px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        border-bottom: 0.5px solid var(--border);
+      }
+      .sb-logomark {
+        width: 28px;
+        height: 28px;
+        background: var(--brand-teal);
+        border-radius: var(--r-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .sb-nav {
+        flex: 1;
+        padding: 12px 8px 0;
+      }
+      .sb-section-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        color: var(--text-3);
+        text-transform: uppercase;
+        padding: 0 6px 5px;
+        margin-bottom: 2px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        font-size: 12.5px;
+        color: var(--text-2);
+        border-radius: var(--r-sm);
+        margin-bottom: 1px;
+      }
+      .nav-item svg {
+        flex-shrink: 0;
+        opacity: 0.7;
+      }
+      .nav-item.active {
+        background: var(--muted);
+        color: var(--brand-teal);
+        font-weight: 500;
+      }
+      .nav-item.active svg {
+        opacity: 1;
+      }
+      .nav-badge {
+        margin-left: auto;
+        font-size: 10px;
+        padding: 1px 6px;
+        border-radius: 10px;
+        background: var(--muted);
+        color: var(--text-2);
+      }
+      .nav-badge.green {
+        background: var(--brand-light);
+        color: var(--brand-text);
+      }
+      .sb-divider {
+        height: 0.5px;
+        background: var(--border);
+        margin: 8px 10px;
+      }
+      .sb-credits {
+        margin: 10px 10px 14px;
+        background: var(--muted);
+        border-radius: var(--r-md);
+        padding: 11px 12px;
+      }
 
-/* HEADER */
-.header {
-  height:var(--header);
-  background:var(--surface);
-  border-bottom:.5px solid var(--border);
-  display:flex; align-items:center;
-  padding:0 20px; gap:14px;
-  flex-shrink:0;
-}
-.hdr-title h1 { font-size:14px; font-weight:500; }
-.hdr-title p  { font-size:11px; color:var(--text-2); margin-top:1px; }
-.credits-pill {
-  flex:1; max-width:320px;
-  background:var(--muted);
-  border:.5px solid var(--border);
-  border-radius:var(--r-md);
-  padding:7px 13px;
-}
-.credits-pill-top {
-  display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;
-}
-.credits-label { font-size:10.5px; color:var(--text-2); font-weight:500; }
-.credits-recharge { font-size:10.5px; color:var(--brand-primary); font-weight:600; background:none; border:none; }
-.credits-amount { font-size:17px; font-weight:600; letter-spacing:-.02em; color:var(--text-1); }
-.credits-bar { height:3px; background:var(--border-md); border-radius:2px; overflow:hidden; margin:5px 0 2px; }
-.credits-bar-fill { height:100%; background:var(--brand-gradient); width:38%; border-radius:2px; }
-.credits-hint { font-size:9.5px; color:var(--text-3); }
-.hdr-actions { display:flex; align-items:center; gap:10px; margin-left:auto; flex-shrink:0; }
-.btn-primary {
-  padding:7px 15px; font-size:12.5px; font-weight:600;
-  background:var(--brand-gradient); color:#0C5460;
-  border:none; border-radius:var(--r-md); white-space:nowrap;
-}
-.avatar {
-  width:28px; height:28px; border-radius:50%;
-  background:var(--brand-teal);
-  display:flex; align-items:center; justify-content:center;
-  font-size:10px; font-weight:700; color:#AAEE22;
-}
-.notif-btn { position:relative; background:none; border:none; color:var(--text-2); padding:3px; }
-.notif-dot {
-  position:absolute; top:1px; right:1px;
-  width:6px; height:6px; background:var(--brand-primary);
-  border-radius:50%; border:1.5px solid var(--surface);
-}
+      /* HEADER */
+      .header {
+        height: var(--header);
+        background: var(--surface);
+        border-bottom: 0.5px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        gap: 14px;
+        flex-shrink: 0;
+      }
+      .hdr-title h1 {
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .hdr-title p {
+        font-size: 11px;
+        color: var(--text-2);
+        margin-top: 1px;
+      }
+      .credits-pill {
+        flex: 1;
+        max-width: 320px;
+        background: var(--muted);
+        border: 0.5px solid var(--border);
+        border-radius: var(--r-md);
+        padding: 7px 13px;
+      }
+      .credits-pill-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+      }
+      .credits-label {
+        font-size: 10.5px;
+        color: var(--text-2);
+        font-weight: 500;
+      }
+      .credits-recharge {
+        font-size: 10.5px;
+        color: var(--brand-primary);
+        font-weight: 600;
+        background: none;
+        border: none;
+      }
+      .credits-amount {
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--text-1);
+      }
+      .credits-bar {
+        height: 3px;
+        background: var(--border-md);
+        border-radius: 2px;
+        overflow: hidden;
+        margin: 5px 0 2px;
+      }
+      .credits-bar-fill {
+        height: 100%;
+        background: var(--brand-gradient);
+        width: 38%;
+        border-radius: 2px;
+      }
+      .credits-hint {
+        font-size: 9.5px;
+        color: var(--text-3);
+      }
+      .hdr-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+      .btn-primary {
+        padding: 7px 15px;
+        font-size: 12.5px;
+        font-weight: 600;
+        background: var(--brand-gradient);
+        color: #0c5460;
+        border: none;
+        border-radius: var(--r-md);
+        white-space: nowrap;
+      }
+      .avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--brand-teal);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        color: #aaee22;
+      }
+      .notif-btn {
+        position: relative;
+        background: none;
+        border: none;
+        color: var(--text-2);
+        padding: 3px;
+      }
+      .notif-dot {
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        width: 6px;
+        height: 6px;
+        background: var(--brand-primary);
+        border-radius: 50%;
+        border: 1.5px solid var(--surface);
+      }
 
-/* MAIN + CONTENT */
-.main { flex:1; min-width:0; display:flex; flex-direction:column; }
-.content { flex:1; overflow:hidden; padding:18px 20px; display:flex; flex-direction:column; gap:12px; }
+      /* MAIN + CONTENT */
+      .main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .content {
+        flex: 1;
+        overflow: hidden;
+        padding: 18px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
 
-/* CARDS */
-.card {
-  background:var(--surface);
-  border:.5px solid var(--border);
-  border-radius:var(--r-lg);
-  padding:16px;
-}
-.card-title { font-size:13px; font-weight:500; color:var(--text-1); }
-.card-subtitle { font-size:11px; color:var(--text-2); margin-top:3px; }
+      /* CARDS */
+      .card {
+        background: var(--surface);
+        border: 0.5px solid var(--border);
+        border-radius: var(--r-lg);
+        padding: 16px;
+      }
+      .card-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-1);
+      }
+      .card-subtitle {
+        font-size: 11px;
+        color: var(--text-2);
+        margin-top: 3px;
+      }
 
-/* CHIPS & BADGES */
-.chip {
-  display:inline-flex; align-items:center;
-  padding:2px 8px; border-radius:4px;
-  font-size:11px; font-weight:500;
-}
-.status { font-size:11.5px; font-weight:500; }
+      /* CHIPS & BADGES */
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .status {
+        font-size: 11.5px;
+        font-weight: 500;
+      }
 
-/* KPI cards */
-.kpi-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
-.kpi { background:var(--muted); border-radius:var(--r-md); padding:14px 16px; }
-.kpi-label { font-size:10.5px; color:var(--text-2); margin-bottom:4px; }
-.kpi-value { font-size:21px; font-weight:600; letter-spacing:-.02em; }
-.kpi-delta { font-size:10.5px; margin-top:4px; }
-.up { color:var(--success); }
-.down { color:var(--danger); }
+      /* KPI cards */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .kpi {
+        background: var(--muted);
+        border-radius: var(--r-md);
+        padding: 14px 16px;
+      }
+      .kpi-label {
+        font-size: 10.5px;
+        color: var(--text-2);
+        margin-bottom: 4px;
+      }
+      .kpi-value {
+        font-size: 21px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+      .kpi-delta {
+        font-size: 10.5px;
+        margin-top: 4px;
+      }
+      .up {
+        color: var(--success);
+      }
+      .down {
+        color: var(--danger);
+      }
 
-/* TABLES */
-.data-table th {
-  font-size:11px; font-weight:500; color:var(--text-2);
-  padding:7px 0; border-bottom:.5px solid var(--border); text-align:left;
-}
-.data-table td {
-  font-size:12.5px; padding:9px 0;
-  border-bottom:.5px solid var(--border); vertical-align:middle;
-}
-.data-table th:not(:first-child),
-.data-table td:not(:first-child) { text-align:right; }
+      /* TABLES */
+      .data-table th {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-2);
+        padding: 7px 0;
+        border-bottom: 0.5px solid var(--border);
+        text-align: left;
+      }
+      .data-table td {
+        font-size: 12.5px;
+        padding: 9px 0;
+        border-bottom: 0.5px solid var(--border);
+        vertical-align: middle;
+      }
+      .data-table th:not(:first-child),
+      .data-table td:not(:first-child) {
+        text-align: right;
+      }
 
-/* FORM ELEMENTS */
-.form-label { font-size:11.5px; font-weight:500; color:var(--text-1); margin-bottom:6px; display:block; }
-.form-input {
-  width:100%; padding:9px 12px;
-  border:.5px solid var(--border-md);
-  border-radius:var(--r-md);
-  font-size:13px; color:var(--text-1);
-  background:var(--surface);
-  font-family:var(--font);
-  outline:none;
-}
-.form-input:focus { border-color:var(--brand-primary); }
-.form-select {
-  width:100%; padding:9px 12px;
-  border:.5px solid var(--border-md);
-  border-radius:var(--r-md);
-  font-size:13px; color:var(--text-1);
-  background:var(--surface);
-  font-family:var(--font);
-  appearance:none;
-}
-.form-textarea {
-  width:100%; padding:10px 12px;
-  border:.5px solid var(--border-md);
-  border-radius:var(--r-md);
-  font-size:13px; color:var(--text-1);
-  background:var(--surface);
-  font-family:var(--font);
-  resize:none;
-  outline:none;
-}
-.form-group { margin-bottom:14px; }
+      /* FORM ELEMENTS */
+      .form-label {
+        font-size: 11.5px;
+        font-weight: 500;
+        color: var(--text-1);
+        margin-bottom: 6px;
+        display: block;
+      }
+      .form-input {
+        width: 100%;
+        padding: 9px 12px;
+        border: 0.5px solid var(--border-md);
+        border-radius: var(--r-md);
+        font-size: 13px;
+        color: var(--text-1);
+        background: var(--surface);
+        font-family: var(--font);
+        outline: none;
+      }
+      .form-input:focus {
+        border-color: var(--brand-primary);
+      }
+      .form-select {
+        width: 100%;
+        padding: 9px 12px;
+        border: 0.5px solid var(--border-md);
+        border-radius: var(--r-md);
+        font-size: 13px;
+        color: var(--text-1);
+        background: var(--surface);
+        font-family: var(--font);
+        appearance: none;
+      }
+      .form-textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 0.5px solid var(--border-md);
+        border-radius: var(--r-md);
+        font-size: 13px;
+        color: var(--text-1);
+        background: var(--surface);
+        font-family: var(--font);
+        resize: none;
+        outline: none;
+      }
+      .form-group {
+        margin-bottom: 14px;
+      }
 
-/* TOGGLE */
-.toggle { width:28px; height:16px; border-radius:8px; display:flex; align-items:center; padding:2px; flex-shrink:0; }
-.toggle.on  { background:var(--brand-primary); justify-content:flex-end; }
-.toggle.off { background:var(--border-md); justify-content:flex-start; }
-.toggle-knob { width:12px; height:12px; background:white; border-radius:50%; }
+      /* TOGGLE */
+      .toggle {
+        width: 28px;
+        height: 16px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        padding: 2px;
+        flex-shrink: 0;
+      }
+      .toggle.on {
+        background: var(--brand-primary);
+        justify-content: flex-end;
+      }
+      .toggle.off {
+        background: var(--border-md);
+        justify-content: flex-start;
+      }
+      .toggle-knob {
+        width: 12px;
+        height: 12px;
+        background: white;
+        border-radius: 50%;
+      }
 
-/* BTN variants */
-.btn-outline {
-  padding:7px 14px; font-size:12.5px;
-  background:transparent; color:var(--text-2);
-  border:.5px solid var(--border-md);
-  border-radius:var(--r-md);
-}
-.btn-teal {
-  padding:7px 14px; font-size:12.5px; font-weight:600;
-  background:var(--brand-teal); color:#AAEE22;
-  border:none; border-radius:var(--r-md);
-}
-.btn-ghost {
-  background:none; border:none; font-size:12px;
-  color:var(--text-2); padding:0;
-}
-.btn-sm {
-  padding:5px 10px; font-size:11.5px;
-  border-radius:var(--r-sm);
-  border:.5px solid var(--border-md);
-  background:var(--surface); color:var(--text-2);
-}
+      /* BTN variants */
+      .btn-outline {
+        padding: 7px 14px;
+        font-size: 12.5px;
+        background: transparent;
+        color: var(--text-2);
+        border: 0.5px solid var(--border-md);
+        border-radius: var(--r-md);
+      }
+      .btn-teal {
+        padding: 7px 14px;
+        font-size: 12.5px;
+        font-weight: 600;
+        background: var(--brand-teal);
+        color: #aaee22;
+        border: none;
+        border-radius: var(--r-md);
+      }
+      .btn-ghost {
+        background: none;
+        border: none;
+        font-size: 12px;
+        color: var(--text-2);
+        padding: 0;
+      }
+      .btn-sm {
+        padding: 5px 10px;
+        font-size: 11.5px;
+        border-radius: var(--r-sm);
+        border: 0.5px solid var(--border-md);
+        background: var(--surface);
+        color: var(--text-2);
+      }
 
-/* DIVIDER */
-.divider { height:.5px; background:var(--border); margin:4px 0; }
+      /* DIVIDER */
+      .divider {
+        height: 0.5px;
+        background: var(--border);
+        margin: 4px 0;
+      }
 
-/* PILL TAG */
-.tag {
-  display:inline-flex; align-items:center; gap:4px;
-  padding:3px 9px; border-radius:20px;
-  font-size:11px; font-weight:500;
-  background:var(--muted); color:var(--text-2);
-}
-.tag.green { background:var(--brand-light); color:var(--brand-text); }
-.tag.teal  { background:#E0EDEF; color:var(--brand-teal); }
+      /* PILL TAG */
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 500;
+        background: var(--muted);
+        color: var(--text-2);
+      }
+      .tag.green {
+        background: var(--brand-light);
+        color: var(--brand-text);
+      }
+      .tag.teal {
+        background: #e0edef;
+        color: var(--brand-teal);
+      }
 
-/* STEP WIZARD */
-.wizard-steps {
-  display:flex; align-items:center; gap:0;
-  margin-bottom:20px;
-}
-.wstep {
-  display:flex; align-items:center; gap:8px;
-  font-size:12px; color:var(--text-3); flex:1;
-}
-.wstep.active { color:var(--brand-teal); font-weight:500; }
-.wstep.done   { color:var(--success); }
-.wstep-num {
-  width:22px; height:22px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:10px; font-weight:700; flex-shrink:0;
-  background:var(--muted); color:var(--text-3);
-  border:.5px solid var(--border-md);
-}
-.wstep.active .wstep-num { background:var(--brand-teal); color:#AAEE22; border-color:var(--brand-teal); }
-.wstep.done .wstep-num   { background:var(--brand-light); color:var(--brand-text); border-color:var(--brand-primary); }
-.wstep-line { flex:1; height:.5px; background:var(--border-md); margin:0 8px; max-width:40px; }
-.wstep.done + .wstep-line { background:var(--brand-primary); }
+      /* STEP WIZARD */
+      .wizard-steps {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 20px;
+      }
+      .wstep {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--text-3);
+        flex: 1;
+      }
+      .wstep.active {
+        color: var(--brand-teal);
+        font-weight: 500;
+      }
+      .wstep.done {
+        color: var(--success);
+      }
+      .wstep-num {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        flex-shrink: 0;
+        background: var(--muted);
+        color: var(--text-3);
+        border: 0.5px solid var(--border-md);
+      }
+      .wstep.active .wstep-num {
+        background: var(--brand-teal);
+        color: #aaee22;
+        border-color: var(--brand-teal);
+      }
+      .wstep.done .wstep-num {
+        background: var(--brand-light);
+        color: var(--brand-text);
+        border-color: var(--brand-primary);
+      }
+      .wstep-line {
+        flex: 1;
+        height: 0.5px;
+        background: var(--border-md);
+        margin: 0 8px;
+        max-width: 40px;
+      }
+      .wstep.done + .wstep-line {
+        background: var(--brand-primary);
+      }
 
-/* WORKFLOW CANVAS */
-.wf-canvas {
-  background:var(--bg);
-  border:.5px solid var(--border);
-  border-radius:var(--r-lg);
-  position:relative;
-  overflow:hidden;
-}
-.wf-node {
-  position:absolute;
-  background:var(--surface);
-  border:.5px solid var(--border-md);
-  border-radius:var(--r-md);
-  padding:10px 14px;
-  min-width:160px;
-  text-align:center;
-}
-.wf-node.trigger { border-color:var(--brand-teal); background:#E0EDEF; }
-.wf-node.action  { border-color:var(--brand-primary); background:var(--brand-light); }
-.wf-node.condition { border-color:var(--warning); background:#FEF3C7; }
-.wf-node.end { border-color:var(--border-md); background:var(--muted); }
-.wf-node-icon { font-size:18px; margin-bottom:4px; }
-.wf-node-label { font-size:11.5px; font-weight:500; color:var(--text-1); }
-.wf-node-sub { font-size:10px; color:var(--text-2); margin-top:2px; }
-.wf-connector {
-  position:absolute;
-  background:var(--border-md);
-  width:1.5px;
-}
+      /* WORKFLOW CANVAS */
+      .wf-canvas {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--r-lg);
+        position: relative;
+        overflow: hidden;
+      }
+      .wf-node {
+        position: absolute;
+        background: var(--surface);
+        border: 0.5px solid var(--border-md);
+        border-radius: var(--r-md);
+        padding: 10px 14px;
+        min-width: 160px;
+        text-align: center;
+      }
+      .wf-node.trigger {
+        border-color: var(--brand-teal);
+        background: #e0edef;
+      }
+      .wf-node.action {
+        border-color: var(--brand-primary);
+        background: var(--brand-light);
+      }
+      .wf-node.condition {
+        border-color: var(--warning);
+        background: #fef3c7;
+      }
+      .wf-node.end {
+        border-color: var(--border-md);
+        background: var(--muted);
+      }
+      .wf-node-icon {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+      .wf-node-label {
+        font-size: 11.5px;
+        font-weight: 500;
+        color: var(--text-1);
+      }
+      .wf-node-sub {
+        font-size: 10px;
+        color: var(--text-2);
+        margin-top: 2px;
+      }
+      .wf-connector {
+        position: absolute;
+        background: var(--border-md);
+        width: 1.5px;
+      }
 
-/* PHONE MOCKUP */
-.phone-mock {
-  width:180px; flex-shrink:0;
-  background:#1A1A1A;
-  border-radius:20px;
-  padding:12px 0;
-  display:flex; flex-direction:column; align-items:center;
-}
-.phone-screen {
-  width:156px; background:#F0F0F0;
-  border-radius:10px; overflow:hidden;
-  flex:1; padding:10px 10px;
-}
-.sms-bubble {
-  background:#2EC80A; color:white;
-  border-radius:12px 12px 2px 12px;
-  padding:8px 12px; font-size:11px;
-  line-height:1.5; margin-bottom:4px;
-  max-width:90%;
-  margin-left:auto;
-}
-.sms-time { font-size:9px; color:var(--text-3); text-align:right; }
+      /* PHONE MOCKUP */
+      .phone-mock {
+        width: 180px;
+        flex-shrink: 0;
+        background: #1a1a1a;
+        border-radius: 20px;
+        padding: 12px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .phone-screen {
+        width: 156px;
+        background: #f0f0f0;
+        border-radius: 10px;
+        overflow: hidden;
+        flex: 1;
+        padding: 10px 10px;
+      }
+      .sms-bubble {
+        background: #2ec80a;
+        color: white;
+        border-radius: 12px 12px 2px 12px;
+        padding: 8px 12px;
+        font-size: 11px;
+        line-height: 1.5;
+        margin-bottom: 4px;
+        max-width: 90%;
+        margin-left: auto;
+      }
+      .sms-time {
+        font-size: 9px;
+        color: var(--text-3);
+        text-align: right;
+      }
 
-/* ANALYTICS */
-.analytics-stat {
-  background:var(--muted); border-radius:var(--r-md);
-  padding:14px; text-align:center;
-}
-.analytics-stat .big { font-size:28px; font-weight:700; letter-spacing:-.03em; }
-.analytics-stat .lbl { font-size:10.5px; color:var(--text-2); margin-top:4px; }
-.progress-track {
-  background:var(--border-md); height:6px;
-  border-radius:3px; overflow:hidden; margin-top:4px;
-}
-.progress-fill { height:100%; border-radius:3px; }
+      /* ANALYTICS */
+      .analytics-stat {
+        background: var(--muted);
+        border-radius: var(--r-md);
+        padding: 14px;
+        text-align: center;
+      }
+      .analytics-stat .big {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+      .analytics-stat .lbl {
+        font-size: 10.5px;
+        color: var(--text-2);
+        margin-top: 4px;
+      }
+      .progress-track {
+        background: var(--border-md);
+        height: 6px;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+      }
 
-/* PAYMENT TABS */
-.pay-tab {
-  flex:1; padding:10px; font-size:13px; font-weight:500;
-  border:none; background:var(--muted); color:var(--text-2);
-  cursor:pointer;
-}
-.pay-tab.active { background:var(--brand-gradient); color:#0C5460; }
-.pay-tab:first-child { border-radius:var(--r-md) 0 0 var(--r-md); }
-.pay-tab:last-child  { border-radius:0 var(--r-md) var(--r-md) 0; }
+      /* PAYMENT TABS */
+      .pay-tab {
+        flex: 1;
+        padding: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        background: var(--muted);
+        color: var(--text-2);
+        cursor: pointer;
+      }
+      .pay-tab.active {
+        background: var(--brand-gradient);
+        color: #0c5460;
+      }
+      .pay-tab:first-child {
+        border-radius: var(--r-md) 0 0 var(--r-md);
+      }
+      .pay-tab:last-child {
+        border-radius: 0 var(--r-md) var(--r-md) 0;
+      }
 
-.amount-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
-.amount-btn {
-  padding:9px; font-size:12.5px; font-weight:500;
-  border:.5px solid var(--border-md);
-  border-radius:var(--r-md);
-  background:var(--surface); color:var(--text-1);
-  cursor:pointer; text-align:center;
-}
-.amount-btn.selected { border-color:var(--brand-primary); background:var(--brand-light); color:var(--brand-teal); }
+      .amount-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .amount-btn {
+        padding: 9px;
+        font-size: 12.5px;
+        font-weight: 500;
+        border: 0.5px solid var(--border-md);
+        border-radius: var(--r-md);
+        background: var(--surface);
+        color: var(--text-1);
+        cursor: pointer;
+        text-align: center;
+      }
+      .amount-btn.selected {
+        border-color: var(--brand-primary);
+        background: var(--brand-light);
+        color: var(--brand-teal);
+      }
 
-.card-field {
-  display:grid; grid-template-columns:2fr 1fr 1fr; gap:8px;
-}
+      .card-field {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 8px;
+      }
 
-/* SEGMENT builder */
-.filter-row {
-  display:flex; align-items:center; gap:8px;
-  background:var(--muted); border-radius:var(--r-md);
-  padding:9px 12px; margin-bottom:6px;
-}
-.filter-chip {
-  padding:3px 10px; border-radius:4px;
-  font-size:11px; font-weight:600;
-  background:#E0EDEF; color:var(--brand-teal);
-}
+      /* SEGMENT builder */
+      .filter-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--muted);
+        border-radius: var(--r-md);
+        padding: 9px 12px;
+        margin-bottom: 6px;
+      }
+      .filter-chip {
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #e0edef;
+        color: var(--brand-teal);
+      }
 
-/* CONTACT CARD */
-.contact-row {
-  display:flex; align-items:center; gap:12px;
-  padding:9px 0; border-bottom:.5px solid var(--border);
-}
-.contact-avatar {
-  width:30px; height:30px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:11px; font-weight:700; flex-shrink:0;
-  background:var(--brand-light); color:var(--brand-teal);
-}
+      /* CONTACT CARD */
+      .contact-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 9px 0;
+        border-bottom: 0.5px solid var(--border);
+      }
+      .contact-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+        background: var(--brand-light);
+        color: var(--brand-teal);
+      }
 
-/* HEATMAP */
-.hm-cell { height:15px; border-radius:2px; }
-.hm-grid { display:grid; gap:2px; align-items:center; }
+      /* HEATMAP */
+      .hm-cell {
+        height: 15px;
+        border-radius: 2px;
+      }
+      .hm-grid {
+        display: grid;
+        gap: 2px;
+        align-items: center;
+      }
 
-/* MISC */
-.flex { display:flex; }
-.flex-1 { flex:1; }
-.items-center { align-items:center; }
-.justify-between { justify-content:space-between; }
-.gap-8 { gap:8px; }
-.gap-12 { gap:12px; }
-.gap-16 { gap:16px; }
-.mb-8  { margin-bottom:8px; }
-.mb-12 { margin-bottom:12px; }
-.mb-16 { margin-bottom:16px; }
-.text-sm { font-size:12px; }
-.text-xs { font-size:10.5px; }
-.text-muted { color:var(--text-2); }
-.font-medium { font-weight:500; }
-.font-semibold { font-weight:600; }
-.grid-2 { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; }
-.grid-3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
-.col-span-2 { grid-column:span 2; }
-</style>
-<style id="extracted-fullpage-overrides">
-html, body { height: 100%; }
-body { margin: 0; background: var(--bg) !important; }
-.screen { width: 100vw !important; min-width: 100vw !important; border-radius: 0 !important; }
-.app { height: 100vh !important; }
-.content { overflow: auto !important; }
-</style>
-
-</head>
-<body style="background:#F7F9F7;">
-<!-- ══════════════════ ÉCRAN 1 : DASHBOARD ══════════════════ -->
-<div class="screen" id="sc-0">
-<div class="app">
-  <!-- sidebar -->
-  <aside class="sidebar">
-    <div class="sb-logo">
-      <div class="sb-logomark">
-        <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
-          <rect x="0" y="2" width="6" height="14" rx="1.5" fill="#2EC80A"/>
-          <path d="M6 2h6a4 4 0 014 4v6a2 2 0 01-2 2H6V2z" fill="url(#g1)"/>
-          <defs><linearGradient id="g1" x1="6" y1="2" x2="16" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#2EC80A"/><stop offset="100%" stop-color="#AAEE22"/></linearGradient></defs>
-        </svg>
-      </div>
-      <span style="font-size:14px; font-weight:700; color:var(--text-1);">NovaSMS</span>
-    </div>
-    <div class="sb-nav">
-      <div class="sb-section-label">Principal</div>
-      <div class="nav-item active">
-        <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>
-        Tableau de bord
-      </div>
-      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 12.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>Contacts<span class="nav-badge">12k</span></div>
-      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="12" height="9" rx="1"/><polyline points="1,4 7,9 13,4"/></svg>Campagnes</div>
-      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="8,1 4,8 7,8 6,13 11,6 7,6"/></svg>Automatisations<span class="nav-badge green">3</span></div>
-      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="7" width="3" height="6"/><rect x="5.5" y="4" width="3" height="9"/><rect x="10" y="1" width="3" height="12"/></svg>Analytics</div>
-      <div class="sb-divider"></div>
-      <div class="sb-section-label">Compte</div>
-      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="5.5" cy="4" r="2.5"/><path d="M1 12c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5"/><line x1="10.5" y1="4.5" x2="10.5" y2="8.5"/><line x1="8.5" y1="6.5" x2="12.5" y2="6.5"/></svg>Équipe</div>
-      <div class="nav-item"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="2.5"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13"/></svg>Paramètres</div>
-    </div>
-  </aside>
-
-  <!-- main -->
-  <div class="main">
-    <div class="header">
-      <div class="hdr-title"><h1>Tableau de bord</h1><p>Jeudi 16 avril 2026 · Bonjour, Kofi</p></div>
-      <div class="credits-pill">
-        <div class="credits-pill-top">
-          <span class="credits-label">Crédits disponibles</span>
-          <button class="credits-recharge">Recharger ↗</button>
-        </div>
-        <div class="flex items-center gap-8">
-          <span class="credits-amount">47 500 FCFA</span>
-          <div style="flex:1">
-            <div class="credits-bar"><div class="credits-bar-fill"></div></div>
-            <div class="credits-hint">38% restant · Alerte sous 20 000 FCFA</div>
+      /* MISC */
+      .flex {
+        display: flex;
+      }
+      .flex-1 {
+        flex: 1;
+      }
+      .items-center {
+        align-items: center;
+      }
+      .justify-between {
+        justify-content: space-between;
+      }
+      .gap-8 {
+        gap: 8px;
+      }
+      .gap-12 {
+        gap: 12px;
+      }
+      .gap-16 {
+        gap: 16px;
+      }
+      .mb-8 {
+        margin-bottom: 8px;
+      }
+      .mb-12 {
+        margin-bottom: 12px;
+      }
+      .mb-16 {
+        margin-bottom: 16px;
+      }
+      .text-sm {
+        font-size: 12px;
+      }
+      .text-xs {
+        font-size: 10.5px;
+      }
+      .text-muted {
+        color: var(--text-2);
+      }
+      .font-medium {
+        font-weight: 500;
+      }
+      .font-semibold {
+        font-weight: 600;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 12px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .col-span-2 {
+        grid-column: span 2;
+      }
+    </style>
+    <style id="extracted-fullpage-overrides">
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--bg) !important;
+      }
+      .screen {
+        width: 100vw !important;
+        min-width: 100vw !important;
+        border-radius: 0 !important;
+      }
+      .app {
+        height: 100vh !important;
+      }
+      .content {
+        overflow: auto !important;
+      }
+    </style>
+  </head>
+  <body style="background: #f7f9f7">
+    <!-- ══════════════════ ÉCRAN 1 : DASHBOARD ══════════════════ -->
+    <div class="screen" id="sc-0">
+      <div class="app">
+        <!-- sidebar -->
+        <aside class="sidebar">
+          <div class="sb-logo">
+            <div class="sb-logomark">
+              <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
+                <rect x="0" y="2" width="6" height="14" rx="1.5" fill="#2EC80A" />
+                <path d="M6 2h6a4 4 0 014 4v6a2 2 0 01-2 2H6V2z" fill="url(#g1)" />
+                <defs>
+                  <linearGradient
+                    id="g1"
+                    x1="6"
+                    y1="2"
+                    x2="16"
+                    y2="14"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop offset="0%" stop-color="#2EC80A" />
+                    <stop offset="100%" stop-color="#AAEE22" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <span style="font-size: 14px; font-weight: 700; color: var(--text-1)">NovaSMS</span>
           </div>
-        </div>
-      </div>
-      <div class="hdr-actions">
-        <button class="notif-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M8 2a5 5 0 015 5v2l1 2H2l1-2V7a5 5 0 015-5z"/><path d="M6.5 13.5a1.5 1.5 0 003 0"/></svg><div class="notif-dot"></div></button>
-        <button class="btn-primary">+ Nouvelle campagne</button>
-        <div class="avatar">KM</div>
-      </div>
-    </div>
-
-    <div class="content">
-      <!-- Onboarding -->
-      <div class="card" style="padding:12px 16px">
-        <div class="flex items-center justify-between mb-8">
-          <span class="card-title">Démarrage rapide — 3 étapes restantes</span>
-          <span style="font-size:18px; color:var(--text-3); cursor:pointer;">×</span>
-        </div>
-        <div class="flex gap-16 items-center">
-          <div class="flex items-center gap-8 text-sm"><div style="width:16px;height:16px;border-radius:50%;background:var(--brand-light);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="9" height="9" viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,6.5 7.5,2.5" fill="none" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span style="color:var(--success)">Profil complété</span></div>
-          <div class="flex items-center gap-8 text-sm text-muted"><div style="width:16px;height:16px;border-radius:50%;border:.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">2</div>Importer des contacts</div>
-          <div class="flex items-center gap-8 text-sm text-muted"><div style="width:16px;height:16px;border-radius:50%;border:.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">3</div>Configurer un canal</div>
-          <div class="flex items-center gap-8 text-sm text-muted"><div style="width:16px;height:16px;border-radius:50%;border:.5px solid var(--border-md);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">4</div>Lancer votre 1ère campagne</div>
-          <div class="flex items-center gap-8" style="margin-left:auto">
-            <div style="width:70px;height:3px;background:var(--border-md);border-radius:2px;overflow:hidden"><div style="width:25%;height:100%;background:var(--brand-gradient)"></div></div>
-            <span class="text-xs text-muted">1/4</span>
+          <div class="sb-nav">
+            <div class="sb-section-label">Principal</div>
+            <div class="nav-item active">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor">
+                <rect x="1" y="1" width="5" height="5" rx="1" />
+                <rect x="8" y="1" width="5" height="5" rx="1" />
+                <rect x="1" y="8" width="5" height="5" rx="1" />
+                <rect x="8" y="8" width="5" height="5" rx="1" />
+              </svg>
+              Tableau de bord
+            </div>
+            <div class="nav-item">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+              >
+                <circle cx="7" cy="4.5" r="2.5" />
+                <path d="M1.5 12.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5" /></svg
+              >Contacts<span class="nav-badge">12k</span>
+            </div>
+            <div class="nav-item">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="1" y="3" width="12" height="9" rx="1" />
+                <polyline points="1,4 7,9 13,4" /></svg
+              >Campagnes
+            </div>
+            <div class="nav-item">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="8,1 4,8 7,8 6,13 11,6 7,6" /></svg
+              >Automatisations<span class="nav-badge green">3</span>
+            </div>
+            <div class="nav-item">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor">
+                <rect x="1" y="7" width="3" height="6" />
+                <rect x="5.5" y="4" width="3" height="9" />
+                <rect x="10" y="1" width="3" height="12" /></svg
+              >Analytics
+            </div>
+            <div class="sb-divider"></div>
+            <div class="sb-section-label">Compte</div>
+            <div class="nav-item">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+              >
+                <circle cx="5.5" cy="4" r="2.5" />
+                <path d="M1 12c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5" />
+                <line x1="10.5" y1="4.5" x2="10.5" y2="8.5" />
+                <line x1="8.5" y1="6.5" x2="12.5" y2="6.5" /></svg
+              >Équipe
+            </div>
+            <div class="nav-item">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+              >
+                <circle cx="7" cy="7" r="2.5" />
+                <path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13" /></svg
+              >Paramètres
+            </div>
           </div>
-        </div>
-      </div>
+        </aside>
 
-      <!-- KPIs -->
-      <div class="kpi-grid">
-        <div class="kpi"><div class="kpi-label">Messages envoyés</div><div class="kpi-value">45 230</div><div class="kpi-delta up">↑ +12% vs période préc.</div></div>
-        <div class="kpi"><div class="kpi-label">Taux d'ouverture</div><div class="kpi-value">23.4%</div><div class="kpi-delta up">↑ +1.2 pt vs période préc.</div></div>
-        <div class="kpi"><div class="kpi-label">Taux de clic</div><div class="kpi-value">4.2%</div><div class="kpi-delta down">↓ −0.3 pt vs période préc.</div></div>
-        <div class="kpi"><div class="kpi-label">Désabonnements</div><div class="kpi-value">0.3%</div><div class="kpi-delta up">↓ −0.1 pt vs période préc.</div></div>
-      </div>
-
-      <!-- Charts row -->
-      <div style="display:grid; grid-template-columns:minmax(0,1.65fr) minmax(0,1fr); gap:12px; flex:1;">
-        <div class="card">
-          <div class="flex items-center justify-between mb-12">
-            <div>
-              <div class="card-title">Évolution des performances</div>
-              <div class="flex gap-12" style="margin-top:5px">
-                <div class="flex items-center gap-8 text-xs text-muted"><span style="width:18px;height:2px;background:var(--brand-primary);display:inline-block;border-radius:1px"></span>Envois</div>
-                <div class="flex items-center gap-8 text-xs text-muted"><span style="width:18px;border-top:2px dashed var(--brand-teal);display:inline-block"></span>Ouverture %</div>
+        <!-- main -->
+        <div class="main">
+          <div class="header">
+            <div class="hdr-title">
+              <h1>Tableau de bord</h1>
+              <p>Jeudi 16 avril 2026 · Bonjour, Kofi</p>
+            </div>
+            <div class="credits-pill">
+              <div class="credits-pill-top">
+                <span class="credits-label">Crédits disponibles</span>
+                <button class="credits-recharge">Recharger ↗</button>
               </div>
-            </div>
-            <div class="flex gap-4">
-              <button class="btn-sm" style="background:var(--muted);border-color:var(--border-md);color:var(--brand-teal);font-weight:600">7j</button>
-              <button class="btn-sm">30j</button>
-              <button class="btn-sm">90j</button>
-            </div>
-          </div>
-          <!-- Chart placeholder -->
-          <div style="height:160px; background:var(--muted); border-radius:var(--r-md); display:flex; align-items:flex-end; padding:10px 10px 0; gap:6px; overflow:hidden">
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%">
-              <div style="flex:1; width:100%; display:flex; align-items:flex-end">
-                <div style="width:100%; height:70%; background:rgba(46,200,10,0.15); border-radius:3px 3px 0 0; position:relative">
-                  <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div>
+              <div class="flex items-center gap-8">
+                <span class="credits-amount">47 500 FCFA</span>
+                <div style="flex: 1">
+                  <div class="credits-bar"><div class="credits-bar-fill"></div></div>
+                  <div class="credits-hint">38% restant · Alerte sous 20 000 FCFA</div>
                 </div>
               </div>
-              <span style="font-size:9px;color:var(--text-3)">10/04</span>
             </div>
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:78%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">11/04</span></div>
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:60%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">12/04</span></div>
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:90%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">13/04</span></div>
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:82%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">14/04</span></div>
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:100%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">15/04</span></div>
-            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%"><div style="flex:1; width:100%; display:flex; align-items:flex-end"><div style="width:100%;height:80%;background:rgba(46,200,10,0.15);border-radius:3px 3px 0 0;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--brand-primary);border-radius:1px"></div></div></div><span style="font-size:9px;color:var(--text-3)">16/04</span></div>
-          </div>
-        </div>
-        <div class="card" style="display:flex;flex-direction:column">
-          <div class="card-title mb-12">Répartition par canal</div>
-          <div style="display:flex;justify-content:center;margin-bottom:14px">
-            <div style="width:90px;height:90px;border-radius:50%;background:conic-gradient(#2EC80A 0% 48%, #0C5460 48% 84%, #AAEE22 84% 100%);position:relative;display:flex;align-items:center;justify-content:center">
-              <div style="width:56px;height:56px;background:white;border-radius:50%"></div>
+            <div class="hdr-actions">
+              <button class="notif-btn">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                >
+                  <path d="M8 2a5 5 0 015 5v2l1 2H2l1-2V7a5 5 0 015-5z" />
+                  <path d="M6.5 13.5a1.5 1.5 0 003 0" />
+                </svg>
+                <div class="notif-dot"></div>
+              </button>
+              <button class="btn-primary">+ Nouvelle campagne</button>
+              <div class="avatar">KM</div>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;flex:1">
-            <div class="flex items-center justify-between text-sm"><span class="flex items-center gap-8 text-muted"><span style="width:8px;height:8px;border-radius:2px;background:var(--brand-primary);display:inline-block"></span>SMS</span><div><strong>48%</strong><span class="text-xs text-muted" style="margin-left:4px">21 710</span></div></div>
-            <div class="flex items-center justify-between text-sm"><span class="flex items-center gap-8 text-muted"><span style="width:8px;height:8px;border-radius:2px;background:var(--brand-teal);display:inline-block"></span>Email</span><div><strong>36%</strong><span class="text-xs text-muted" style="margin-left:4px">16 283</span></div></div>
-            <div class="flex items-center justify-between text-sm"><span class="flex items-center gap-8 text-muted"><span style="width:8px;height:8px;border-radius:2px;background:var(--brand-lime);display:inline-block"></span>WhatsApp</span><div><strong>16%</strong><span class="text-xs text-muted" style="margin-left:4px">7 237</span></div></div>
-            <div class="divider"></div>
-            <div class="flex items-center justify-between text-sm font-medium"><span class="text-muted">Total</span><span>45 230</span></div>
+
+          <div class="content">
+            <!-- Onboarding -->
+            <div class="card" style="padding: 12px 16px">
+              <div class="flex items-center justify-between mb-8">
+                <span class="card-title">Démarrage rapide — 3 étapes restantes</span>
+                <span style="font-size: 18px; color: var(--text-3); cursor: pointer">×</span>
+              </div>
+              <div class="flex gap-16 items-center">
+                <div class="flex items-center gap-8 text-sm">
+                  <div
+                    style="
+                      width: 16px;
+                      height: 16px;
+                      border-radius: 50%;
+                      background: var(--brand-light);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      flex-shrink: 0;
+                    "
+                  >
+                    <svg width="9" height="9" viewBox="0 0 9 9">
+                      <polyline
+                        points="1.5,4.5 3.5,6.5 7.5,2.5"
+                        fill="none"
+                        stroke="#16A34A"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <span style="color: var(--success)">Profil complété</span>
+                </div>
+                <div class="flex items-center gap-8 text-sm text-muted">
+                  <div
+                    style="
+                      width: 16px;
+                      height: 16px;
+                      border-radius: 50%;
+                      border: 0.5px solid var(--border-md);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 9px;
+                      font-weight: 700;
+                      flex-shrink: 0;
+                    "
+                  >
+                    2
+                  </div>
+                  Importer des contacts
+                </div>
+                <div class="flex items-center gap-8 text-sm text-muted">
+                  <div
+                    style="
+                      width: 16px;
+                      height: 16px;
+                      border-radius: 50%;
+                      border: 0.5px solid var(--border-md);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 9px;
+                      font-weight: 700;
+                      flex-shrink: 0;
+                    "
+                  >
+                    3
+                  </div>
+                  Configurer un canal
+                </div>
+                <div class="flex items-center gap-8 text-sm text-muted">
+                  <div
+                    style="
+                      width: 16px;
+                      height: 16px;
+                      border-radius: 50%;
+                      border: 0.5px solid var(--border-md);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 9px;
+                      font-weight: 700;
+                      flex-shrink: 0;
+                    "
+                  >
+                    4
+                  </div>
+                  Lancer votre 1ère campagne
+                </div>
+                <div class="flex items-center gap-8" style="margin-left: auto">
+                  <div
+                    style="
+                      width: 70px;
+                      height: 3px;
+                      background: var(--border-md);
+                      border-radius: 2px;
+                      overflow: hidden;
+                    "
+                  >
+                    <div style="width: 25%; height: 100%; background: var(--brand-gradient)"></div>
+                  </div>
+                  <span class="text-xs text-muted">1/4</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- KPIs -->
+            <div class="kpi-grid">
+              <div class="kpi">
+                <div class="kpi-label">Messages envoyés</div>
+                <div class="kpi-value">45 230</div>
+                <div class="kpi-delta up">↑ +12% vs période préc.</div>
+              </div>
+              <div class="kpi">
+                <div class="kpi-label">Taux d'ouverture</div>
+                <div class="kpi-value">23.4%</div>
+                <div class="kpi-delta up">↑ +1.2 pt vs période préc.</div>
+              </div>
+              <div class="kpi">
+                <div class="kpi-label">Taux de clic</div>
+                <div class="kpi-value">4.2%</div>
+                <div class="kpi-delta down">↓ −0.3 pt vs période préc.</div>
+              </div>
+              <div class="kpi">
+                <div class="kpi-label">Désabonnements</div>
+                <div class="kpi-value">0.3%</div>
+                <div class="kpi-delta up">↓ −0.1 pt vs période préc.</div>
+              </div>
+            </div>
+
+            <!-- Charts row -->
+            <div
+              style="
+                display: grid;
+                grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+                gap: 12px;
+                flex: 1;
+              "
+            >
+              <div class="card">
+                <div class="flex items-center justify-between mb-12">
+                  <div>
+                    <div class="card-title">Évolution des performances</div>
+                    <div class="flex gap-12" style="margin-top: 5px">
+                      <div class="flex items-center gap-8 text-xs text-muted">
+                        <span
+                          style="
+                            width: 18px;
+                            height: 2px;
+                            background: var(--brand-primary);
+                            display: inline-block;
+                            border-radius: 1px;
+                          "
+                        ></span
+                        >Envois
+                      </div>
+                      <div class="flex items-center gap-8 text-xs text-muted">
+                        <span
+                          style="
+                            width: 18px;
+                            border-top: 2px dashed var(--brand-teal);
+                            display: inline-block;
+                          "
+                        ></span
+                        >Ouverture %
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex gap-4">
+                    <button
+                      class="btn-sm"
+                      style="
+                        background: var(--muted);
+                        border-color: var(--border-md);
+                        color: var(--brand-teal);
+                        font-weight: 600;
+                      "
+                    >
+                      7j
+                    </button>
+                    <button class="btn-sm">30j</button>
+                    <button class="btn-sm">90j</button>
+                  </div>
+                </div>
+                <!-- Chart placeholder -->
+                <div
+                  style="
+                    height: 160px;
+                    background: var(--muted);
+                    border-radius: var(--r-md);
+                    display: flex;
+                    align-items: flex-end;
+                    padding: 10px 10px 0;
+                    gap: 6px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 4px;
+                      height: 100%;
+                    "
+                  >
+                    <div style="flex: 1; width: 100%; display: flex; align-items: flex-end">
+                      <div
+                        style="
+                          width: 100%;
+                          height: 70%;
+                          background: rgba(46, 200, 10, 0.15);
+                          border-radius: 3px 3px 0 0;
+                          position: relative;
+                        "
+                      >
+                        <div
+                          style="
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            height: 2px;
+                            background: var(--brand-primary);
+                            border-radius: 1px;
+                          "
+                        ></div>
+                      </div>
+                    </div>
+                    <span style="font-size: 9px; color: var(--text-3)">10/04</span>
+                  </div>
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 4px;
+                      height: 100%;
+                    "
+                  >
+                    <div style="flex: 1; width: 100%; display: flex; align-items: flex-end">
+                      <div
+                        style="
+                          width: 100%;
+                          height: 78%;
+                          background: rgba(46, 200, 10, 0.15);
+                          border-radius: 3px 3px 0 0;
+                          position: relative;
+                        "
+                      >
+                        <div
+                          style="
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            height: 2px;
+                            background: var(--brand-primary);
+                            border-radius: 1px;
+                          "
+                        ></div>
+                      </div>
+                    </div>
+                    <span style="font-size: 9px; color: var(--text-3)">11/04</span>
+                  </div>
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 4px;
+                      height: 100%;
+                    "
+                  >
+                    <div style="flex: 1; width: 100%; display: flex; align-items: flex-end">
+                      <div
+                        style="
+                          width: 100%;
+                          height: 60%;
+                          background: rgba(46, 200, 10, 0.15);
+                          border-radius: 3px 3px 0 0;
+                          position: relative;
+                        "
+                      >
+                        <div
+                          style="
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            height: 2px;
+                            background: var(--brand-primary);
+                            border-radius: 1px;
+                          "
+                        ></div>
+                      </div>
+                    </div>
+                    <span style="font-size: 9px; color: var(--text-3)">12/04</span>
+                  </div>
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 4px;
+                      height: 100%;
+                    "
+                  >
+                    <div style="flex: 1; width: 100%; display: flex; align-items: flex-end">
+                      <div
+                        style="
+                          width: 100%;
+                          height: 90%;
+                          background: rgba(46, 200, 10, 0.15);
+                          border-radius: 3px 3px 0 0;
+                          position: relative;
+                        "
+                      >
+                        <div
+                          style="
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            height: 2px;
+                            background: var(--brand-primary);
+                            border-radius: 1px;
+                          "
+                        ></div>
+                      </div>
+                    </div>
+                    <span style="font-size: 9px; color: var(--text-3)">13/04</span>
+                  </div>
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 4px;
+                      height: 100%;
+                    "
+                  >
+                    <div style="flex: 1; width: 100%; display: flex; align-items: flex-end">
+                      <div
+                        style="
+                          width: 100%;
+                          height: 82%;
+                          background: rgba(46, 200, 10, 0.15);
+                          border-radius: 3px 3px 0 0;
+                          position: relative;
+                        "
+                      >
+                        <div
+                          style="
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            height: 2px;
+                            background: var(--brand-primary);
+                            border-radius: 1px;
+                          "
+                        ></div>
+                      </div>
+                    </div>
+                    <span style="font-size: 9px; color: var(--text-3)">14/04</span>
+                  </div>
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 4px;
+                      height: 100%;
+                    "
+                  >
+                    <div style="flex: 1; width: 100%; display: flex; align-items: flex-end">
+                      <div
+                        style="
+                          width: 100%;
+                          height: 100%;
+                          background: rgba(46, 200, 10, 0.15);
+                          border-radius: 3px 3px 0 0;
+                          position: relative;
+                        "
+                      >
+                        <div
+                          style="
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            height: 2px;
+                            background: var(--brand-primary);
+                            border-radius: 1px;
+                          "
+                        ></div>
+                      </div>
+                    </div>
+                    <span style="font-size: 9px; color: var(--text-3)">15/04</span>
+                  </div>
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      gap: 4px;
+                      height: 100%;
+                    "
+                  >
+                    <div style="flex: 1; width: 100%; display: flex; align-items: flex-end">
+                      <div
+                        style="
+                          width: 100%;
+                          height: 80%;
+                          background: rgba(46, 200, 10, 0.15);
+                          border-radius: 3px 3px 0 0;
+                          position: relative;
+                        "
+                      >
+                        <div
+                          style="
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            height: 2px;
+                            background: var(--brand-primary);
+                            border-radius: 1px;
+                          "
+                        ></div>
+                      </div>
+                    </div>
+                    <span style="font-size: 9px; color: var(--text-3)">16/04</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card" style="display: flex; flex-direction: column">
+                <div class="card-title mb-12">Répartition par canal</div>
+                <div style="display: flex; justify-content: center; margin-bottom: 14px">
+                  <div
+                    style="
+                      width: 90px;
+                      height: 90px;
+                      border-radius: 50%;
+                      background: conic-gradient(#2ec80a 0% 48%, #0c5460 48% 84%, #aaee22 84% 100%);
+                      position: relative;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                  >
+                    <div
+                      style="width: 56px; height: 56px; background: white; border-radius: 50%"
+                    ></div>
+                  </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; flex: 1">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="flex items-center gap-8 text-muted"
+                      ><span
+                        style="
+                          width: 8px;
+                          height: 8px;
+                          border-radius: 2px;
+                          background: var(--brand-primary);
+                          display: inline-block;
+                        "
+                      ></span
+                      >SMS</span
+                    >
+                    <div>
+                      <strong>48%</strong
+                      ><span class="text-xs text-muted" style="margin-left: 4px">21 710</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="flex items-center gap-8 text-muted"
+                      ><span
+                        style="
+                          width: 8px;
+                          height: 8px;
+                          border-radius: 2px;
+                          background: var(--brand-teal);
+                          display: inline-block;
+                        "
+                      ></span
+                      >Email</span
+                    >
+                    <div>
+                      <strong>36%</strong
+                      ><span class="text-xs text-muted" style="margin-left: 4px">16 283</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="flex items-center gap-8 text-muted"
+                      ><span
+                        style="
+                          width: 8px;
+                          height: 8px;
+                          border-radius: 2px;
+                          background: var(--brand-lime);
+                          display: inline-block;
+                        "
+                      ></span
+                      >WhatsApp</span
+                    >
+                    <div>
+                      <strong>16%</strong
+                      ><span class="text-xs text-muted" style="margin-left: 4px">7 237</span>
+                    </div>
+                  </div>
+                  <div class="divider"></div>
+                  <div class="flex items-center justify-between text-sm font-medium">
+                    <span class="text-muted">Total</span><span>45 230</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-</div><!-- /sc-0 -->
-</body>
+    <!-- /sc-0 -->
+  </body>
 </html>

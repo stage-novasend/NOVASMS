@@ -1,315 +1,478 @@
-<!DOCTYPE html>
+<!doctype html>
 
-<html class="light" lang="fr"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Configuration de la Sécurité 2FA - NovaSMS</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        h1, h2, h3, .headline-font {
-            font-family: 'Manrope', sans-serif;
-        }
-        .glass-panel {
-            background: rgba(243, 253, 233, 0.7);
-            backdrop-filter: blur(16px);
-        }
+<html class="light" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Configuration de la Sécurité 2FA - NovaSMS</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      h1,
+      h2,
+      h3,
+      .headline-font {
+        font-family: 'Manrope', sans-serif;
+      }
+      .glass-panel {
+        background: rgba(243, 253, 233, 0.7);
+        backdrop-filter: blur(16px);
+      }
     </style>
-<script id="tailwind-config">
-        tailwind.config = {
-          darkMode: "class",
-          theme: {
-            extend: {
-              "colors": {
-                      "on-tertiary-container": "#791a49",
-                      "inverse-on-surface": "#eaf4e1",
-                      "on-tertiary-fixed-variant": "#80214e",
-                      "on-surface": "#161e12",
-                      "on-secondary-fixed-variant": "#004e5a",
-                      "surface-tint": "#136e00",
-                      "inverse-primary": "#4ee330",
-                      "on-primary-container": "#0a4c00",
-                      "tertiary-fixed-dim": "#ffb0cc",
-                      "on-error-container": "#93000a",
-                      "background": "#f3fde9",
-                      "surface-container-lowest": "#ffffff",
-                      "secondary": "#276673",
-                      "outline": "#6d7b65",
-                      "tertiary": "#9f3967",
-                      "surface": "#f3fde9",
-                      "on-error": "#ffffff",
-                      "error": "#ba1a1a",
-                      "surface-dim": "#d3ddca",
-                      "secondary-fixed": "#b0ecfb",
-                      "secondary-fixed-dim": "#94d0de",
-                      "on-secondary-container": "#2c6b77",
-                      "on-surface-variant": "#3d4a37",
-                      "on-secondary-fixed": "#001f25",
-                      "surface-container-highest": "#dce6d3",
-                      "on-tertiary": "#ffffff",
-                      "inverse-surface": "#2a3326",
-                      "error-container": "#ffdad6",
-                      "secondary-container": "#ade9f8",
-                      "primary-fixed-dim": "#4ee330",
-                      "surface-container": "#e7f1de",
-                      "on-primary-fixed": "#022100",
-                      "primary": "#136e00",
-                      "outline-variant": "#bccbb2",
-                      "on-secondary": "#ffffff",
-                      "surface-container-high": "#e2ebd8",
-                      "on-primary": "#ffffff",
-                      "surface-variant": "#dce6d3",
-                      "surface-container-low": "#edf7e3",
-                      "tertiary-fixed": "#ffd9e4",
-                      "primary-fixed": "#79ff59",
-                      "surface-bright": "#f3fde9",
-                      "on-tertiary-fixed": "#3e0020",
-                      "primary-container": "#2ec80a",
-                      "tertiary-container": "#ff87b7",
-                      "on-primary-fixed-variant": "#0c5300",
-                      "on-background": "#161e12"
-              },
-              "borderRadius": {
-                      "DEFAULT": "0.125rem",
-                      "lg": "0.25rem",
-                      "xl": "0.5rem",
-                      "full": "0.75rem"
-              },
-              "fontFamily": {
-                      "headline": ["Manrope"],
-                      "display": ["Manrope"],
-                      "body": ["Inter"],
-                      "label": ["Inter"]
-              }
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'on-tertiary-container': '#791a49',
+              'inverse-on-surface': '#eaf4e1',
+              'on-tertiary-fixed-variant': '#80214e',
+              'on-surface': '#161e12',
+              'on-secondary-fixed-variant': '#004e5a',
+              'surface-tint': '#136e00',
+              'inverse-primary': '#4ee330',
+              'on-primary-container': '#0a4c00',
+              'tertiary-fixed-dim': '#ffb0cc',
+              'on-error-container': '#93000a',
+              background: '#f3fde9',
+              'surface-container-lowest': '#ffffff',
+              secondary: '#276673',
+              outline: '#6d7b65',
+              tertiary: '#9f3967',
+              surface: '#f3fde9',
+              'on-error': '#ffffff',
+              error: '#ba1a1a',
+              'surface-dim': '#d3ddca',
+              'secondary-fixed': '#b0ecfb',
+              'secondary-fixed-dim': '#94d0de',
+              'on-secondary-container': '#2c6b77',
+              'on-surface-variant': '#3d4a37',
+              'on-secondary-fixed': '#001f25',
+              'surface-container-highest': '#dce6d3',
+              'on-tertiary': '#ffffff',
+              'inverse-surface': '#2a3326',
+              'error-container': '#ffdad6',
+              'secondary-container': '#ade9f8',
+              'primary-fixed-dim': '#4ee330',
+              'surface-container': '#e7f1de',
+              'on-primary-fixed': '#022100',
+              primary: '#136e00',
+              'outline-variant': '#bccbb2',
+              'on-secondary': '#ffffff',
+              'surface-container-high': '#e2ebd8',
+              'on-primary': '#ffffff',
+              'surface-variant': '#dce6d3',
+              'surface-container-low': '#edf7e3',
+              'tertiary-fixed': '#ffd9e4',
+              'primary-fixed': '#79ff59',
+              'surface-bright': '#f3fde9',
+              'on-tertiary-fixed': '#3e0020',
+              'primary-container': '#2ec80a',
+              'tertiary-container': '#ff87b7',
+              'on-primary-fixed-variant': '#0c5300',
+              'on-background': '#161e12',
             },
-          }
-        }
+            borderRadius: {
+              DEFAULT: '0.125rem',
+              lg: '0.25rem',
+              xl: '0.5rem',
+              full: '0.75rem',
+            },
+            fontFamily: {
+              headline: ['Manrope'],
+              display: ['Manrope'],
+              body: ['Inter'],
+              label: ['Inter'],
+            },
+          },
+        },
+      };
     </script>
-</head>
-<body class="bg-surface text-on-surface min-h-screen">
-<!-- TopAppBar -->
-<header class="bg-[#faf8ff] dark:bg-[#131b2e] flex justify-between items-center px-6 py-4 w-full docked full-width top-0 sticky z-50">
-<div class="flex items-center gap-4">
-<span class="font-['Manrope'] font-extrabold text-[#3525cd] dark:text-[#4f46e5] tracking-[-0.02em] text-2xl">NovaSMS</span>
-</div>
-<div class="flex items-center gap-6">
-<div class="hidden md:flex gap-8 items-center font-['Manrope'] tracking-tight font-bold text-lg">
-<a class="text-[#777587] dark:text-[#a1a1aa] hover:bg-[#eaedff] dark:hover:bg-[#252f4d] transition-colors px-3 py-1 rounded-lg" href="#">Dashboard</a>
-<a class="text-[#777587] dark:text-[#a1a1aa] hover:bg-[#eaedff] dark:hover:bg-[#252f4d] transition-colors px-3 py-1 rounded-lg" href="#">Campaigns</a>
-<a class="text-[#3525cd] dark:text-[#4f46e5] font-bold" href="#">Security</a>
-</div>
-<div class="flex items-center gap-3">
-<span class="bg-surface-container-highest px-3 py-1.5 rounded-full text-sm font-bold text-on-surface-variant">Balance: 1,250</span>
-<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold overflow-hidden shadow-sm">
-<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a marketing executive with a confident expression, set against a clean, minimalist studio background. The lighting is soft and flattering, highlighting the subject's features with a modern, high-end feel. The overall aesthetic is polished and executive, perfectly fitting a premium SaaS application user profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiHVFgCbBZ5O-Lf4icd0C2WTYBW2a0FGDTwvRAUYDbPyvCR9g0m-VL_v44VpzjKU3T2pmNZBpAPN0hlHc2F0qz8u1YZlo1OhZU7JAs-JPyhnSovRltP2P5cioNw_sVrLGyou4iI0-bTLrYzBqcH7ZkLxxoPc60d3q2PUgH78izayLYHZgqmG7XUXobcN8XNm0NkE67M9r-_Jp9OENtEHU6BGpQ2VLDEKmKajosbbxzH_M-PQIIRdZuxRyUv4xPncn7CfhB5ZhRj2Ba"/>
-</div>
-</div>
-</div>
-</header>
-<main class="max-w-7xl mx-auto px-6 py-12 pb-24">
-<!-- Breadcrumb & Header -->
-<div class="mb-12">
-<div class="flex items-center gap-2 text-on-surface-variant mb-4 font-label text-sm tracking-wide uppercase">
-<span>Account</span>
-<span class="material-symbols-outlined text-xs">chevron_right</span>
-<span class="font-bold text-primary">Security Settings</span>
-</div>
-<h1 class="text-4xl md:text-5xl font-black headline-font tracking-tight text-on-surface mb-2">Configuration de la Sécurité 2FA</h1>
-<p class="text-on-surface-variant max-w-2xl text-lg leading-relaxed">Renforcez la protection de votre compte Nova Marketing en ajoutant une couche de sécurité supplémentaire lors de vos connexions.</p>
-</div>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-<!-- Left Column: Primary Config -->
-<div class="lg:col-span-8 space-y-8">
-<!-- Main Status & Toggle Card -->
-<section class="bg-surface-container-low p-8 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-<div class="flex items-start gap-4">
-<div class="w-14 h-14 bg-primary-fixed-dim rounded-xl flex items-center justify-center text-primary">
-<span class="material-symbols-outlined text-3xl">verified_user</span>
-</div>
-<div>
-<h3 class="text-xl font-bold headline-font mb-1">État de la double authentification</h3>
-<p class="text-on-surface-variant text-sm">La protection 2FA est actuellement désactivée.</p>
-</div>
-</div>
-<label class="relative inline-flex items-center cursor-pointer">
-<input class="sr-only peer" type="checkbox" value=""/>
-<div class="w-14 h-7 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
-<span class="ml-3 text-sm font-bold uppercase tracking-wider text-on-surface">Activer</span>
-</label>
-</section>
-<!-- Method Selection: Bento Card style -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<!-- TOTP App -->
-<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm flex flex-col h-full border border-primary/5">
-<div class="flex justify-between items-start mb-6">
-<div class="p-3 bg-secondary-container rounded-lg text-secondary">
-<span class="material-symbols-outlined text-2xl">phonelink_setup</span>
-</div>
-<span class="bg-primary-container/10 text-primary-container text-[10px] font-black px-2 py-0.5 rounded tracking-widest uppercase">Recommandé</span>
-</div>
-<h4 class="text-lg font-bold headline-font mb-2">Application d'authentification</h4>
-<p class="text-on-surface-variant text-sm flex-grow leading-snug">Utilisez Google Authenticator ou Authy pour générer des codes de sécurité même hors ligne.</p>
-<button class="mt-6 w-full py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-md flex items-center justify-center gap-2 transition-transform active:scale-95">
-                            Configurer (TOTP)
-                        </button>
-</div>
-<!-- SMS Method -->
-<div class="bg-surface-container p-8 rounded-xl flex flex-col h-full opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-not-allowed">
-<div class="p-3 bg-white/50 w-fit rounded-lg text-on-surface-variant mb-6">
-<span class="material-symbols-outlined text-2xl">sms</span>
-</div>
-<h4 class="text-lg font-bold headline-font mb-2">SMS</h4>
-<p class="text-on-surface-variant text-sm flex-grow leading-snug">Recevez un code à 6 chiffres par message texte sur votre mobile enregistré.</p>
-<button class="mt-6 w-full py-3 bg-surface-container-highest text-on-surface-variant font-bold rounded-md cursor-not-allowed">
-                            Indisponible
-                        </button>
-</div>
-</div>
-<!-- Setup Wizard: Application (TOTP) -->
-<section class="bg-surface-container-lowest p-8 md:p-12 rounded-xl shadow-sm border-l-4 border-primary">
-<div class="flex items-center gap-3 mb-10">
-<span class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">1</span>
-<h3 class="text-2xl font-bold headline-font">Assistant de configuration TOTP</h3>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-<!-- Step A: QR Code -->
-<div class="space-y-6">
-<div>
-<h5 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4">Étape 1: Scannez le code</h5>
-<div class="bg-white p-6 rounded-xl inline-block shadow-md">
-<div class="w-48 h-48 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="A macro shot of a complex, minimalist QR code displayed on a high-resolution smartphone screen. The screen is clean and reflects soft green studio lighting. The background is a blurred, professional office setting with deep teal and organic green accents. The overall atmosphere is focused on high-tech precision and security." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU-Ptggh__4x0tQQOEFN-ZhdUDYNZ441OwTJa5Hh1KE9I_iosJOLAnuNCs8xaSfK3QfB1KH2zxBOI1rB3RcNlG7hk_GMsw-XCDR6VNyZPtEbDy6_F61B6Y2K-PlizrEqg1Ya7Gh4hVhPYhYYIUM0P4xs349R7oZonQ8DwNNXHlmqyaS0E-SPU-DdogjAXsbx9baSMbB2Ql7XoaLJEzFmuOpZShO_F7zbtYiD8IHj2TZYVlX1hJBGyPPNa1NE_0XOddesfekxQ7syda"/>
-<div class="absolute inset-0 border-2 border-primary/20 rounded-lg"></div>
-</div>
-</div>
-</div>
-<div class="bg-surface-container-low p-4 rounded-lg">
-<p class="text-xs font-bold text-on-surface-variant uppercase mb-2">Clé manuelle</p>
-<div class="flex items-center justify-between font-mono text-sm tracking-widest text-secondary font-bold">
-<span>J3KZ L92M 88WQ PX44</span>
-<button class="text-primary hover:bg-primary/10 p-1 rounded transition-colors">
-<span class="material-symbols-outlined text-sm">content_copy</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Step B: Verification -->
-<div class="flex flex-col justify-center space-y-8">
-<div>
-<h5 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4">Étape 2: Vérifiez le code</h5>
-<p class="text-sm text-on-surface-variant leading-relaxed mb-6">
-                                    Saisissez le code à 6 chiffres généré par votre application d'authentification pour confirmer la synchronisation.
-                                </p>
-<div class="flex gap-2 justify-between">
-<input class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all" maxlength="1" type="text"/>
-<input class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all" maxlength="1" type="text"/>
-<input class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all" maxlength="1" type="text"/>
-<span class="flex items-center text-on-surface-variant opacity-30">—</span>
-<input class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all" maxlength="1" type="text"/>
-<input class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all" maxlength="1" type="text"/>
-<input class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all" maxlength="1" type="text"/>
-</div>
-</div>
-<button class="w-full py-4 bg-secondary text-on-secondary font-bold rounded-md shadow-lg shadow-secondary/10 hover:bg-secondary/90 transition-all">
-                                Valider et Terminer
-                            </button>
-</div>
-</div>
-</section>
-</div>
-<!-- Right Column: Secondary Info / Backup Codes -->
-<aside class="lg:col-span-4 space-y-6">
-<!-- Backup Codes Section -->
-<section class="bg-surface-container-low p-8 rounded-xl">
-<div class="flex items-center gap-3 mb-6">
-<span class="material-symbols-outlined text-tertiary">key_visualizer</span>
-<h3 class="text-xl font-bold headline-font">Codes de secours</h3>
-</div>
-<p class="text-sm text-on-surface-variant mb-6 leading-relaxed">
-                        Si vous perdez l'accès à votre téléphone, ces codes vous permettront de vous reconnecter. Conservez-les en lieu sûr.
-                    </p>
-<div class="bg-surface-container-highest rounded-lg p-6 font-mono text-sm space-y-3 mb-8 border border-outline-variant/20">
-<div class="flex justify-between items-center text-on-surface/70 group">
-<span class="font-bold">4821 - 9901</span>
-<span class="text-[10px] bg-tertiary/10 text-tertiary px-1 rounded opacity-0 group-hover:opacity-100 uppercase font-black">Utilisé</span>
-</div>
-<div class="flex justify-between items-center text-secondary">
-<span class="font-bold">9920 - 3318</span>
-<span class="material-symbols-outlined text-xs">check_circle</span>
-</div>
-<div class="flex justify-between items-center text-secondary">
-<span class="font-bold">1288 - 0541</span>
-<span class="material-symbols-outlined text-xs">check_circle</span>
-</div>
-<div class="flex justify-between items-center text-secondary">
-<span class="font-bold">8823 - 4410</span>
-<span class="material-symbols-outlined text-xs">check_circle</span>
-</div>
-<div class="flex justify-between items-center text-secondary">
-<span class="font-bold">0019 - 8827</span>
-<span class="material-symbols-outlined text-xs">check_circle</span>
-</div>
-</div>
-<div class="flex flex-col gap-3">
-<button class="flex items-center justify-center gap-2 py-3 bg-white text-on-surface font-bold text-sm rounded-md border border-outline-variant/30 hover:bg-surface-container-lowest transition-colors">
-<span class="material-symbols-outlined text-lg">download</span>
-                            Télécharger (PDF)
-                        </button>
-<button class="flex items-center justify-center gap-2 py-3 bg-white text-on-surface font-bold text-sm rounded-md border border-outline-variant/30 hover:bg-surface-container-lowest transition-colors">
-<span class="material-symbols-outlined text-lg">content_copy</span>
-                            Copier tout
-                        </button>
-</div>
-</section>
-<!-- Security Insights -->
-<section class="bg-primary/5 p-8 rounded-xl border border-primary/10">
-<h4 class="text-sm font-black text-primary uppercase tracking-widest mb-4">Conseils de sécurité</h4>
-<ul class="space-y-4">
-<li class="flex gap-3">
-<span class="material-symbols-outlined text-primary text-lg" data-weight="fill">verified</span>
-<p class="text-xs text-on-surface-variant font-medium leading-normal">Activez les notifications pour recevoir des alertes de connexion suspecte.</p>
-</li>
-<li class="flex gap-3">
-<span class="material-symbols-outlined text-primary text-lg" data-weight="fill">verified</span>
-<p class="text-xs text-on-surface-variant font-medium leading-normal">Utilisez une application de gestion de mots de passe pour stocker vos clés TOTP.</p>
-</li>
-</ul>
-</section>
-<!-- Support Card -->
-<div class="relative group overflow-hidden rounded-xl h-48">
-<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A clean, bright workspace featuring high-tech monitors and professional equipment, conveying a sense of top-tier customer support and reliability. The lighting is bright and modern, aligned with the light-mode UI, using a color palette of soft whites, pale greens, and deep secondary teals. The overall mood is helpful, professional, and technologically advanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsSawDO0inr87cQhsO-fUmDs9d6HTaS6hixXEMJnhtFitGqGaRa-AVKh-C_1WESnpe2av4UkVhKvjJKA_feklWRb0D8r0dToWGQ-u7iG0roWWiVh-UOy9jq2IXq9-b4kqEiqf6jrkriBuwCBU5eyFUs1TEW5DYGfOLHwKFTYkbJ-MATLrpgJOI2gEFuyKnHARusKKsKxa_3DL4F_rmkrExa7FEhLsEo07nNMbq5yPQ5xbT3gtyIoDBzqt6P9zXstHG6jwWbrdVwmSC"/>
-<div class="absolute inset-0 bg-gradient-to-t from-secondary to-transparent opacity-80"></div>
-<div class="absolute bottom-4 left-4 right-4">
-<p class="text-white text-sm font-bold mb-1">Besoin d'aide ?</p>
-<p class="text-white/70 text-xs mb-3">Notre équipe support est disponible 24/7 pour vos questions de sécurité.</p>
-<a class="text-primary-fixed font-black text-xs uppercase tracking-widest hover:underline" href="#">Contacter le support</a>
-</div>
-</div>
-</aside>
-</div>
-</main>
-<!-- Footer -->
-<footer class="bg-surface-container-low border-t border-outline-variant/10 py-12 px-6">
-<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-<div class="flex flex-col gap-4">
-<span class="font-['Manrope'] font-black text-[#3525cd] text-xl">NovaSMS</span>
-<p class="text-on-surface-variant text-sm max-w-xs">Solution de marketing omnicanal haute-performance pour entreprises exigeantes.</p>
-</div>
-<div class="flex gap-12 font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant">
-<a class="hover:text-primary transition-colors" href="#">Privacy</a>
-<a class="hover:text-primary transition-colors" href="#">Terms</a>
-<a class="hover:text-primary transition-colors" href="#">Security Audit</a>
-</div>
-<div class="text-on-surface-variant font-medium text-sm">
-                Copyright 2026. All rights reserved.
+  </head>
+  <body class="bg-surface text-on-surface min-h-screen">
+    <!-- TopAppBar -->
+    <header
+      class="bg-[#faf8ff] dark:bg-[#131b2e] flex justify-between items-center px-6 py-4 w-full docked full-width top-0 sticky z-50"
+    >
+      <div class="flex items-center gap-4">
+        <span
+          class="font-['Manrope'] font-extrabold text-[#3525cd] dark:text-[#4f46e5] tracking-[-0.02em] text-2xl"
+          >NovaSMS</span
+        >
+      </div>
+      <div class="flex items-center gap-6">
+        <div
+          class="hidden md:flex gap-8 items-center font-['Manrope'] tracking-tight font-bold text-lg"
+        >
+          <a
+            class="text-[#777587] dark:text-[#a1a1aa] hover:bg-[#eaedff] dark:hover:bg-[#252f4d] transition-colors px-3 py-1 rounded-lg"
+            href="#"
+            >Dashboard</a
+          >
+          <a
+            class="text-[#777587] dark:text-[#a1a1aa] hover:bg-[#eaedff] dark:hover:bg-[#252f4d] transition-colors px-3 py-1 rounded-lg"
+            href="#"
+            >Campaigns</a
+          >
+          <a class="text-[#3525cd] dark:text-[#4f46e5] font-bold" href="#">Security</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <span
+            class="bg-surface-container-highest px-3 py-1.5 rounded-full text-sm font-bold text-on-surface-variant"
+            >Balance: 1,250</span
+          >
+          <div
+            class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold overflow-hidden shadow-sm"
+          >
+            <img
+              alt="User Profile"
+              class="w-full h-full object-cover"
+              data-alt="A professional headshot of a marketing executive with a confident expression, set against a clean, minimalist studio background. The lighting is soft and flattering, highlighting the subject's features with a modern, high-end feel. The overall aesthetic is polished and executive, perfectly fitting a premium SaaS application user profile."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiHVFgCbBZ5O-Lf4icd0C2WTYBW2a0FGDTwvRAUYDbPyvCR9g0m-VL_v44VpzjKU3T2pmNZBpAPN0hlHc2F0qz8u1YZlo1OhZU7JAs-JPyhnSovRltP2P5cioNw_sVrLGyou4iI0-bTLrYzBqcH7ZkLxxoPc60d3q2PUgH78izayLYHZgqmG7XUXobcN8XNm0NkE67M9r-_Jp9OENtEHU6BGpQ2VLDEKmKajosbbxzH_M-PQIIRdZuxRyUv4xPncn7CfhB5ZhRj2Ba"
+            />
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-6 py-12 pb-24">
+      <!-- Breadcrumb & Header -->
+      <div class="mb-12">
+        <div
+          class="flex items-center gap-2 text-on-surface-variant mb-4 font-label text-sm tracking-wide uppercase"
+        >
+          <span>Account</span>
+          <span class="material-symbols-outlined text-xs">chevron_right</span>
+          <span class="font-bold text-primary">Security Settings</span>
+        </div>
+        <h1
+          class="text-4xl md:text-5xl font-black headline-font tracking-tight text-on-surface mb-2"
+        >
+          Configuration de la Sécurité 2FA
+        </h1>
+        <p class="text-on-surface-variant max-w-2xl text-lg leading-relaxed">
+          Renforcez la protection de votre compte Nova Marketing en ajoutant une couche de sécurité
+          supplémentaire lors de vos connexions.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Left Column: Primary Config -->
+        <div class="lg:col-span-8 space-y-8">
+          <!-- Main Status & Toggle Card -->
+          <section
+            class="bg-surface-container-low p-8 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+          >
+            <div class="flex items-start gap-4">
+              <div
+                class="w-14 h-14 bg-primary-fixed-dim rounded-xl flex items-center justify-center text-primary"
+              >
+                <span class="material-symbols-outlined text-3xl">verified_user</span>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold headline-font mb-1">
+                  État de la double authentification
+                </h3>
+                <p class="text-on-surface-variant text-sm">
+                  La protection 2FA est actuellement désactivée.
+                </p>
+              </div>
             </div>
-</div>
-</footer>
-</body></html>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input class="sr-only peer" type="checkbox" value="" />
+              <div
+                class="w-14 h-7 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"
+              ></div>
+              <span class="ml-3 text-sm font-bold uppercase tracking-wider text-on-surface"
+                >Activer</span
+              >
+            </label>
+          </section>
+          <!-- Method Selection: Bento Card style -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- TOTP App -->
+            <div
+              class="bg-surface-container-lowest p-8 rounded-xl shadow-sm flex flex-col h-full border border-primary/5"
+            >
+              <div class="flex justify-between items-start mb-6">
+                <div class="p-3 bg-secondary-container rounded-lg text-secondary">
+                  <span class="material-symbols-outlined text-2xl">phonelink_setup</span>
+                </div>
+                <span
+                  class="bg-primary-container/10 text-primary-container text-[10px] font-black px-2 py-0.5 rounded tracking-widest uppercase"
+                  >Recommandé</span
+                >
+              </div>
+              <h4 class="text-lg font-bold headline-font mb-2">Application d'authentification</h4>
+              <p class="text-on-surface-variant text-sm flex-grow leading-snug">
+                Utilisez Google Authenticator ou Authy pour générer des codes de sécurité même hors
+                ligne.
+              </p>
+              <button
+                class="mt-6 w-full py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-md flex items-center justify-center gap-2 transition-transform active:scale-95"
+              >
+                Configurer (TOTP)
+              </button>
+            </div>
+            <!-- SMS Method -->
+            <div
+              class="bg-surface-container p-8 rounded-xl flex flex-col h-full opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-not-allowed"
+            >
+              <div class="p-3 bg-white/50 w-fit rounded-lg text-on-surface-variant mb-6">
+                <span class="material-symbols-outlined text-2xl">sms</span>
+              </div>
+              <h4 class="text-lg font-bold headline-font mb-2">SMS</h4>
+              <p class="text-on-surface-variant text-sm flex-grow leading-snug">
+                Recevez un code à 6 chiffres par message texte sur votre mobile enregistré.
+              </p>
+              <button
+                class="mt-6 w-full py-3 bg-surface-container-highest text-on-surface-variant font-bold rounded-md cursor-not-allowed"
+              >
+                Indisponible
+              </button>
+            </div>
+          </div>
+          <!-- Setup Wizard: Application (TOTP) -->
+          <section
+            class="bg-surface-container-lowest p-8 md:p-12 rounded-xl shadow-sm border-l-4 border-primary"
+          >
+            <div class="flex items-center gap-3 mb-10">
+              <span
+                class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold"
+                >1</span
+              >
+              <h3 class="text-2xl font-bold headline-font">Assistant de configuration TOTP</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <!-- Step A: QR Code -->
+              <div class="space-y-6">
+                <div>
+                  <h5
+                    class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4"
+                  >
+                    Étape 1: Scannez le code
+                  </h5>
+                  <div class="bg-white p-6 rounded-xl inline-block shadow-md">
+                    <div
+                      class="w-48 h-48 bg-gray-100 rounded-lg flex items-center justify-center relative overflow-hidden"
+                    >
+                      <img
+                        class="w-full h-full object-cover"
+                        data-alt="A macro shot of a complex, minimalist QR code displayed on a high-resolution smartphone screen. The screen is clean and reflects soft green studio lighting. The background is a blurred, professional office setting with deep teal and organic green accents. The overall atmosphere is focused on high-tech precision and security."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU-Ptggh__4x0tQQOEFN-ZhdUDYNZ441OwTJa5Hh1KE9I_iosJOLAnuNCs8xaSfK3QfB1KH2zxBOI1rB3RcNlG7hk_GMsw-XCDR6VNyZPtEbDy6_F61B6Y2K-PlizrEqg1Ya7Gh4hVhPYhYYIUM0P4xs349R7oZonQ8DwNNXHlmqyaS0E-SPU-DdogjAXsbx9baSMbB2Ql7XoaLJEzFmuOpZShO_F7zbtYiD8IHj2TZYVlX1hJBGyPPNa1NE_0XOddesfekxQ7syda"
+                      />
+                      <div class="absolute inset-0 border-2 border-primary/20 rounded-lg"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-surface-container-low p-4 rounded-lg">
+                  <p class="text-xs font-bold text-on-surface-variant uppercase mb-2">
+                    Clé manuelle
+                  </p>
+                  <div
+                    class="flex items-center justify-between font-mono text-sm tracking-widest text-secondary font-bold"
+                  >
+                    <span>J3KZ L92M 88WQ PX44</span>
+                    <button class="text-primary hover:bg-primary/10 p-1 rounded transition-colors">
+                      <span class="material-symbols-outlined text-sm">content_copy</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Step B: Verification -->
+              <div class="flex flex-col justify-center space-y-8">
+                <div>
+                  <h5
+                    class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4"
+                  >
+                    Étape 2: Vérifiez le code
+                  </h5>
+                  <p class="text-sm text-on-surface-variant leading-relaxed mb-6">
+                    Saisissez le code à 6 chiffres généré par votre application d'authentification
+                    pour confirmer la synchronisation.
+                  </p>
+                  <div class="flex gap-2 justify-between">
+                    <input
+                      class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                      maxlength="1"
+                      type="text"
+                    />
+                    <input
+                      class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                      maxlength="1"
+                      type="text"
+                    />
+                    <input
+                      class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                      maxlength="1"
+                      type="text"
+                    />
+                    <span class="flex items-center text-on-surface-variant opacity-30">—</span>
+                    <input
+                      class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                      maxlength="1"
+                      type="text"
+                    />
+                    <input
+                      class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                      maxlength="1"
+                      type="text"
+                    />
+                    <input
+                      class="w-12 h-14 text-center text-2xl font-bold bg-surface-container-highest border-none rounded-md focus:ring-2 focus:ring-primary focus:bg-white transition-all"
+                      maxlength="1"
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <button
+                  class="w-full py-4 bg-secondary text-on-secondary font-bold rounded-md shadow-lg shadow-secondary/10 hover:bg-secondary/90 transition-all"
+                >
+                  Valider et Terminer
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+        <!-- Right Column: Secondary Info / Backup Codes -->
+        <aside class="lg:col-span-4 space-y-6">
+          <!-- Backup Codes Section -->
+          <section class="bg-surface-container-low p-8 rounded-xl">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="material-symbols-outlined text-tertiary">key_visualizer</span>
+              <h3 class="text-xl font-bold headline-font">Codes de secours</h3>
+            </div>
+            <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">
+              Si vous perdez l'accès à votre téléphone, ces codes vous permettront de vous
+              reconnecter. Conservez-les en lieu sûr.
+            </p>
+            <div
+              class="bg-surface-container-highest rounded-lg p-6 font-mono text-sm space-y-3 mb-8 border border-outline-variant/20"
+            >
+              <div class="flex justify-between items-center text-on-surface/70 group">
+                <span class="font-bold">4821 - 9901</span>
+                <span
+                  class="text-[10px] bg-tertiary/10 text-tertiary px-1 rounded opacity-0 group-hover:opacity-100 uppercase font-black"
+                  >Utilisé</span
+                >
+              </div>
+              <div class="flex justify-between items-center text-secondary">
+                <span class="font-bold">9920 - 3318</span>
+                <span class="material-symbols-outlined text-xs">check_circle</span>
+              </div>
+              <div class="flex justify-between items-center text-secondary">
+                <span class="font-bold">1288 - 0541</span>
+                <span class="material-symbols-outlined text-xs">check_circle</span>
+              </div>
+              <div class="flex justify-between items-center text-secondary">
+                <span class="font-bold">8823 - 4410</span>
+                <span class="material-symbols-outlined text-xs">check_circle</span>
+              </div>
+              <div class="flex justify-between items-center text-secondary">
+                <span class="font-bold">0019 - 8827</span>
+                <span class="material-symbols-outlined text-xs">check_circle</span>
+              </div>
+            </div>
+            <div class="flex flex-col gap-3">
+              <button
+                class="flex items-center justify-center gap-2 py-3 bg-white text-on-surface font-bold text-sm rounded-md border border-outline-variant/30 hover:bg-surface-container-lowest transition-colors"
+              >
+                <span class="material-symbols-outlined text-lg">download</span>
+                Télécharger (PDF)
+              </button>
+              <button
+                class="flex items-center justify-center gap-2 py-3 bg-white text-on-surface font-bold text-sm rounded-md border border-outline-variant/30 hover:bg-surface-container-lowest transition-colors"
+              >
+                <span class="material-symbols-outlined text-lg">content_copy</span>
+                Copier tout
+              </button>
+            </div>
+          </section>
+          <!-- Security Insights -->
+          <section class="bg-primary/5 p-8 rounded-xl border border-primary/10">
+            <h4 class="text-sm font-black text-primary uppercase tracking-widest mb-4">
+              Conseils de sécurité
+            </h4>
+            <ul class="space-y-4">
+              <li class="flex gap-3">
+                <span class="material-symbols-outlined text-primary text-lg" data-weight="fill"
+                  >verified</span
+                >
+                <p class="text-xs text-on-surface-variant font-medium leading-normal">
+                  Activez les notifications pour recevoir des alertes de connexion suspecte.
+                </p>
+              </li>
+              <li class="flex gap-3">
+                <span class="material-symbols-outlined text-primary text-lg" data-weight="fill"
+                  >verified</span
+                >
+                <p class="text-xs text-on-surface-variant font-medium leading-normal">
+                  Utilisez une application de gestion de mots de passe pour stocker vos clés TOTP.
+                </p>
+              </li>
+            </ul>
+          </section>
+          <!-- Support Card -->
+          <div class="relative group overflow-hidden rounded-xl h-48">
+            <img
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              data-alt="A clean, bright workspace featuring high-tech monitors and professional equipment, conveying a sense of top-tier customer support and reliability. The lighting is bright and modern, aligned with the light-mode UI, using a color palette of soft whites, pale greens, and deep secondary teals. The overall mood is helpful, professional, and technologically advanced."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsSawDO0inr87cQhsO-fUmDs9d6HTaS6hixXEMJnhtFitGqGaRa-AVKh-C_1WESnpe2av4UkVhKvjJKA_feklWRb0D8r0dToWGQ-u7iG0roWWiVh-UOy9jq2IXq9-b4kqEiqf6jrkriBuwCBU5eyFUs1TEW5DYGfOLHwKFTYkbJ-MATLrpgJOI2gEFuyKnHARusKKsKxa_3DL4F_rmkrExa7FEhLsEo07nNMbq5yPQ5xbT3gtyIoDBzqt6P9zXstHG6jwWbrdVwmSC"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-secondary to-transparent opacity-80"
+            ></div>
+            <div class="absolute bottom-4 left-4 right-4">
+              <p class="text-white text-sm font-bold mb-1">Besoin d'aide ?</p>
+              <p class="text-white/70 text-xs mb-3">
+                Notre équipe support est disponible 24/7 pour vos questions de sécurité.
+              </p>
+              <a
+                class="text-primary-fixed font-black text-xs uppercase tracking-widest hover:underline"
+                href="#"
+                >Contacter le support</a
+              >
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-surface-container-low border-t border-outline-variant/10 py-12 px-6">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="flex flex-col gap-4">
+          <span class="font-['Manrope'] font-black text-[#3525cd] text-xl">NovaSMS</span>
+          <p class="text-on-surface-variant text-sm max-w-xs">
+            Solution de marketing omnicanal haute-performance pour entreprises exigeantes.
+          </p>
+        </div>
+        <div
+          class="flex gap-12 font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant"
+        >
+          <a class="hover:text-primary transition-colors" href="#">Privacy</a>
+          <a class="hover:text-primary transition-colors" href="#">Terms</a>
+          <a class="hover:text-primary transition-colors" href="#">Security Audit</a>
+        </div>
+        <div class="text-on-surface-variant font-medium text-sm">
+          Copyright 2026. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

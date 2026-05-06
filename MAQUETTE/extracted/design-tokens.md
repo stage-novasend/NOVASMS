@@ -1,12 +1,14 @@
 # NovaSMS Design Tokens (extracted)
 
 Source files:
+
 - MAQUETTE/novasms-figma-all-screens.html
 - MAQUETTE/pageacceuil.html
 
 ## 1) Colors
 
 Core brand:
+
 - `--brand-primary`: `#2EC80A`
 - `--brand-dark`: `#25A208`
 - `--brand-lime`: `#AAEE22`
@@ -16,12 +18,14 @@ Core brand:
 - `--brand-gradient`: `linear-gradient(135deg, #2EC80A 0%, #AAEE22 100%)`
 
 Semantic/support:
+
 - `--success`: `#16A34A`
 - `--danger`: `#DC2626`
 - `--warning`: `#D97706`
 - `--info`: `#0C5460`
 
 Surface/text from app screens:
+
 - `--bg`: `#F7F9F7`
 - `--surface`: `#FFFFFF`
 - `--muted`: `#F0F7F0`
@@ -32,6 +36,7 @@ Surface/text from app screens:
 - `--text-3`: `#9CA3AF`
 
 Landing (tailwind token names):
+
 - `primary`: `#2EC80A`
 - `secondary`: `#0C5460`
 - `surface`: `#FDFDFD`
@@ -45,16 +50,19 @@ Landing (tailwind token names):
 ## 2) Typography
 
 From app screens (backoffice):
+
 - Font family: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`
 - Base size: `14px`
 - Common weights: `500`, `600`, `700`
 
 From landing:
+
 - Headline family: `Manrope`
 - Body family: `Inter`
 - Weights used: `400`, `500`, `600`, `700`, `800`
 
 Scale observed:
+
 - H1 dashboard header area: `14px` (compact app header)
 - KPI value: `21px-22px`
 - Section/card titles: `13px`
@@ -64,28 +72,34 @@ Scale observed:
 ## 3) Radius + spacing
 
 Radius tokens:
+
 - `--r-sm`: `6px`
 - `--r-md`: `8px`
 - `--r-lg`: `12px`
 - `--r-xl`: `16px`
 
 Landing radius set:
+
 - default `4px`, `lg: 8px`, `xl: 12px`, `2xl: 24px`, `full: 9999px`
 
 Spacing cadence seen in layouts:
+
 - `4px`, `6px`, `8px`, `10px`, `12px`, `14px`, `16px`, `18px`, `20px`, `24px`, `30px`, `32px`, `40px`, `60px`
 
 Suggested Tailwind mapping for integration:
+
 - `1`=4px, `1.5`=6px, `2`=8px, `2.5`=10px, `3`=12px, `3.5`=14px, `4`=16px, `4.5`=18px, `5`=20px, `6`=24px, `7.5`=30px, `8`=32px, `10`=40px, `15`=60px
 
 ## 4) Reusable components (from maquettes)
 
 Main shell:
+
 - Sidebar (`.sidebar`, `.nav-item`, `.nav-badge`)
 - Top header (`.header`, `.credits-pill`, `.hdr-actions`)
 - Content container (`.content`)
 
 Data/UI blocks:
+
 - Cards (`.card`, `.card-title`, `.card-subtitle`)
 - KPI cards (`.kpi-grid`, `.kpi`)
 - Tables (`.data-table`)
@@ -95,6 +109,7 @@ Data/UI blocks:
 - Wizard stepper (`.wizard-steps`, `.wstep*`)
 
 Special modules:
+
 - Workflow canvas (`.wf-canvas`, `.wf-node*`)
 - Phone preview (`.phone-mock`, `.sms-bubble`)
 - Analytics stat cards (`.analytics-stat`, `.progress-*`)
