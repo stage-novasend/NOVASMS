@@ -1,0 +1,14 @@
+email,phone,firstName,lastName,tags,location
+contact01@example.com,0700000001,Prénom01,Nom01,VIP,Abidjan
+contact02@example.com,0700000002,Prénom02,Nom02,NEWSLETTER,Bouake
+contact03@example.com,0700000003,Prénom03,Nom03,VIP,Abidjan
+contact04@example.com,0700000004,Prénom04,Nom04,PROSPECT,Yamoussoukro
+contact05@example.com,0700000005,Prénom05,Nom05,NEWSLETTER,San Pedro
+newcontact06@example.com,0700000006,Prénom06,Nom06,VIP,Abidjan
+newcontact07@example.com,0700000007,Prénom07,Nom07,PROSPECT,Man
+newcontact08@example.com,0700000008,Prénom08,Nom08,VIP,Daloa
+newcontact09@example.com,0700000009,Prénom09,Nom09,NEWSLETTER,Abengourou
+newcontact10@example.com,0700000010,Prénom10,Nom10,VIP,Bouake
+contact01@example.com,0700000001,Prénom01,Nom01,VIP,Abidjan
+contact02@example.com,0700000002,Prénom02,Nom02,NEWSLETTER,Bouake
+contact03@example.com,0700000003,Prénom03,Nom03,VIP,Abidjan

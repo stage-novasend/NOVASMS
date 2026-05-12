@@ -1,0 +1,41 @@
+email,phone,firstName,lastName,tags,location
+contact01@example.com,0700000001,Prénom01,Nom01,VIP,Abidjan
+contact02@example.com,0700000002,Prénom02,Nom02,NEWSLETTER,Bouake
+contact03@example.com,0700000003,Prénom03,Nom03,VIP,Abidjan
+contact04@example.com,0700000004,Prénom04,Nom04,PROSPECT,Yamoussoukro
+contact05@example.com,0700000005,Prénom05,Nom05,NEWSLETTER,San Pedro
+contact06@example.com,0700000006,Prénom06,Nom06,VIP,Abidjan
+contact07@example.com,0700000007,Prénom07,Nom07,PROSPECT,Man
+contact08@example.com,0700000008,Prénom08,Nom08,VIP,Daloa
+contact09@example.com,0700000009,Prénom09,Nom09,NEWSLETTER,Abengourou
+contact10@example.com,0700000010,Prénom10,Nom10,VIP,Abidjan
+contact11@example.com,0700000011,Prénom11,Nom11,PROSPECT,Bouake
+contact12@example.com,0700000012,Prénom12,Nom12,NEWSLETTER,Korhogo
+contact13@example.com,0700000013,Prénom13,Nom13,VIP,Abidjan
+contact14@example.com,0700000014,Prénom14,Nom14,PROSPECT,San Pedro
+contact15@example.com,0700000015,Prénom15,Nom15,NEWSLETTER,Daloa
+contact16@example.com,0700000016,Prénom16,Nom16,VIP,Abidjan
+contact17@example.com,0700000017,Prénom17,Nom17,PROSPECT,Man
+contact18@example.com,0700000018,Prénom18,Nom18,NEWSLETTER,Abengourou
+contact19@example.com,0700000019,Prénom19,Nom19,VIP,Abidjan
+contact20@example.com,0700000020,Prénom20,Nom20,PROSPECT,Yamoussoukro
+contact21@example.com,0700000021,Prénom21,Nom21,NEWSLETTER,Abidjan
+contact22@example.com,0700000022,Prénom22,Nom22,VIP,Bouake
+contact23@example.com,0700000023,Prénom23,Nom23,PROSPECT,San Pedro
+contact24@example.com,0700000024,Prénom24,Nom24,NEWSLETTER,Korhogo
+contact25@example.com,0700000025,Prénom25,Nom25,VIP,Abidjan
+contact26@example.com,0700000026,Prénom26,Nom26,PROSPECT,Daloa
+contact27@example.com,0700000027,Prénom27,Nom27,NEWSLETTER,Man
+contact28@example.com,0700000028,Prénom28,Nom28,VIP,Abidjan
+contact29@example.com,0700000029,Prénom29,Nom29,PROSPECT,Abengourou
+contact30@example.com,0700000030,Prénom30,Nom30,NEWSLETTER,Yamoussoukro
+contact31@example.com,0700000031,Prénom31,Nom31,VIP,Abidjan
+contact32@example.com,0700000032,Prénom32,Nom32,PROSPECT,Bouake
+contact33@example.com,0700000033,Prénom33,Nom33,NEWSLETTER,San Pedro
+contact34@example.com,0700000034,Prénom34,Nom34,VIP,Daloa
+contact35@example.com,0700000035,Prénom35,Nom35,PROSPECT,Korhogo
+contact36@example.com,0700000036,Prénom36,Nom36,NEWSLETTER,Abidjan
+contact37@example.com,0700000037,Prénom37,Nom37,VIP,Man
+contact38@example.com,0700000038,Prénom38,Nom38,PROSPECT,Abengourou
+contact39@example.com,0700000039,Prénom39,Nom39,NEWSLETTER,Yamoussoukro
+contact40@example.com,0700000040,Prénom40,Nom40,VIP,Abidjan
