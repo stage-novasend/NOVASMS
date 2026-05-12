@@ -1,0 +1,21 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@tailwind",
+      "description": "Tailwind CSS directive"
+    },
+    {
+      "name": "@apply",
+      "description": "Tailwind CSS apply"
+    },
+    {
+      "name": "@layer",
+      "description": "Tailwind CSS layer"
+    },
+    {
+      "name": "@config",
+      "description": "Tailwind CSS config"
+    }
+  ]
+}
