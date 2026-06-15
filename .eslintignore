@@ -1,0 +1,5 @@
+# Les apps ont leurs propres configs ESLint v9 (eslint.config.mjs / eslint.config.js)
+# Le ESLint v8 racine ne doit pas traiter les fichiers des apps
+apps/
+node_modules/
+dist/

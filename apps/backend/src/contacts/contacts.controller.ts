@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-base-to-string */
 import {
   BadRequestException,
   Body,
@@ -21,10 +20,22 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ContactsService } from './contacts.service';
+import { UserRole } from '@prisma/client';
+import {
+  ContactsService,
+  SegmentCriterion,
+  SegmentLogic,
+} from './contacts.service';
 import { ImportService } from './import.service';
+import { importQueue } from '../queues/import.queue';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
+import { randomUUID } from 'crypto';
+
 import { SegmentCreateSchema, SegmentPreviewSchema } from './dto/segment.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard, RequireRoles } from '../common';
 import type { Request as ExpressRequest } from 'express';
 
 type TenantRequest = ExpressRequest & { accountId?: string };
@@ -47,7 +58,7 @@ type ContactUpdateBody = {
 
 @ApiTags('Contacts')
 @Controller('contacts')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class ContactsController {
   constructor(
@@ -57,7 +68,19 @@ export class ContactsController {
 
   @Get()
   @ApiOperation({ summary: 'Lister contacts' })
-  async list(@Query() q: any, @Request() req: TenantRequest) {
+  async list(
+    @Query()
+    q: {
+      cursor?: string;
+      limit?: string;
+      search?: string;
+      location?: string;
+      tag?: string;
+      dateAddedFrom?: string;
+      dateAddedTo?: string;
+    },
+    @Request() req: TenantRequest,
+  ) {
     const accountId = req.accountId;
     if (!accountId) throw new BadRequestException('accountId manquant');
     return this.contactsService.findAll(accountId, {
@@ -84,7 +107,7 @@ export class ContactsController {
 
     const mappedRows = body.rows
       .map((row) => {
-        const c: any = {};
+        const c: Record<string, string | string[]> = {};
         for (const [t, s] of Object.entries(body.mapping || {})) {
           const v = row[s];
           if (v === undefined || v === null || v === '') continue;
@@ -99,9 +122,9 @@ export class ContactsController {
         }
         return c;
       })
-      .filter((r: any) => r.email || r.phone);
+      .filter((r) => r.email || r.phone);
 
-    const result = await this.importService.processFullImport(
+    const result = await this.importService.startImport(
       accountId,
       body.fileName,
       mappedRows,
@@ -109,8 +132,129 @@ export class ContactsController {
     return {
       success: true,
       jobId: result.jobId,
-      status: result.status,
-      report: result.report,
+      message: result.message,
+      estimatedTime: result.estimatedTime,
+    };
+  }
+
+  @RequireRoles(UserRole.Admin, UserRole.Editor)
+  @Post('import/start')
+  @ApiOperation({ summary: 'Démarrer un import par chunks (retourne fileId)' })
+  async startImport(@Request() req: TenantRequest) {
+    const accountId = req.accountId;
+    if (!accountId) throw new BadRequestException('accountId manquant');
+    const fileId = randomUUID();
+    const dir = path.join(os.tmpdir(), 'novasms-imports', accountId);
+    await fs.promises.mkdir(dir, { recursive: true });
+    const filePath = path.join(dir, `${fileId}.ndjson`);
+    // create empty file
+    await fs.promises.writeFile(filePath, '');
+    return { success: true, fileId };
+  }
+
+  @RequireRoles(UserRole.Admin, UserRole.Editor)
+  @Post('import/chunk')
+  @ApiOperation({ summary: "Envoyer un chunk d'import (rows en JSON array)" })
+  async uploadImportChunk(
+    @Body() body: { fileId: string; rows: Array<Record<string, unknown>> },
+    @Request() req: TenantRequest,
+  ) {
+    const accountId = req.accountId;
+    if (!accountId) throw new BadRequestException('accountId manquant');
+    if (!body.fileId || !Array.isArray(body.rows))
+      throw new BadRequestException('fileId ou rows manquant');
+
+    const dir = path.join(os.tmpdir(), 'novasms-imports', accountId);
+    const filePath = path.join(dir, `${body.fileId}.ndjson`);
+    try {
+      await fs.promises.access(filePath);
+    } catch (e) {
+      throw new BadRequestException('fileId introuvable');
+    }
+
+    // Append each row as JSON line
+    const lines = body.rows.map((r) => JSON.stringify(r)).join('\n') + '\n';
+    await fs.promises.appendFile(filePath, lines, { encoding: 'utf8' });
+    return { success: true };
+  }
+
+  @RequireRoles(UserRole.Admin, UserRole.Editor)
+  @Post('import/complete')
+  @ApiOperation({
+    summary: "Finaliser l'import: assembler et lancer le traitement",
+  })
+  async completeImport(
+    @Body() body: { fileId: string; fileName: string },
+    @Request() req: TenantRequest,
+  ) {
+    const accountId = req.accountId;
+    if (!accountId) throw new BadRequestException('accountId manquant');
+    if (!body.fileId) throw new BadRequestException('fileId manquant');
+
+    const dir = path.join(os.tmpdir(), 'novasms-imports', accountId);
+    const filePath = path.join(dir, `${body.fileId}.ndjson`);
+    try {
+      await fs.promises.access(filePath);
+    } catch (e) {
+      throw new BadRequestException('fileId introuvable');
+    }
+
+    const fileName = body.fileName || `import-${body.fileId}.ndjson`;
+    const result = await this.importService.startImportFromFile(
+      accountId,
+      fileName,
+      filePath,
+    );
+    return { success: true, jobId: result.jobId };
+  }
+
+  @Get('import/:jobId')
+  @ApiOperation({ summary: "Récupérer le statut d'un import" })
+  async getImportStatus(
+    @Param('jobId') jobId: string,
+    @Request() req: TenantRequest,
+  ) {
+    const accountId = req.accountId;
+    if (!accountId) throw new BadRequestException('accountId manquant');
+
+    const job = await importQueue.getJob(jobId);
+    if (!job) {
+      return { success: false, message: 'Job introuvable' };
+    }
+
+    const state = await job.getState();
+    // If completed, try to return the job return value if available
+    if (state === 'completed') {
+      // job.returnvalue may contain the report if the worker returned it
+      const report = job.returnvalue || null;
+      return { success: true, status: 'completed', report };
+    }
+
+    return { success: true, status: state };
+  }
+
+  @Get(':id/export')
+  @ApiOperation({ summary: 'Exporter un contact en CSV ou JSON' })
+  async exportContact(
+    @Param('id') id: string,
+    @Query('format') format: 'csv' | 'json' = 'csv',
+    @Request() req: TenantRequest,
+  ) {
+    const accountId = req.accountId;
+    if (!accountId) throw new BadRequestException('accountId manquant');
+
+    const data = await this.contactsService.exportContact(
+      accountId,
+      id,
+      format,
+    );
+    if (!data) throw new NotFoundException('Contact non trouvé');
+
+    return {
+      success: true,
+      format,
+      data,
+      fileName: `contact-${id}.${format === 'csv' ? 'csv' : 'json'}`,
     };
   }
 
@@ -124,6 +268,7 @@ export class ContactsController {
     return contact;
   }
 
+  @RequireRoles(UserRole.Admin, UserRole.Editor)
   @Post()
   @ApiOperation({ summary: 'Creer un contact' })
   async create(@Body() body: ContactUpdateBody, @Request() req: TenantRequest) {
@@ -131,7 +276,7 @@ export class ContactsController {
     if (!accountId) throw new BadRequestException('accountId manquant');
     return this.contactsService.create(accountId, body);
   }
-
+  @RequireRoles(UserRole.Admin, UserRole.Editor)
   @Patch(':id')
   @ApiOperation({ summary: 'Mettre a jour un contact' })
   async update(
@@ -156,6 +301,27 @@ export class ContactsController {
     return { success: true };
   }
 
+  @Post(':id/notes')
+  @ApiOperation({ summary: 'Ajouter une note a un contact' })
+  @HttpCode(HttpStatus.CREATED)
+  async addNote(
+    @Param('id') id: string,
+    @Body() body: { content: string },
+    @Request() req: TenantRequest,
+  ) {
+    const accountId = req.accountId;
+    if (!accountId) throw new BadRequestException('accountId manquant');
+    if (!body?.content?.trim())
+      throw new BadRequestException('Note content is required');
+    const notes = await this.contactsService.addNote(
+      accountId,
+      id,
+      body.content.trim(),
+    );
+    return { success: true, notes };
+  }
+
+  @RequireRoles(UserRole.Admin, UserRole.Editor)
   @Delete(':id')
   @ApiOperation({ summary: 'Supprimer un contact' })
   async remove(@Param('id') id: string, @Request() req: TenantRequest) {
@@ -180,10 +346,11 @@ export class ContactsController {
         logic: parsed.logic,
         criteria: parsed.criteria,
       });
-    } catch (e: any) {
+    } catch (e) {
+      const err = e as { errors?: unknown[]; message?: string };
       throw new BadRequestException({
         message: 'Payload invalide',
-        errors: e.errors || [e.message],
+        errors: err.errors || [err.message],
       });
     }
   }
@@ -215,6 +382,7 @@ export class ContactsController {
     };
   }
 
+  @RequireRoles(UserRole.Admin, UserRole.Editor)
   @Post('segments')
   @ApiOperation({ summary: 'Creer segment' })
   @HttpCode(HttpStatus.CREATED)
@@ -236,13 +404,42 @@ export class ContactsController {
       });
       return {
         success: true,
+        id: segment.id,
         segment,
         message: `Segment "${parsed.name}" cree pour ${segment.contactCount} contacts`,
       };
-    } catch (e: any) {
+    } catch (e) {
+      const err = e as { errors?: unknown[]; message?: string };
       throw new BadRequestException({
         message: 'Echec creation',
-        errors: e.errors || [e.message],
+        errors: err.errors || [err.message],
+      });
+    }
+  }
+
+  @Get('segments/:id/count')
+  @ApiOperation({ summary: "Compter contacts actifs d'un segment" })
+  async countSegmentContacts(
+    @Param('id') segmentId: string,
+    @Request() req: TenantRequest,
+  ) {
+    const accountId = req.accountId;
+    if (!accountId) throw new BadRequestException('accountId manquant');
+
+    try {
+      const count = await this.contactsService.countSegmentContacts(
+        accountId,
+        segmentId,
+      );
+      return {
+        segmentId,
+        count,
+        message: `${count} contact(s) actif(s) dans ce segment`,
+      };
+    } catch (error) {
+      throw new BadRequestException({
+        message: 'Erreur lors du comptage',
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   }
@@ -252,12 +449,49 @@ export class ContactsController {
   async getSegment(@Param('id') id: string, @Request() req: TenantRequest) {
     const accountId = req.accountId;
     if (!accountId) throw new BadRequestException('accountId manquant');
-    const segments = await this.contactsService.listSegments(accountId);
-    const segment = segments.find((s: any) => s.id === id);
+    const segment = await this.contactsService.getSegmentWithContacts(
+      accountId,
+      id,
+    );
     if (!segment) throw new NotFoundException('Segment non trouve');
     return { segment };
   }
 
+  @RequireRoles(UserRole.Admin, UserRole.Editor)
+  @Patch('segments/:id')
+  @ApiOperation({ summary: 'Modifier segment' })
+  async updateSegment(
+    @Param('id') id: string,
+    @Body()
+    body: {
+      name?: string;
+      logic?: SegmentLogic;
+      criteria?: SegmentCriterion[];
+      type?: 'dynamic' | 'static';
+      contactIds?: string[];
+    },
+    @Request() req: TenantRequest,
+  ) {
+    const accountId = req.accountId;
+    if (!accountId) throw new BadRequestException('accountId manquant');
+
+    const updated = await this.contactsService.updateSegment(
+      accountId,
+      id,
+      body,
+    );
+    await this.contactsService.createAuditLog(accountId, 'segment_updated', {
+      segmentId: id,
+      name: updated.name,
+    });
+
+    return {
+      success: true,
+      segment: updated,
+    };
+  }
+
+  @RequireRoles(UserRole.Admin, UserRole.Editor)
   @Delete('segments/:id')
   @ApiOperation({ summary: 'Supprimer segment' })
   async deleteSegment(@Param('id') id: string, @Request() req: TenantRequest) {

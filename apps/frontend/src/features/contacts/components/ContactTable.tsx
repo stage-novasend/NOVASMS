@@ -1,9 +1,35 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
+
+/** Normalise le champ tags : Prisma Json? peut arriver en tableau OU en string JSON */
+function parseTags(raw: unknown): string[] {
+  if (Array.isArray(raw)) return raw as string[];
+  if (typeof raw === 'string' && raw.startsWith('[')) {
+    try {
+      return JSON.parse(raw) as string[];
+    } catch {
+      /* ignore */
+    }
+  }
+  return [];
+}
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, Filter, ChevronLeft, ChevronRight, 
-  MoreVertical, Mail, Phone, User, Calendar, 
-  CheckCircle, XCircle, Loader2, Plus, X, Download
+import {
+  Search,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+  MoreVertical,
+  Mail,
+  Phone,
+  User,
+  Calendar,
+  CheckCircle,
+  XCircle,
+  Loader2,
+  Plus,
+  X,
+  Download,
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { contactsApi } from '@/api/contacts';
@@ -18,21 +44,30 @@ import type {
 type ContactTableProps = {
   onContactClick?: (contact: Contact) => void;
   onImportClick?: () => void;
+  onAddContactClick?: () => void;
 };
 
-export default function ContactTable({ onContactClick, onImportClick }: ContactTableProps) {
+export default function ContactTable({
+  onContactClick,
+  onImportClick,
+  onAddContactClick,
+}: ContactTableProps) {
   const { accessToken } = useAuthStore();
-  
+
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
-  
+
   const [filters, setFilters] = useState<ContactFilter>({});
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [searchType, setSearchType] = useState<'all' | 'tag' | 'location'>('all');
   const [showFilters, setShowFilters] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<Array<{key: string; value: string; label: string}>>([]);
+  const [activeFilters, setActiveFilters] = useState<
+    Array<{ key: string; value: string; label: string }>
+  >([]);
   const [segmentName, setSegmentName] = useState('Nouveau segment');
   const [segmentLogic, setSegmentLogic] = useState<SegmentLogic>('AND');
   const [segmentCriteria, setSegmentCriteria] = useState<SegmentCriterion[]>([
@@ -46,12 +81,33 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
   const [savingSegment, setSavingSegment] = useState(false);
   const [segments, setSegments] = useState<SegmentWithContacts[]>([]);
   const [selectedSegmentId, setSelectedSegmentId] = useState<string>('');
+  const [editingSegmentId, setEditingSegmentId] = useState<string | null>(null);
   const [selectedContactIds, setSelectedContactIds] = useState<Set<string>>(new Set());
   const [isDeleting, setIsDeleting] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
+  // Ref pour le conteneur scrollable (virtualisation)
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+
+  // Virtualizer — estime chaque ligne à ~56px
+  const rowVirtualizer = useVirtualizer({
+    count: contacts.length,
+    getScrollElement: () => tableContainerRef.current,
+    estimateSize: () => 56,
+    overscan: 8,
+  });
+
+  // Debounce search query (500ms) to avoid refetching on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const formatSegmentFormula = (criteria: SegmentWithContacts['criteria']) => {
-    const payload = criteria as { logic?: string; rules?: Array<{ field?: string; operator?: string; value?: unknown }> };
+    const payload = criteria as {
+      logic?: string;
+      rules?: Array<{ field?: string; operator?: string; value?: unknown }>;
+    };
     const logic = payload?.logic === 'OR' ? 'OU' : 'ET';
     const rules = Array.isArray(payload?.rules) ? payload.rules : [];
     if (rules.length === 0) return 'Aucune condition';
@@ -83,7 +139,9 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
     const parts = rules.map((rule) => {
       const field = fieldLabels[rule.field || ''] || 'Champ';
       const operator = operatorLabels[rule.operator || ''] || 'contient';
-      const value = Array.isArray(rule.value) ? rule.value.join(', ') : String(rule.value ?? '').trim();
+      const value = Array.isArray(rule.value)
+        ? rule.value.join(', ')
+        : String(rule.value ?? '').trim();
       return `${field} ${operator} ${value || '-'}`;
     });
 
@@ -91,41 +149,47 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
   };
 
   // Fetch contacts avec pagination cursor-based (RG-53)
-  const fetchContacts = useCallback(async (nextCursor?: string | null, reset: boolean = false) => {
-    if (!accessToken) return;
-    
-    setIsLoading(true);
-    try {
-      const params: {
-        limit: number;
-        cursor?: string;
-        search?: string;
-      } & ContactFilter = {
-        limit: 20,
-        ...(searchQuery && { search: searchQuery }),
-        ...filters,
-      };
-      
-      if (nextCursor) params.cursor = nextCursor;
-      
-      const response = await contactsApi.list(params);
-      
-      if (reset) {
-        setContacts(response.data);
-      } else {
-        setContacts(prev => nextCursor ? [...prev, ...response.data] : response.data);
+  const fetchContacts = useCallback(
+    async (nextCursor?: string | null, reset: boolean = false) => {
+      if (!accessToken) return;
+
+      setIsLoading(true);
+      try {
+        const params: {
+          limit: number;
+          cursor?: string;
+          search?: string;
+          tag?: string;
+          location?: string;
+        } & ContactFilter = {
+          limit: 20,
+          ...(debouncedSearch && searchType === 'tag' && { tag: debouncedSearch }),
+          ...(debouncedSearch && searchType === 'location' && { location: debouncedSearch }),
+          ...(debouncedSearch && searchType === 'all' && { search: debouncedSearch }),
+          ...filters,
+        };
+
+        if (nextCursor) params.cursor = nextCursor;
+
+        const response = await contactsApi.list(params);
+
+        if (reset) {
+          setContacts(response.data);
+        } else {
+          setContacts((prev) => (nextCursor ? [...prev, ...response.data] : response.data));
+        }
+
+        setTotal(response.total);
+        setCursor(response.nextCursor);
+        setHasMore(!!response.nextCursor);
+      } catch (error) {
+        console.error('Failed to fetch contacts:', error);
+      } finally {
+        setIsLoading(false);
       }
-      
-      setTotal(response.total);
-      setCursor(response.nextCursor);
-      setHasMore(!!response.nextCursor);
-      
-    } catch (error) {
-      console.error('Failed to fetch contacts:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [accessToken, filters, searchQuery]);
+    },
+    [accessToken, filters, debouncedSearch, searchType],
+  );
 
   // Initial load
   useEffect(() => {
@@ -168,7 +232,7 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
       setIsPreviewLoading(true);
       try {
         const response = await contactsApi.previewSegment(segmentLogic, segmentCriteria);
-        
+
         // Vérifier que cette requête n'a pas été annulée
         if (!abortController.signal.aborted) {
           setPreviewCount(response.count || 0);
@@ -210,12 +274,12 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
   };
 
   const removeFilter = (key: string) => {
-    setFilters(prev => {
+    setFilters((prev) => {
       const { [key as keyof ContactFilter]: _removed, ...rest } = prev;
       void _removed;
       return rest;
     });
-    setActiveFilters(prev => prev.filter(f => f.key !== key));
+    setActiveFilters((prev) => prev.filter((f) => f.key !== key));
   };
 
   const clearAllFilters = () => {
@@ -225,7 +289,7 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
   };
 
   const toggleSelectContact = (id: string) => {
-    setSelectedContactIds(prev => {
+    setSelectedContactIds((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -240,18 +304,18 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
     if (selectedContactIds.size === contacts.length && contacts.length > 0) {
       setSelectedContactIds(new Set());
     } else {
-      setSelectedContactIds(new Set(contacts.map(c => c.id)));
+      setSelectedContactIds(new Set(contacts.map((c) => c.id)));
     }
   };
 
   const deleteContact = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce contact ?')) return;
-    
+
     try {
       setIsDeleting(true);
       await contactsApi.delete(id);
-      setContacts(prev => prev.filter(c => c.id !== id));
-      setSelectedContactIds(prev => {
+      setContacts((prev) => prev.filter((c) => c.id !== id));
+      setSelectedContactIds((prev) => {
         const newSet = new Set(prev);
         newSet.delete(id);
         return newSet;
@@ -267,14 +331,15 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
 
   const deleteSelectedContacts = async () => {
     if (selectedContactIds.size === 0) return;
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${selectedContactIds.size} contact(s) ?`)) return;
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${selectedContactIds.size} contact(s) ?`))
+      return;
 
     try {
       setIsDeleting(true);
       for (const id of selectedContactIds) {
         await contactsApi.delete(id);
       }
-      setContacts(prev => prev.filter(c => !selectedContactIds.has(c.id)));
+      setContacts((prev) => prev.filter((c) => !selectedContactIds.has(c.id)));
       setSelectedContactIds(new Set());
     } catch (error) {
       console.error('Failed to delete contacts:', error);
@@ -302,10 +367,7 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
   };
 
   const addCriterion = () => {
-    setSegmentCriteria((prev) => [
-      ...prev,
-      { field: 'tag', operator: 'equals', value: '' },
-    ]);
+    setSegmentCriteria((prev) => [...prev, { field: 'tag', operator: 'equals', value: '' }]);
   };
 
   const removeCriterion = (index: number) => {
@@ -322,10 +384,19 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
     setSavingSegment(true);
     setSegmentError(null);
     try {
-      const result = await contactsApi.createSegment(name, segmentLogic, segmentCriteria);
+      const payload = {
+        name,
+        logic: segmentLogic,
+        criteria: segmentCriteria,
+      };
+      const result = editingSegmentId
+        ? await contactsApi.updateSegment(editingSegmentId, payload)
+        : await contactsApi.createSegment(name, segmentLogic, segmentCriteria);
+
       await loadSegments();
       if (result?.segment?.id) {
         setSelectedSegmentId(result.segment.id);
+        setEditingSegmentId(result.segment.id);
       }
     } catch (error: unknown) {
       const message =
@@ -357,12 +428,60 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
         : [{ field: 'tag', operator: 'equals', value: '' }],
     );
     setSegmentName(selected.name || 'Segment');
+    setEditingSegmentId(selected.id);
     setShowFilters(true);
+  };
+
+  const editSegment = (segment: SegmentWithContacts) => {
+    const criteriaObj = (segment.criteria || {}) as {
+      logic?: SegmentLogic;
+      rules?: SegmentCriterion[];
+    };
+
+    setSelectedSegmentId(segment.id);
+    setEditingSegmentId(segment.id);
+    setSegmentName(segment.name || 'Segment');
+    setSegmentLogic(criteriaObj.logic === 'OR' ? 'OR' : 'AND');
+    setSegmentCriteria(
+      Array.isArray(criteriaObj.rules) && criteriaObj.rules.length > 0
+        ? criteriaObj.rules
+        : [{ field: 'tag', operator: 'equals', value: '' }],
+    );
+    setShowFilters(true);
+  };
+
+  const removeSegment = async (segment: SegmentWithContacts) => {
+    if (!confirm(`Supprimer le segment "${segment.name || 'Sans nom'}" ?`)) return;
+
+    try {
+      await contactsApi.deleteSegment(segment.id);
+      await loadSegments();
+      if (selectedSegmentId === segment.id) {
+        setSelectedSegmentId('');
+      }
+      if (editingSegmentId === segment.id) {
+        setEditingSegmentId(null);
+        setSegmentName('Nouveau segment');
+        setSegmentLogic('AND');
+        setSegmentCriteria([{ field: 'tag', operator: 'equals', value: '' }]);
+      }
+      setSegmentError(null);
+    } catch (error: unknown) {
+      const message =
+        typeof error === 'object' && error !== null && 'response' in error
+          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
+          : error instanceof Error
+            ? error.message
+            : 'Impossible de supprimer le segment';
+      setSegmentError(message || 'Impossible de supprimer le segment');
+    }
   };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
-      day: 'numeric', month: 'short', year: 'numeric'
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
     });
   };
 
@@ -392,13 +511,17 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
         </p>
         <div className="flex items-center justify-center gap-3">
           <button
+            id="tour-import-btn"
             onClick={onImportClick}
             className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
           >
             <Download className="w-4 h-4" />
             Importer CSV / XLS
           </button>
-          <button className="px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-colors flex items-center gap-2">
+          <button
+            onClick={onAddContactClick}
+            className="px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-colors flex items-center gap-2"
+          >
             <Plus className="w-4 h-4" />
             Ajouter un contact
           </button>
@@ -413,13 +536,17 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div className="flex items-center gap-3">
           <button
+            id="tour-import-btn"
             onClick={onImportClick}
             className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
           >
             <Download className="w-4 h-4" />
             Importer CSV / XLS
           </button>
-          <button className="px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-colors flex items-center gap-2">
+          <button
+            onClick={onAddContactClick}
+            className="px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-colors flex items-center gap-2"
+          >
             <Plus className="w-4 h-4" />
             Ajouter un contact
           </button>
@@ -436,15 +563,32 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
         </div>
 
         {/* Search */}
-        <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
-          <input
-            type="text"
-            placeholder="Rechercher un contact..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-outline-variant bg-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
-          />
+        <div className="relative w-full sm:w-80 flex">
+          <select
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value as 'all' | 'tag' | 'location')}
+            aria-label="Type de recherche"
+            className="text-xs border border-r-0 border-outline-variant px-2 py-1 bg-surface rounded-l-lg rounded-r-none outline-none text-on-surface-variant focus:ring-2 focus:ring-primary/20 shrink-0"
+          >
+            <option value="all">Tous les champs</option>
+            <option value="tag">Tag</option>
+            <option value="location">Localisation</option>
+          </select>
+          <div className="relative flex-1">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none"
+              aria-hidden="true"
+            />
+            <input
+              type="text"
+              role="searchbox"
+              aria-label="Rechercher un contact"
+              placeholder="Rechercher un contact..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-r-lg rounded-l-none border border-outline-variant bg-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
+            />
+          </div>
         </div>
       </div>
 
@@ -522,7 +666,14 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
 
         <button
           data-testid="new-segment-button"
-          onClick={() => setShowFilters(true)}
+          onClick={() => {
+            setShowFilters(true);
+            setEditingSegmentId(null);
+            setSegmentName('Nouveau segment');
+            setSegmentLogic('AND');
+            setSegmentCriteria([{ field: 'tag', operator: 'equals', value: '' }]);
+            setSegmentError(null);
+          }}
           className="px-4 py-2 text-primary font-medium rounded-lg hover:bg-primary/5 transition-colors text-sm"
         >
           + Nouveau segment
@@ -546,7 +697,11 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
                 onClick={() => void saveSegment()}
                 disabled={savingSegment}
               >
-                {savingSegment ? 'Sauvegarde…' : 'Sauvegarder'}
+                {savingSegment
+                  ? 'Sauvegarde…'
+                  : editingSegmentId
+                    ? 'Enregistrer les modifications'
+                    : 'Sauvegarder'}
               </button>
             </div>
 
@@ -581,10 +736,15 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
               </div>
 
               {segmentCriteria.map((criterion, index) => (
-                <div key={`${criterion.field}-${index}`} className="flex items-center gap-3 flex-wrap">
+                <div
+                  key={`${criterion.field}-${index}`}
+                  className="flex items-center gap-3 flex-wrap"
+                >
                   <select
                     value={criterion.field}
-                    onChange={(e) => updateCriterion(index, 'field', e.target.value as SegmentCriterion['field'])}
+                    onChange={(e) =>
+                      updateCriterion(index, 'field', e.target.value as SegmentCriterion['field'])
+                    }
                     className="px-3 py-2 rounded-lg border border-outline-variant bg-background text-sm min-w-[150px]"
                   >
                     <option value="tag">Tag</option>
@@ -598,7 +758,11 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
                   <select
                     value={criterion.operator}
                     onChange={(e) =>
-                      updateCriterion(index, 'operator', e.target.value as SegmentCriterion['operator'])
+                      updateCriterion(
+                        index,
+                        'operator',
+                        e.target.value as SegmentCriterion['operator'],
+                      )
                     }
                     className="px-3 py-2 rounded-lg border border-outline-variant bg-background text-sm min-w-[130px]"
                   >
@@ -628,18 +792,20 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
               <div className="flex items-center gap-2">
                 {isPreviewLoading && <Loader2 className="w-3 h-3 text-primary animate-spin" />}
                 <p className="text-sm text-on-surface-variant">
-                  <span className="font-semibold text-on-surface">{previewCount}</span> contacts correspondent
+                  <span className="font-semibold text-on-surface">{previewCount}</span> contacts
+                  correspondent
                 </p>
               </div>
-              {segmentError ? (
-                <p className="text-sm text-error mt-2">{segmentError}</p>
-              ) : null}
+              {segmentError ? <p className="text-sm text-error mt-2">{segmentError}</p> : null}
               {segments.length > 0 ? (
                 <div className="mt-4 space-y-3">
                   <p className="text-xs text-on-surface-variant">Contacts par segment</p>
                   <div className="space-y-3">
                     {segments.map((segment) => (
-                      <details key={segment.id} className="group rounded-lg border border-outline-variant/40 bg-background/50">
+                      <details
+                        key={segment.id}
+                        className="group rounded-lg border border-outline-variant/40 bg-background/50"
+                      >
                         <summary className="flex cursor-pointer items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-on-surface">
                           <div className="flex flex-col">
                             <span>{segment.name || 'Sans nom'}</span>
@@ -652,6 +818,22 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
                           </span>
                         </summary>
                         <div className="border-t border-outline-variant/40 px-4 py-3">
+                          <div className="mb-3 flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => editSegment(segment)}
+                              className="rounded-md border border-outline-variant/40 px-2.5 py-1 text-xs font-semibold text-on-surface hover:bg-surface"
+                            >
+                              Modifier
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => void removeSegment(segment)}
+                              className="rounded-md border border-error/30 px-2.5 py-1 text-xs font-semibold text-error hover:bg-error/10"
+                            >
+                              Supprimer
+                            </button>
+                          </div>
                           {segment.contacts.length > 0 ? (
                             <div className="space-y-2">
                               {segment.contacts.map((contact) => (
@@ -668,7 +850,9 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
                               ))}
                             </div>
                           ) : (
-                            <p className="text-xs text-on-surface-variant">Aucun contact dans ce segment.</p>
+                            <p className="text-xs text-on-surface-variant">
+                              Aucun contact dans ce segment.
+                            </p>
                           )}
                         </div>
                       </details>
@@ -682,7 +866,11 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
       </AnimatePresence>
 
       {/* Table - Conforme maquette contacts.html */}
-      <div className="overflow-x-auto rounded-xl border border-outline-variant">
+      <div
+        ref={tableContainerRef}
+        className="overflow-auto rounded-xl border border-outline-variant"
+        style={{ maxHeight: '520px' }}
+      >
         <table className="w-full text-sm">
           <thead className="bg-surface">
             <tr>
@@ -704,140 +892,172 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant/50">
-            {contacts.map((contact, index) => (
-              <motion.tr
-                key={contact.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.03 }}
-                className="hover:bg-surface/50 transition-colors"
-              >
-                {/* Checkbox */}
-                <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
-                  <input
-                    type="checkbox"
-                    checked={selectedContactIds.has(contact.id)}
-                    onChange={() => toggleSelectContact(contact.id)}
-                    className="w-4 h-4 rounded border-outline-variant"
-                  />
-                </td>
-
-                {/* Nom avec avatar initials - Comme maquette */}
-                <td
-                  className="px-4 py-3 cursor-pointer"
-                  onClick={() => onContactClick?.(contact)}
+            {/* Spacer haut pour la virtualisation */}
+            {rowVirtualizer.getVirtualItems().length > 0 &&
+              rowVirtualizer.getVirtualItems()[0].start > 0 && (
+                <tr style={{ height: `${rowVirtualizer.getVirtualItems()[0].start}px` }} />
+              )}
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const contact = contacts[virtualRow.index];
+              return (
+                <motion.tr
+                  key={contact.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="hover:bg-surface/50 transition-colors"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs">
-                      {getInitials(contact.firstName, contact.lastName)}
+                  {/* Checkbox */}
+                  <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      checked={selectedContactIds.has(contact.id)}
+                      onChange={() => toggleSelectContact(contact.id)}
+                      className="w-4 h-4 rounded border-outline-variant"
+                    />
+                  </td>
+
+                  {/* Nom avec avatar initials - Comme maquette */}
+                  <td
+                    className="px-4 py-3 cursor-pointer"
+                    onClick={() => onContactClick?.(contact)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs">
+                        {getInitials(contact.firstName, contact.lastName)}
+                      </div>
+                      <div>
+                        <p className="font-medium text-on-surface">
+                          {contact.firstName} {contact.lastName}
+                        </p>
+                        {contact.location && (
+                          <p className="text-xs text-on-surface-variant">{contact.location}</p>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-on-surface">
-                        {contact.firstName} {contact.lastName}
-                      </p>
-                      {contact.location && (
-                        <p className="text-xs text-on-surface-variant">{contact.location}</p>
+                  </td>
+
+                  {/* Email */}
+                  <td
+                    className="px-4 py-3 cursor-pointer"
+                    onClick={() => onContactClick?.(contact)}
+                  >
+                    <div className="flex items-center gap-2 text-on-surface-variant">
+                      <Mail className="w-3.5 h-3.5" />
+                      <span className="truncate max-w-[200px]">{contact.email}</span>
+                    </div>
+                  </td>
+
+                  {/* Téléphone */}
+                  <td
+                    className="px-4 py-3 cursor-pointer"
+                    onClick={() => onContactClick?.(contact)}
+                  >
+                    <div className="flex items-center gap-2 text-on-surface-variant">
+                      <Phone className="w-3.5 h-3.5" />
+                      <span>{contact.phone}</span>
+                    </div>
+                  </td>
+
+                  {/* Tags */}
+                  <td
+                    className="px-4 py-3 cursor-pointer"
+                    onClick={() => onContactClick?.(contact)}
+                  >
+                    <div className="flex flex-wrap gap-1">
+                      {parseTags(contact.tags)
+                        .slice(0, 2)
+                        .map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2 py-0.5 text-xs rounded-full bg-primary/10 text-primary font-medium"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      {(contact.tags || []).length > 2 && (
+                        <span className="text-xs text-on-surface-variant">
+                          +{(contact.tags || []).length - 2}
+                        </span>
                       )}
                     </div>
-                  </div>
-                </td>
+                  </td>
 
-                {/* Email */}
-                <td
-                  className="px-4 py-3 cursor-pointer"
-                  onClick={() => onContactClick?.(contact)}
-                >
-                  <div className="flex items-center gap-2 text-on-surface-variant">
-                    <Mail className="w-3.5 h-3.5" />
-                    <span className="truncate max-w-[200px]">{contact.email}</span>
-                  </div>
-                </td>
+                  {/* Date d'ajout */}
+                  <td
+                    className="px-4 py-3 text-on-surface-variant cursor-pointer"
+                    onClick={() => onContactClick?.(contact)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5" />
+                      {formatDate(contact.createdAt)}
+                    </div>
+                  </td>
 
-                {/* Téléphone */}
-                <td
-                  className="px-4 py-3 cursor-pointer"
-                  onClick={() => onContactClick?.(contact)}
-                >
-                  <div className="flex items-center gap-2 text-on-surface-variant">
-                    <Phone className="w-3.5 h-3.5" />
-                    <span>{contact.phone}</span>
-                  </div>
-                </td>
-
-                {/* Tags */}
-                <td
-                  className="px-4 py-3 cursor-pointer"
-                  onClick={() => onContactClick?.(contact)}
-                >
-                  <div className="flex flex-wrap gap-1">
-                    {(contact.tags || []).slice(0, 2).map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 text-xs rounded-full bg-primary/10 text-primary font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                    {(contact.tags || []).length > 2 && (
-                      <span className="text-xs text-on-surface-variant">
-                        +{(contact.tags || []).length - 2}
-                      </span>
-                    )}
-                  </div>
-                </td>
-
-                {/* Date d'ajout */}
-                <td
-                  className="px-4 py-3 text-on-surface-variant cursor-pointer"
-                  onClick={() => onContactClick?.(contact)}
-                >
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5" />
-                    {formatDate(contact.createdAt)}
-                  </div>
-                </td>
-
-                {/* Statut - Comme maquette */}
-                <td
-                  className="px-4 py-3 cursor-pointer"
-                  onClick={() => onContactClick?.(contact)}
-                >
-                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
-                    contact.optOut 
-                      ? 'text-error bg-error/10' 
-                      : 'text-success bg-success/10'
-                  }`}>
-                    {contact.optOut ? <XCircle className="w-3 h-3" /> : <CheckCircle className="w-3 h-3" />}
-                    {contact.optOut ? 'Inactif' : 'Actif'}
-                  </span>
-                </td>
-
-                {/* Actions menu */}
-                <td className="px-4 py-3 text-right relative" onClick={(e) => e.stopPropagation()}>
-                  <div className="relative">
-                    <button
-                      onClick={() => setOpenMenuId(openMenuId === contact.id ? null : contact.id)}
-                      className="p-1.5 rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant"
-                      disabled={isDeleting}
+                  {/* Statut - Comme maquette */}
+                  <td
+                    className="px-4 py-3 cursor-pointer"
+                    onClick={() => onContactClick?.(contact)}
+                  >
+                    <span
+                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
+                        contact.optOut ? 'text-error bg-error/10' : 'text-success bg-success/10'
+                      }`}
                     >
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
-                    
-                    {openMenuId === contact.id && (
-                      <div className="absolute right-0 mt-1 w-40 bg-surface border border-outline-variant rounded-lg shadow-lg z-10">
-                        <button
-                          onClick={() => deleteContact(contact.id)}
-                          disabled={isDeleting}
-                          className="w-full text-left px-4 py-2 text-sm text-error hover:bg-error/10 rounded-t-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      {contact.optOut ? (
+                        <XCircle className="w-3 h-3" />
+                      ) : (
+                        <CheckCircle className="w-3 h-3" />
+                      )}
+                      {contact.optOut ? 'Inactif' : 'Actif'}
+                    </span>
+                  </td>
+
+                  {/* Actions menu */}
+                  <td
+                    className="px-4 py-3 text-right relative"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="relative">
+                      <button
+                        aria-label="Actions du contact"
+                        aria-haspopup="menu"
+                        aria-expanded={openMenuId === contact.id}
+                        onClick={() => setOpenMenuId(openMenuId === contact.id ? null : contact.id)}
+                        className="p-1.5 rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant"
+                        disabled={isDeleting}
+                      >
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+
+                      {openMenuId === contact.id && (
+                        <div
+                          role="menu"
+                          aria-label="Actions du contact"
+                          className="absolute right-0 mt-1 w-40 bg-surface border border-outline-variant rounded-lg shadow-lg z-10"
                         >
-                          Supprimer ce contact
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </td>
-              </motion.tr>
-            ))}
+                          <button
+                            role="menuitem"
+                            onClick={() => deleteContact(contact.id)}
+                            disabled={isDeleting}
+                            className="w-full text-left px-4 py-2 text-sm text-error hover:bg-error/10 rounded-t-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Supprimer ce contact
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </motion.tr>
+              );
+            })}
+            {/* Spacer bas pour la virtualisation */}
+            {rowVirtualizer.getVirtualItems().length > 0 &&
+              (() => {
+                const lastItem =
+                  rowVirtualizer.getVirtualItems()[rowVirtualizer.getVirtualItems().length - 1];
+                const bottomSpace = rowVirtualizer.getTotalSize() - lastItem.end;
+                return bottomSpace > 0 ? <tr style={{ height: `${bottomSpace}px` }} /> : null;
+              })()}
           </tbody>
         </table>
       </div>
@@ -858,7 +1078,7 @@ export default function ContactTable({ onContactClick, onImportClick }: ContactT
             <ChevronLeft className="w-4 h-4" />
             Préc.
           </button>
-          
+
           <button
             onClick={handleNextPage}
             disabled={!hasMore || isLoading}

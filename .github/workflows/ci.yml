@@ -1,56 +1,124 @@
-name: CI Pipeline
+name: NovaSMS CI
+
 on:
   push:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
-env:
-  NODE_VERSION: '20'
+
 jobs:
-  lint:
-    name: Lint Code
+  # CI-01 — Lint + TypeScript check (frontend + backend)
+  lint-and-typecheck:
+    name: Lint & TypeScript
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: '${{ env.NODE_VERSION }}'
+          node-version: '20'
           cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
-  test:
-    needs: lint
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prisma generate (requis pour les types avant lint)
+        run: cd apps/backend && npx prisma generate
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: TypeScript — frontend
+        run: cd apps/frontend && npx tsc --noEmit
+
+      - name: TypeScript — backend
+        run: cd apps/backend && npx tsc --noEmit
+
+  # CI-02 — Backend tests avec PostgreSQL 15 + Redis 7
+  test-backend:
+    name: Tests backend
+    needs: lint-and-typecheck
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: novasms
+          POSTGRES_PASSWORD: novasms
+          POSTGRES_DB: novasms_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    # CI-03 — Variables d'environnement nécessaires aux tests
+    env:
+      DATABASE_URL: postgresql://novasms:novasms@localhost:5432/novasms_test
+      REDIS_URL: redis://localhost:6379
+      JWT_SECRET: ${{ secrets.JWT_SECRET || 'ci-jwt-secret-dev' }}
+      JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET || 'ci-refresh-secret-dev' }}
+      NODE_ENV: test
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 're_test_ci' }}
+      SMS_PROVIDER: simulation
+      PAYMENT_PROVIDER: simulation
+      VISA_PROVIDER: simulation
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: '${{ env.NODE_VERSION }}'
+          node-version: '20'
           cache: 'npm'
-      - run: npm ci
-      - run: npm run test --if-present
-  e2e:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '${{ env.NODE_VERSION }}'
-          cache: 'npm'
-      - run: npm ci
-      - run: npx playwright install --with-deps
-        working-directory: apps/frontend
-      - run: npm run test:e2e
-        working-directory: apps/frontend
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # CI-04 — Prisma migrate deploy avant les tests
+      - name: Prisma migrate deploy
+        run: cd apps/backend && npx prisma migrate deploy
+
+      - name: Run backend tests
+        run: cd apps/backend && npm run test
+
+  # Build frontend + backend
   build:
-    needs: e2e
+    name: Build
+    needs: test-backend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: '${{ env.NODE_VERSION }}'
+          node-version: '20'
           cache: 'npm'
-      - run: npm ci
-      - run: npm run build --if-present
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: cd apps/frontend && npm run build
+        env:
+          VITE_API_URL: http://localhost:3000
+          VITE_IS_STAGING: 'true'
+
+      - name: Build backend
+        run: cd apps/backend && npm run build

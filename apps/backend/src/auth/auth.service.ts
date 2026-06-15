@@ -1,16 +1,20 @@
 import {
   Injectable,
   ConflictException,
+  Logger,
   BadRequestException,
   UnauthorizedException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { MailService } from '../mail/mail.service';
+import { SmsProviderFactory } from '../providers/sms/sms.provider.factory';
 import * as bcrypt from 'bcryptjs';
 import { RegisterDto } from './dto/register.dto';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID, randomInt } from 'crypto';
 import * as speakeasy from 'speakeasy';
+import { UserRole } from '@prisma/client'; // ✅ Import de l'enum Prisma
 
 const LOGIN_LOCK_THRESHOLD = 5;
 const LOGIN_LOCK_MINUTES = 15;
@@ -30,7 +34,6 @@ type AuthAccount = {
   twoFactorCodeExpiry: Date | null;
   twoFactorSecret: string | null;
   backupCodes?: string[];
-  // ✅ NOUVEAUX CHAMPS pour Wizard + RBAC + Multi-tenant
   onboardingCompleted: boolean;
 };
 
@@ -39,7 +42,7 @@ type AuthUser = {
   accountId: string;
   email: string;
   passwordHash: string;
-  role: string;
+  role: UserRole; // ✅ Type enum Prisma
   twoFactorEnabled: boolean;
 };
 
@@ -50,15 +53,38 @@ type AuthTokens = {
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private prisma: PrismaService,
     private mail: MailService,
     private jwtService: JwtService,
+    private smsProviderFactory: SmsProviderFactory,
   ) {}
 
-  async register(data: RegisterDto) {
+  async register(
+    data:
+      | RegisterDto
+      | {
+          adminEmail?: string;
+          password?: string;
+          companyName?: string;
+          country?: string;
+        },
+  ) {
+    // Normalize incoming payloads: support both French DTO and older API shape
+    const raw = (data ?? {}) as Record<string, string | undefined>;
+    const email = raw.email ?? raw.adminEmail ?? null;
+    const password = raw.motDePasse ?? raw.password ?? null;
+    const nom = raw.nom ?? raw.companyName ?? 'Nouvelle entreprise';
+    const pays = raw.pays ?? raw.country ?? 'CI';
+
+    if (!email || !password) {
+      throw new BadRequestException('Email and password are required');
+    }
+
     const existing = await this.prisma.account.findUnique({
-      where: { adminEmail: data.email },
+      where: { adminEmail: email },
     });
 
     if (existing) {
@@ -67,28 +93,27 @@ export class AuthService {
       );
     }
 
-    const hashedPassword = await bcrypt.hash(data.motDePasse, 12);
-
-    const token = uuidv4();
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const token = randomUUID();
     const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     await this.prisma.account.create({
       data: {
-        companyName: data.nom,
-        adminEmail: data.email,
+        companyName: nom,
+        adminEmail: email,
         passwordHash: hashedPassword,
-        country: data.pays,
+        country: pays,
         creditBalance: 0,
         confirmationToken: token,
         tokenExpiry: expiry,
         emailVerified: false,
-        onboardingCompleted: false, // ✅ Valeur par défaut
+        onboardingCompleted: false,
       },
     });
 
     const createdAccount = await this.prisma.account.findUnique({
-      where: { adminEmail: data.email },
-      select: { id: true },
+      where: { adminEmail: email },
+      select: { id: true, adminEmail: true, companyName: true },
     });
 
     if (!createdAccount) {
@@ -98,18 +123,61 @@ export class AuthService {
     await this.prisma.user.create({
       data: {
         accountId: createdAccount.id,
-        email: data.email,
+        email,
         passwordHash: hashedPassword,
-        role: 'admin',
+        role: UserRole.Admin,
         twoFactorEnabled: false,
       },
     });
 
-    await this.mail.sendVerificationEmail(data.email, token);
+    // US-001: audit log pour traçabilité inscription
+    try {
+      await this.prisma.auditLog.create({
+        data: {
+          accountId: createdAccount.id,
+          userId: createdAccount.id,
+          action: 'registration_complete',
+          details: { email, companyName: nom },
+        },
+      });
+    } catch {
+      // non-bloquant : l'inscription réussit même si l'audit log échoue
+    }
+
+    // send verification email (best-effort)
+    try {
+      await this.mail.sendVerificationEmail(email, token);
+    } catch (err) {
+      // don't block registration if mail fails in tests
+      this.logger.warn(
+        `Failed to send verification email: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+
+    // Build minimal auth account object for token generation
+    const authAccount = {
+      id: createdAccount.id,
+      companyName: createdAccount.companyName || nom,
+      adminEmail: createdAccount.adminEmail || email,
+      passwordHash: hashedPassword,
+      sector: null,
+      primaryChannels: [],
+      emailVerified: false,
+      loginAttempts: 0,
+      lockedUntil: null,
+      twoFactorCode: null,
+      twoFactorCodeExpiry: null,
+      twoFactorSecret: null,
+      onboardingCompleted: false,
+    } as unknown as AuthAccount;
+
+    const tokens = this.generateTokens(authAccount, UserRole.Admin);
 
     return {
       success: true,
-      message: 'Account created. Please check your email to verify.',
+      access_token: tokens.accessToken,
+      refresh_token: tokens.refreshToken,
+      account: { id: createdAccount.id },
     };
   }
 
@@ -138,7 +206,7 @@ export class AuthService {
       },
     });
 
-    console.log(`[Auth] Email verified: ${account.adminEmail}`);
+    this.logger.log(`Email verified: ${account.adminEmail}`);
     return {
       success: true,
       message: 'Email verified successfully',
@@ -165,7 +233,7 @@ export class AuthService {
       };
     }
 
-    const token = uuidv4();
+    const token = randomUUID();
     const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     await this.prisma.account.update({
@@ -185,8 +253,9 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const account = await this.prisma.account.findUnique({
-      where: { adminEmail: email },
+    const normalizedEmail = email.trim().toLowerCase();
+    const account = await this.prisma.account.findFirst({
+      where: { adminEmail: { equals: normalizedEmail, mode: 'insensitive' } },
     });
 
     if (!account) {
@@ -259,29 +328,22 @@ export class AuthService {
       data: { loginAttempts: 0, lockedUntil: null },
     });
 
-    // 2FA si activé
+    // 2FA si active: authenticator TOTP + backup codes uniquement
     if (primaryUser.twoFactorEnabled) {
-      const twoFactorCode = this.generateTwoFactorCode();
-      const twoFactorCodeExpiry = new Date(
-        Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000,
-      );
       const twoFactorToken = this.generateTwoFactorToken(authAccount);
 
+      // cleanup legacy email-based 2FA fields
       await this.prisma.account.update({
         where: { id: authAccount.id },
-        data: { twoFactorCode, twoFactorCodeExpiry },
+        data: { twoFactorCode: null, twoFactorCodeExpiry: null },
       });
-
-      await this.mail.sendTwoFactorCodeEmail(
-        authAccount.adminEmail,
-        twoFactorCode,
-      );
 
       return {
         success: true,
         requiresTwoFactor: true,
         twoFactorToken,
-        message: 'Un code de vérification a été envoyé à votre adresse email.',
+        message:
+          'Entrez le code de votre application Authenticator ou un backup code.',
         account: {
           id: authAccount.id,
           email: authAccount.adminEmail,
@@ -347,7 +409,6 @@ export class AuthService {
 
     const authAccount = account as unknown as AuthAccount;
     const primaryUser = await this.getPrimaryUser(authAccount);
-    const now = new Date();
 
     if (!primaryUser.twoFactorEnabled) {
       throw new UnauthorizedException(
@@ -361,20 +422,18 @@ export class AuthService {
       : [];
     const matchedBackupCode = backupCodes.find((bc) => bc === normalizedCode);
 
-    if (!matchedBackupCode) {
-      if (!authAccount.twoFactorCode || !authAccount.twoFactorCodeExpiry) {
-        throw new UnauthorizedException('Code de vérification expiré');
-      }
-      if (authAccount.twoFactorCodeExpiry < now) {
-        await this.prisma.account.update({
-          where: { id: authAccount.id },
-          data: { twoFactorCode: null, twoFactorCodeExpiry: null },
-        });
-        throw new UnauthorizedException('Code de vérification expiré');
-      }
-      if (authAccount.twoFactorCode !== normalizedCode) {
-        throw new UnauthorizedException('Code de vérification incorrect');
-      }
+    let isTotpValid = false;
+    if (authAccount.twoFactorSecret) {
+      isTotpValid = speakeasy.totp.verify({
+        secret: authAccount.twoFactorSecret,
+        encoding: 'base32',
+        token: normalizedCode,
+        window: 2,
+      });
+    }
+
+    if (!isTotpValid && !matchedBackupCode) {
+      throw new UnauthorizedException('Code de vérification incorrect');
     }
 
     await this.prisma.account.update({
@@ -403,18 +462,130 @@ export class AuthService {
         role: primaryUser.role,
         sector: authAccount.sector,
         primaryChannels: authAccount.primaryChannels,
-        onboardingCompleted: authAccount.onboardingCompleted, // ✅ Pour redirection frontend
+        onboardingCompleted: authAccount.onboardingCompleted,
       },
     };
   }
 
-  // ✅ NOUVELLE MÉTHODE — Marquer onboarding comme complété
+  async refreshTokens(refreshToken: string) {
+    if (!refreshToken) {
+      throw new BadRequestException('refreshToken requis');
+    }
+
+    let payload: { sub?: string; email?: string };
+    try {
+      payload = this.jwtService.verify<{ sub?: string; email?: string }>(
+        refreshToken,
+        {
+          secret: process.env.JWT_REFRESH_SECRET,
+        },
+      );
+    } catch {
+      throw new UnauthorizedException('Refresh token invalide ou expiré');
+    }
+
+    if (!payload.sub || !payload.email) {
+      throw new UnauthorizedException('Refresh token invalide');
+    }
+
+    const account = await this.prisma.account.findUnique({
+      where: { id: payload.sub },
+    });
+
+    if (!account || account.adminEmail !== payload.email) {
+      throw new UnauthorizedException('Compte introuvable pour ce token');
+    }
+
+    const authAccount = account as unknown as AuthAccount;
+    const primaryUser = await this.getPrimaryUser(authAccount);
+    const tokens = this.generateTokens(authAccount, primaryUser.role);
+
+    return {
+      success: true,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    };
+  }
+
   async markOnboardingCompleted(accountId: string) {
     await this.prisma.account.update({
       where: { id: accountId },
       data: { onboardingCompleted: true },
     });
     return { success: true, message: 'Onboarding marked as completed' };
+  }
+
+  // ✅ Reset password (US-002)
+  async requestPasswordReset(email: string) {
+    if (!email) {
+      throw new BadRequestException('Email requis');
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const account = await this.prisma.account.findFirst({
+      where: { adminEmail: { equals: normalizedEmail, mode: 'insensitive' } },
+      select: { id: true, adminEmail: true },
+    });
+
+    if (!account) {
+      return {
+        success: true,
+        message: 'Si le compte existe, un email sera envoyé.',
+      };
+    }
+
+    const token = randomUUID();
+    const expiry = new Date(Date.now() + 60 * 60 * 1000);
+
+    await this.prisma.account.update({
+      where: { id: account.id },
+      data: { resetPasswordToken: token, resetPasswordExpiry: expiry },
+    });
+
+    try {
+      await this.mail.sendPasswordResetEmail(account.adminEmail, token);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        error instanceof Error
+          ? error.message
+          : "Impossible d'envoyer l'email de réinitialisation.",
+      );
+    }
+
+    return { success: true, message: 'Email de réinitialisation envoyé.' };
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    if (!token) {
+      throw new BadRequestException('Token requis');
+    }
+
+    const account = await this.prisma.account.findFirst({
+      where: {
+        resetPasswordToken: token,
+        resetPasswordExpiry: { gte: new Date() },
+      },
+    });
+
+    if (!account) {
+      throw new UnauthorizedException('Token invalide ou expiré');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    await this.prisma.account.update({
+      where: { id: account.id },
+      data: {
+        passwordHash: hashedPassword,
+        resetPasswordToken: null,
+        resetPasswordExpiry: null,
+        loginAttempts: 0,
+        lockedUntil: null,
+      },
+    });
+
+    return { success: true, message: 'Mot de passe réinitialisé avec succès.' };
   }
 
   async updateProfile(
@@ -433,7 +604,8 @@ export class AuthService {
       throw new BadRequestException('Company name required');
     }
 
-    const normalizedRole = this.normalizeRole(profile.role);
+    // ✅ Correction: normaliser le rôle en enum UserRole
+    const normalizedRole = this.normalizeRoleToEnum(profile.role);
 
     const accountSnapshot = await this.prisma.account.findUnique({
       where: { id: accountId },
@@ -450,9 +622,7 @@ export class AuthService {
 
     const account = await this.prisma.account.update({
       where: { id: accountId },
-      data: {
-        companyName,
-      },
+      data: { companyName },
       select: {
         id: true,
         adminEmail: true,
@@ -500,12 +670,11 @@ export class AuthService {
     return await bcrypt.compare(plainPassword, hash);
   }
 
-  private generateTokens(account: AuthAccount, role: string): AuthTokens {
-    // ✅ Payload enrichi pour multi-tenant + RBAC
+  private generateTokens(account: AuthAccount, role: UserRole): AuthTokens {
     const payload = {
       sub: account.id,
       email: account.adminEmail,
-      accountId: account.id, // 🔑 Isolation données entre entreprises
+      accountId: account.id,
       role,
       onboardingCompleted: account.onboardingCompleted,
     };
@@ -527,10 +696,6 @@ export class AuthService {
     };
   }
 
-  private generateTwoFactorCode(): string {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  }
-
   private generateTwoFactorToken(account: AuthAccount): string {
     return this.jwtService.sign(
       {
@@ -549,12 +714,9 @@ export class AuthService {
   private generateBackupCodes(count = 10): string[] {
     const codes: string[] = [];
     for (let i = 0; i < count; i++) {
-      const code = `${Math.floor(Math.random() * 10000)
-        .toString()
-        .padStart(4, '0')}-${Math.floor(Math.random() * 10000)
-        .toString()
-        .padStart(4, '0')}`;
-      codes.push(code);
+      const a = randomInt(0, 10000).toString().padStart(4, '0');
+      const b = randomInt(0, 10000).toString().padStart(4, '0');
+      codes.push(`${a}-${b}`);
     }
     return codes;
   }
@@ -568,9 +730,6 @@ export class AuthService {
     });
     if (!account) throw new BadRequestException('Account not found');
 
-    /* speakeasy doesn't have strict types in this project environment; disable
-       the specific ESLint type-safety checks for this call only. */
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const secret = speakeasy.generateSecret({
       name: `NovaSMS (${account.adminEmail})`,
       issuer: 'NovaSMS',
@@ -606,8 +765,6 @@ export class AuthService {
     const secret = account.twoFactorSecret;
     if (!secret) throw new BadRequestException('2FA secret not set');
 
-    // speakeasy.totp may be untyped in this environment — suppress type-safety ESLint rules here
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
     const ok = speakeasy.totp.verify({
       secret,
       encoding: 'base32',
@@ -686,7 +843,7 @@ export class AuthService {
     });
     if (!account) throw new BadRequestException('Account not found');
 
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const code = randomInt(100000, 1000000).toString();
     const expiry = new Date(Date.now() + 10 * 60 * 1000);
 
     await this.prisma.account.update({
@@ -694,14 +851,36 @@ export class AuthService {
       data: { twoFactorCode: code, twoFactorCodeExpiry: expiry },
     });
 
-    console.log(
-      `[Auth] 2FA SMS code for ${account.adminEmail}: ${code} (phone: ${_phone || 'n/a'})`,
-    );
+    const phone = _phone || null;
+    if (phone) {
+      try {
+        const smsProvider = this.smsProviderFactory.getProvider();
+        const result = await smsProvider.send(
+          phone,
+          `Votre code NovaSMS : ${code}. Valable 10 min.`,
+        );
+        if (!result.success) {
+          throw new Error(result.error || 'SMS provider error');
+        }
+      } catch (err) {
+        // Fail-safe : on logue l'erreur mais on ne bloque pas (évite lock-out)
+        this.logger.error(
+          `2FA SMS send failed: ${err instanceof Error ? err.message : String(err)}`,
+        );
+        this.logger.debug(
+          `2FA fallback — code for ${account.adminEmail}: ${code}`,
+        );
+      }
+    } else {
+      // Aucun numéro connu — mode développement
+      this.logger.debug(
+        `2FA dev mode — code for ${account.adminEmail}: ${code}`,
+      );
+    }
 
-    return { success: true, message: 'Code 2FA envoyé (placeholder)' };
+    return { success: true, message: 'Code 2FA envoyé' };
   }
 
-  // New helper: get account info for frontend
   async getAccount(accountId: string) {
     if (!accountId) throw new BadRequestException('accountId required');
     const account = await this.prisma.account.findUnique({
@@ -750,7 +929,7 @@ export class AuthService {
 
   private async getPrimaryUser(
     account: AuthAccount & { passwordHash?: string },
-    desiredRole?: string,
+    desiredRole?: UserRole, // ✅ Type enum
   ): Promise<AuthUser> {
     const existingUser = await this.prisma.user.findUnique({
       where: { email: account.adminEmail },
@@ -761,10 +940,11 @@ export class AuthService {
         throw new BadRequestException('Primary user does not match account');
       }
 
+      // ✅ Correction: comparaison avec enum
       if (desiredRole && existingUser.role !== desiredRole) {
         return this.prisma.user.update({
           where: { email: account.adminEmail },
-          data: { role: desiredRole },
+          data: { role: desiredRole }, // ✅ Enum UserRole
         });
       }
 
@@ -775,44 +955,36 @@ export class AuthService {
       throw new BadRequestException('Primary user not found');
     }
 
+    // ✅ Correction: utiliser UserRole.Admin par défaut
     return this.prisma.user.create({
       data: {
         accountId: account.id,
         email: account.adminEmail,
         passwordHash: account.passwordHash,
-        role: desiredRole || 'admin',
+        role: desiredRole || UserRole.Admin, // ✅ Enum Prisma
         twoFactorEnabled: false,
       },
     });
   }
 
-  private normalizeRole(role?: string): string | undefined {
-    if (!role) {
-      return undefined;
-    }
+  // ✅ Nouvelle méthode: normaliser string → UserRole enum
+  private normalizeRoleToEnum(role?: string): UserRole | undefined {
+    if (!role) return undefined;
 
     const value = role.trim().toLowerCase();
+    if (!value) return undefined;
 
-    if (!value) {
-      return undefined;
-    }
-
-    if (value.includes('administr')) {
-      return 'admin';
-    }
-
-    if (value.includes('marketing')) {
-      return 'marketing_manager';
-    }
-
+    if (value.includes('administr')) return UserRole.Admin;
+    if (value.includes('marketing')) return UserRole.Editor; // ou créer UserRole.MarketingManager
     if (
       value.includes('boutique') ||
       value.includes('gérant') ||
       value.includes('gerant')
     ) {
-      return 'store_manager';
+      return UserRole.Editor;
     }
 
-    return value.slice(0, 20);
+    // Fallback: retourner Admin si la valeur n'est pas reconnue
+    return UserRole.Admin;
   }
 }

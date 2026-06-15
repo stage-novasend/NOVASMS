@@ -8,17 +8,25 @@ import {
   Param,
   UseGuards,
   BadRequestException,
+  Req,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { AuthService } from './auth.service';
-import { ApiOperation, ApiBody, ApiTags, ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiParam } from '@nestjs/swagger';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { JwtBlacklistService } from './jwt-blacklist.service';
 import type { RegisterDto } from './dto/register.dto';
 import { Tenant } from '../common/decorators/tenant.decorator';
+import { ForgotPasswordSchema } from './dto/forgot-password.dto';
+import { ResetPasswordSchema } from './dto/reset-password.dto';
 
 @ApiTags('Authentification')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly blacklist: JwtBlacklistService,
+  ) {}
 
   @Post('register')
   @ApiOperation({ summary: 'Inscription nouveau compte marchand' })
@@ -43,27 +51,35 @@ export class AuthController {
     return this.authService.resendConfirmationEmail(body.email);
   }
 
-  // ✅ ENDPOINT LOGIN
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Connexion utilisateur (Email/Mdp)' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: { type: 'string', example: 'contact@boutique.ci' },
-        motDePasse: { type: 'string', example: 'MonMotDePasse123!' },
-      },
-    },
-  })
   async login(@Body() body: { email: string; motDePasse: string }) {
     return this.authService.login(body.email, body.motDePasse);
   }
 
-  // ✅ NOUVEL ENDPOINT — Marquer onboarding comme complété
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Demande de réinitialisation du mot de passe' })
+  async forgotPassword(@Body() body: { email: string }) {
+    ForgotPasswordSchema.parse(body);
+    return this.authService.requestPasswordReset(body.email);
+  }
+
+  @Post('reset-password/:token')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Réinitialiser le mot de passe (token fourni)' })
+  async resetPassword(
+    @Param('token') token: string,
+    @Body() body: { newPassword: string },
+  ) {
+    ResetPasswordSchema.parse({ token, newPassword: body.newPassword });
+    return this.authService.resetPassword(token, body.newPassword);
+  }
+
   @Post('onboarding/complete')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: "Marquer l'onboarding comme complété" })
+  @ApiOperation({ summary: 'Marquer onboarding comme complété' })
   async markOnboardingCompleted(@Tenant() accountId: string | null) {
     if (!accountId) {
       throw new BadRequestException('Utilisateur non authentifié');
@@ -87,7 +103,6 @@ export class AuthController {
     if (!accountId) {
       throw new BadRequestException('Utilisateur non authentifié');
     }
-
     return this.authService.updateProfile(accountId, body);
   }
 
@@ -100,9 +115,35 @@ export class AuthController {
     return this.authService.verifyTwoFactor(body.twoFactorToken, body.code);
   }
 
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Rafraîchir les tokens d'authentification" })
+  async refresh(@Body() body: { refreshToken: string }) {
+    return this.authService.refreshTokens(body.refreshToken);
+  }
+
+  /**
+   * US-015 – Logout: immediately revoke the current access token via Redis.
+   * The token remains in Redis until its natural expiry time.
+   */
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Déconnexion — révocation immédiate du token JWT' })
+  async logout(
+    @Req()
+    req: Request & { user?: { accountId: string; iat?: number; exp?: number } },
+  ) {
+    const user = req.user;
+    if (user?.accountId && user.iat !== undefined && user.exp !== undefined) {
+      await this.blacklist.revoke(user.accountId, user.iat, user.exp);
+    }
+    return { success: true, message: 'Déconnecté avec succès' };
+  }
+
   @Post('generate-2fa-secret')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: "Générer un secret TOTP pour l'enrôlement 2FA" })
+  @ApiOperation({ summary: 'Générer un secret TOTP pour l’enrôlement 2FA' })
   async generateTwoFactorSecret(@Tenant() accountId: string | null) {
     if (!accountId) {
       throw new BadRequestException('Utilisateur non authentifié');

@@ -1,19 +1,45 @@
 # Dependencies
 node_modules/
+
 # Build outputs
-dist/ build/ .next/
-# Environment
-.env .env.local .env*.local
+dist/
+build/
+.next/
+
+# Environment — jamais versionner les .env réels
+.env
+.env.local
+.env.staging
+.env.production
+.env.prod
+.env*.local
+# .env.example EST versionné (template sans vraies clés)
+
 # OS
-.DS_Store Thumbs.db
+.DS_Store
+Thumbs.db
+
 # Logs
-*.log npm-debug.log*
+*.log
+npm-debug.log*
+
 # Testing
-coverage/ .nyc_output/
+coverage/
+.nyc_output/
+
 # IDE
-.idea/ .vscode/ *.swp
+.idea/
+.vscode/
+*.swp
+
 # Prisma
-prisma/*.db prisma/migrations/*/migration.sql
+prisma/*.db
+prisma/migrations/*/migration.sql
+
 # Apps
-apps/frontend/dist/ apps/frontend/.vite/
+apps/frontend/dist/
+apps/frontend/.vite/
 apps/backend/dist/
+
+# Uploads locaux (générés au runtime)
+apps/backend/uploads/
