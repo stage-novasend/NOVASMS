@@ -22,5 +22,8 @@ export default defineConfig([
         project: ['./tsconfig.app.json', './tsconfig.node.json'],
       },
     },
+    rules: {
+      'react-hooks/set-state-in-effect': 'off',
+    },
   },
 ]);
