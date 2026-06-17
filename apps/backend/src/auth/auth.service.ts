@@ -61,8 +61,8 @@ export class AuthService {
     // Normalize incoming payloads: support both French DTO and older API shape
     const email = (data && (data.email ?? data.adminEmail)) || null;
     const password = (data && (data.motDePasse ?? data.password)) || null;
-    const nom = (data && (data.nom ?? data.companyName)) || 'Nouvelle entreprise';
-    const nomBoutique = (data && (data.nomBoutique ?? `${nom} shop`)) || `${nom} shop`;
+    const nom =
+      (data && (data.nom ?? data.companyName)) || 'Nouvelle entreprise';
     const pays = (data && (data.pays ?? data.country)) || 'CI';
 
     if (!email || !password) {
@@ -121,7 +121,10 @@ export class AuthService {
       await this.mail.sendVerificationEmail(email, token);
     } catch (err) {
       // don't block registration if mail fails in tests
-      console.warn('Failed to send verification email:', err instanceof Error ? err.message : err);
+      console.warn(
+        'Failed to send verification email:',
+        err instanceof Error ? err.message : err,
+      );
     }
 
     // Build minimal auth account object for token generation
@@ -378,7 +381,6 @@ export class AuthService {
 
     const authAccount = account as unknown as AuthAccount;
     const primaryUser = await this.getPrimaryUser(authAccount);
-    const now = new Date();
 
     if (!primaryUser.twoFactorEnabled) {
       throw new UnauthorizedException(
@@ -553,6 +555,11 @@ export class AuthService {
         loginAttempts: 0,
         lockedUntil: null,
       },
+    });
+
+    await this.prisma.user.updateMany({
+      where: { accountId: account.id },
+      data: { passwordHash: hashedPassword },
     });
 
     return { success: true, message: 'Mot de passe réinitialisé avec succès.' };
