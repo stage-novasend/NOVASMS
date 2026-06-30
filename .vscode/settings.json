@@ -1,3 +1,12 @@
 {
-  "css.customData": [".vscode/tailwindcss.custom-data.json"]
+  "css.customData": [".vscode/tailwindcss.custom-data.json"],
+  "cSpell.configPaths": ["./cspell.json"],
+  "cSpell.language": "en,fr",
+  "cSpell.ignorePaths": [
+    ".env",
+    ".env.*",
+    "node_modules",
+    "dist",
+    "coverage"
+  ]
 }
