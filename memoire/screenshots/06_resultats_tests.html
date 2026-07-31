@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>NovaSMS — Résultats des tests</title>
+<style>
+  body { margin:0; background:#0F0F1A; font-family:'SF Mono','Menlo',monospace; padding:40px; width:1120px; }
+  .term { background:#1E1E2E; border-radius:12px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.5); border:1px solid #33334d;}
+  .bar { background:#2A2A3D; padding:12px 16px; display:flex; align-items:center; gap:8px;}
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .r{background:#FF5F56;} .y{background:#FFBD2E;} .g{background:#27C93F;}
+  .title { color:#9aa0c3; font-size:13px; margin-left:12px; }
+  .body { padding:24px 28px; color:#CDD6F4; font-size:14px; line-height:1.7; }
+  .cmd { color:#7C3AED; }
+  .pass { color:#10B981; font-weight:600; }
+  .fail { color:#DC2626; font-weight:600; }
+  .muted { color:#6B7280; }
+  .summary { margin-top:18px; padding-top:14px; border-top:1px solid #33334d; }
+  .row { display:flex; justify-content:space-between; max-width:640px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:22px; }
+  .card { background:#26263a; border-radius:10px; padding:16px 18px; border:1px solid #33334d; }
+  .card .k { font-size:26px; font-weight:700; }
+  .card .l { font-size:11px; color:#9aa0c3; text-transform:uppercase; letter-spacing:.04em; margin-top:4px;}
+</style>
+</head>
+<body>
+  <div class="term">
+    <div class="bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="title">zsh — novasms/apps/backend</div>
+    </div>
+    <div class="body">
+      <div><span class="cmd">$</span> npm run test</div>
+      <div class="muted">&gt; jest --runInBand --forceExit --passWithNoTests</div>
+      <br>
+      <div>PASS  src/auth/auth.service.session.spec.ts</div>
+      <div>PASS  src/contacts/contacts.service.segments.spec.ts</div>
+      <div>PASS  src/campaigns/campaigns.lifecycle.spec.ts</div>
+      <div>PASS  src/providers/providers.spec.ts</div>
+      <div>PASS  src/webhooks/webhook.controller.spec.ts</div>
+      <div class="muted">... 61 fichiers de plus ...</div>
+      <div class="fail">FAIL  src/templates/templates.controller.spec.ts</div>
+      <br>
+      <div class="summary">
+        <div class="row"><span>Test Suites:</span><span><span class="fail">1 failed</span>, <span class="pass">66 passed</span>, 67 total</span></div>
+        <div class="row"><span>Tests:</span><span><span class="fail">2 failed</span>, 3 skipped, <span class="pass">608 passed</span>, 613 total</span></div>
+        <div class="row"><span>Time:</span><span>7.2 s</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="k pass">608 / 613</div><div class="l">Tests unitaires backend</div></div>
+    <div class="card"><div class="k pass">45 / 45</div><div class="l">Scénarios e2e Playwright</div></div>
+    <div class="card"><div class="k pass">10 / 10</div><div class="l">Tests unitaires frontend</div></div>
+    <div class="card"><div class="k" style="color:#F59E0B">70,3 %</div><div class="l">Couverture lignes backend</div></div>
+    <div class="card"><div class="k" style="color:#F59E0B">51,5 %</div><div class="l">Couverture branches backend</div></div>
+    <div class="card"><div class="k pass">26</div><div class="l">Modèles de données (Prisma)</div></div>
+  </div>
+</body>
+</html>
