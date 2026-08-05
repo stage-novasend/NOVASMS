@@ -35,9 +35,7 @@ export const ABReport: FC<ABReportProps> = ({ data, showDetails = true }) => {
               </p>
             </div>
             {data.winner === 'A' && (
-              <span className="material-symbols-outlined text-green-600 text-2xl">
-                verified
-              </span>
+              <span className="material-symbols-outlined text-green-600 text-2xl">verified</span>
             )}
           </div>
 
@@ -113,9 +111,7 @@ export const ABReport: FC<ABReportProps> = ({ data, showDetails = true }) => {
               </p>
             </div>
             {data.winner === 'B' && (
-              <span className="material-symbols-outlined text-green-600 text-2xl">
-                verified
-              </span>
+              <span className="material-symbols-outlined text-green-600 text-2xl">verified</span>
             )}
           </div>
 
@@ -178,9 +174,7 @@ export const ABReport: FC<ABReportProps> = ({ data, showDetails = true }) => {
       {data.winner !== 'pending' && (
         <div
           className={`rounded-2xl p-6 border-2 ${
-            isVictorySignificant
-              ? 'bg-green-50 border-green-200'
-              : 'bg-yellow-50 border-yellow-200'
+            isVictorySignificant ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200'
           }`}
         >
           <div className="flex items-start gap-4">
@@ -205,8 +199,11 @@ export const ABReport: FC<ABReportProps> = ({ data, showDetails = true }) => {
                   isVictorySignificant ? 'text-green-700' : 'text-yellow-700'
                 }`}
               >
-                Basé sur le critère: <strong>{data.winningCriteria === 'open-rate' ? 'Taux d\'ouverture' : 'Taux de clic'}</strong> •
-                Confiance: {data.confidenceLevel.toFixed(0)}%
+                Basé sur le critère:{' '}
+                <strong>
+                  {data.winningCriteria === 'open-rate' ? "Taux d'ouverture" : 'Taux de clic'}
+                </strong>{' '}
+                • Confiance: {data.confidenceLevel.toFixed(0)}%
               </p>
             </div>
           </div>
@@ -223,8 +220,8 @@ export const ABReport: FC<ABReportProps> = ({ data, showDetails = true }) => {
                 Version gagnante envoyée au reste de l'audience
               </p>
               <p className="text-sm text-on-surface-variant mt-1">
-                <strong>{data.sentToRemainingCount.toLocaleString()}</strong> destinataires supplémentaires ont reçu
-                la variante gagnante
+                <strong>{data.sentToRemainingCount.toLocaleString()}</strong> destinataires
+                supplémentaires ont reçu la variante gagnante
               </p>
             </div>
           </div>
@@ -239,15 +236,15 @@ export const ABReport: FC<ABReportProps> = ({ data, showDetails = true }) => {
               📊 Insights
             </p>
             <p className="text-sm text-on-surface">
-              La variante {data.winner} a {
-                data.winningCriteria === 'open-rate'
-                  ? `généré ${(Math.abs(
-                      data.variantA.openRate - data.variantB.openRate
-                    )).toFixed(1)}% de différence`
-                  : `généré ${(Math.abs(
-                      data.variantA.clickRate - data.variantB.clickRate
-                    )).toFixed(1)}% de différence`
-              } en performance.
+              La variante {data.winner} a{' '}
+              {data.winningCriteria === 'open-rate'
+                ? `généré ${Math.abs(data.variantA.openRate - data.variantB.openRate).toFixed(
+                    1,
+                  )}% de différence`
+                : `généré ${Math.abs(data.variantA.clickRate - data.variantB.clickRate).toFixed(
+                    1,
+                  )}% de différence`}{' '}
+              en performance.
             </p>
           </div>
           <div className="bg-surface-container-low rounded-xl p-4 border border-outline-variant/20">

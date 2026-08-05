@@ -40,15 +40,14 @@ export const CancellationControl: FC<CancellationControlProps> = ({
     <div className="fixed bottom-8 right-8 max-w-sm">
       <div className="bg-white rounded-2xl p-6 shadow-2xl border-2 border-warning space-y-4">
         <div className="flex items-start gap-3">
-          <span className="material-symbols-outlined text-warning text-2xl mt-1">
-            schedule
-          </span>
+          <span className="material-symbols-outlined text-warning text-2xl mt-1">schedule</span>
           <div>
-            <p className="font-headline font-bold text-on-surface">
-              Annuler l'envoi?
-            </p>
+            <p className="font-headline font-bold text-on-surface">Annuler l'envoi?</p>
             <p className="text-sm text-on-surface-variant mt-1">
-              Envoi dans <strong>{minutesLeft} minute{minutesLeft !== 1 ? 's' : ''}</strong>
+              Envoi dans{' '}
+              <strong>
+                {minutesLeft} minute{minutesLeft !== 1 ? 's' : ''}
+              </strong>
             </p>
           </div>
         </div>
@@ -63,9 +62,7 @@ export const CancellationControl: FC<CancellationControlProps> = ({
               Annuler
             </span>
           </button>
-          <button
-            className="flex-1 px-4 py-2 bg-surface-container text-on-surface font-bold rounded-lg text-sm hover:bg-surface-container-high transition-colors"
-          >
+          <button className="flex-1 px-4 py-2 bg-surface-container text-on-surface font-bold rounded-lg text-sm hover:bg-surface-container-high transition-colors">
             Fermer
           </button>
         </div>

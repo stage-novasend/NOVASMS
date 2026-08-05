@@ -1,7 +1,9 @@
 # NOVASMS
+
 ## Plateforme de messagerie marchande
 
 ### Cahier des Charges Fonctionnel
+
 **Version 1.0 – Avril 2026**
 
 Application Web — Interface Marchand

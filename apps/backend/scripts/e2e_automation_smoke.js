@@ -56,18 +56,40 @@ async function run() {
     console.log('Created automation', automation.id);
 
     // Load compiled AutomationsService
-    const automationsModulePath = path.join(__dirname, '..', 'dist', 'src', 'automations', 'automations.service');
+    const automationsModulePath = path.join(
+      __dirname,
+      '..',
+      'dist',
+      'src',
+      'automations',
+      'automations.service',
+    );
     let AutomationsService;
     try {
       AutomationsService = require(automationsModulePath).AutomationsService;
     } catch (e) {
       // fallback to dist relative to cwd
-      AutomationsService = require('../../dist/src/automations/automations.service').AutomationsService;
+      AutomationsService =
+        require('../../dist/src/automations/automations.service').AutomationsService;
     }
 
     // Mocks for provider factories
-    const emailFactoryMock = { getProvider: () => ({ send: async (to, subject, html) => { console.log('[MOCK EMAIL SEND]', to, subject); return { success: true }; } }) };
-    const smsFactoryMock = { getProvider: () => ({ send: async (to, msg) => { console.log('[MOCK SMS SEND]', to, msg); return { success: true }; } }) };
+    const emailFactoryMock = {
+      getProvider: () => ({
+        send: async (to, subject, html) => {
+          console.log('[MOCK EMAIL SEND]', to, subject);
+          return { success: true };
+        },
+      }),
+    };
+    const smsFactoryMock = {
+      getProvider: () => ({
+        send: async (to, msg) => {
+          console.log('[MOCK SMS SEND]', to, msg);
+          return { success: true };
+        },
+      }),
+    };
 
     // queue mock that will call the execution immediately
     let serviceRef = null;
@@ -87,24 +109,41 @@ async function run() {
     };
 
     // instantiate the service
-    const service = new AutomationsService(prisma, emailFactoryMock, smsFactoryMock, queueMock);
+    const service = new AutomationsService(
+      prisma,
+      emailFactoryMock,
+      smsFactoryMock,
+      queueMock,
+    );
     serviceRef = service;
 
     // trigger scheduling like the app would (contact added)
-    await service.scheduleContactAddedAutomations({ accountId: account.id, contactId: contact.id, contact });
+    await service.scheduleContactAddedAutomations({
+      accountId: account.id,
+      contactId: contact.id,
+      contact,
+    });
 
     console.log('Scheduling done, waiting for execution...');
 
     // wait and verify
     await new Promise((r) => setTimeout(r, 1000));
 
-    const exec = await prisma.workflowExecution.findFirst({ where: { automationId: automation.id, contactId: contact.id } });
-    const updatedAutomation = await prisma.automation.findUnique({ where: { id: automation.id } });
+    const exec = await prisma.workflowExecution.findFirst({
+      where: { automationId: automation.id, contactId: contact.id },
+    });
+    const updatedAutomation = await prisma.automation.findUnique({
+      where: { id: automation.id },
+    });
 
     console.log('Execution row:', exec);
     console.log('Updated automation sendCount:', updatedAutomation.sendCount);
 
-    if (exec && exec.status === 'Completed' && updatedAutomation.sendCount > 0) {
+    if (
+      exec &&
+      exec.status === 'Completed' &&
+      updatedAutomation.sendCount > 0
+    ) {
       console.log('E2E smoke SUCCESS');
       process.exit(0);
     }
@@ -115,7 +154,9 @@ async function run() {
     console.error('E2E smoke error:', err);
     process.exit(3);
   } finally {
-    try { await prisma.$disconnect(); } catch {}
+    try {
+      await prisma.$disconnect();
+    } catch {}
   }
 }
 

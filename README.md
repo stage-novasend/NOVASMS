@@ -10,8 +10,6 @@ Plateforme SaaS de messagerie marketing multicanale pour campagnes Email, SMS, W
 
 Le socle métier est branché sur de vraies couches d'exécution pour l'authentification, l'envoi d'emails, les SMS, les files BullMQ, le stockage d'images de campagne, les webhooks et les paiements/recharges. Les providers externes restent configurables par variables d'environnement, avec fallbacks locaux quand une intégration n'est pas encore disponible.
 
-
-
 ## Où brancher les providers et intégrations
 
 ### 1. Email

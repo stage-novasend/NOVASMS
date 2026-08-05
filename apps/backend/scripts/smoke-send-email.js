@@ -74,7 +74,8 @@
     }
     console.log('Using segment', segment.id);
 
-    const secret = process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET || 'secret';
+    const secret =
+      process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET || 'secret';
     const token = jwt.sign(
       { sub: account.id, email: account.adminEmail },
       secret,
@@ -134,7 +135,12 @@
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const sendRows = await prisma.send.findMany({
         where: { campaignId },
-        select: { status: true, sentAt: true, bouncedReason: true, contactId: true },
+        select: {
+          status: true,
+          sentAt: true,
+          bouncedReason: true,
+          contactId: true,
+        },
       });
       if (sendRows.length > 0) {
         finalSend = sendRows[0];
@@ -144,7 +150,13 @@
 
     const finalCampaign = await prisma.campaign.findUnique({
       where: { id: campaignId },
-      select: { id: true, status: true, sentCount: true, failedCount: true, updatedAt: true },
+      select: {
+        id: true,
+        status: true,
+        sentCount: true,
+        failedCount: true,
+        updatedAt: true,
+      },
     });
 
     console.log('Final campaign', finalCampaign);

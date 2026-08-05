@@ -20,14 +20,14 @@ export const useCampaignActions = () => {
       store.loadDraft(campaignId);
       store.setDraftStep(1);
     },
-    [store]
+    [store],
   );
 
   const duplicateCampaign = useCallback(
     async (campaign: Campaign) => {
       return store.duplicateCampaign(campaign.id);
     },
-    [store]
+    [store],
   );
 
   const saveCampaignDraft = useCallback(async () => {
@@ -81,25 +81,18 @@ export const useCampaignDraft = () => {
 };
 
 export const useCampaignList = () => {
-  const {
-    campaigns,
-    listCampaigns,
-    getCampaign,
-    deleteCampaign,
-    updateCampaign,
-  } = useCampaignStore();
+  const { campaigns, listCampaigns, getCampaign, deleteCampaign, updateCampaign } =
+    useCampaignStore();
 
-  const filterByStatus = (status: string) =>
-    campaigns.filter((c) => c.status === status);
+  const filterByStatus = (status: string) => campaigns.filter((c) => c.status === status);
 
-  const filterByChannel = (channel: string) =>
-    campaigns.filter((c) => c.channel === channel);
+  const filterByChannel = (channel: string) => campaigns.filter((c) => c.channel === channel);
 
   const sortByDate = (desc = true) =>
     [...campaigns].sort((a, b) =>
       desc
         ? new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-        : new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
+        : new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
     );
 
   return {

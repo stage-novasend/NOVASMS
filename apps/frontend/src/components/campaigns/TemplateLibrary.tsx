@@ -33,7 +33,7 @@ export const TemplateLibrary: FC<TemplateLibraryProps> = ({ onTemplateSelect }) 
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-8 py-12 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8">
       {/* Header */}
       <div>
         <h2 className="font-headline font-black text-3xl text-on-surface mb-2">
@@ -146,7 +146,8 @@ export const TemplateLibrary: FC<TemplateLibraryProps> = ({ onTemplateSelect }) 
       {/* Stats */}
       <div className="bg-surface-container-low rounded-2xl p-6 border border-outline-variant/20 text-center">
         <p className="text-sm text-on-surface-variant">
-          Total: <strong className="text-on-surface">{EMAIL_TEMPLATES.length} templates</strong> • Catégorisés • Adaptés mobile
+          Total: <strong className="text-on-surface">{EMAIL_TEMPLATES.length} templates</strong> •
+          Catégorisés • Adaptés mobile
         </p>
       </div>
     </div>

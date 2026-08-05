@@ -11,11 +11,7 @@ interface CampaignChannelStepProps {
  */
 
 export const CampaignChannelStep: FC<CampaignChannelStepProps> = ({ onNext }) => {
-  const {
-    draft,
-    setDraftChannel,
-    setDraftName,
-  } = useCampaignStore();
+  const { draft, setDraftChannel, setDraftName } = useCampaignStore();
 
   const handleSelectChannel = (channel: 'SMS' | 'EMAIL') => {
     setDraftChannel(channel);
@@ -25,24 +21,21 @@ export const CampaignChannelStep: FC<CampaignChannelStepProps> = ({ onNext }) =>
   const isAutomationMode = draft.mode === 'automation';
 
   return (
-    <div className="max-w-4xl mx-auto px-8 py-12 space-y-12">
+    <div className="max-w-4xl mx-auto px-4 sm:px-8 py-8 sm:py-12 space-y-8 sm:space-y-12">
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex justify-center">
           <div className="inline-flex items-center gap-2 text-primary bg-primary/10 px-4 py-1.5 rounded-full">
-            <span className="material-symbols-outlined text-sm">
-              flag
-            </span>
-            <span className="text-xs font-bold uppercase tracking-widest">
-              Étape 1 sur 4
-            </span>
+            <span className="material-symbols-outlined text-sm">flag</span>
+            <span className="text-xs font-bold uppercase tracking-widest">Étape 1 sur 4</span>
           </div>
         </div>
         <h2 className="text-4xl font-headline font-bold text-on-surface">
           Sélectionnez votre canal
         </h2>
         <p className="text-on-surface-variant max-w-2xl mx-auto">
-          Choisissez un canal classique ou activez le mode automatisé pour créer une campagne sans segment.
+          Choisissez un canal classique ou activez le mode automatisé pour créer une campagne sans
+          segment.
         </p>
       </div>
 
@@ -85,14 +78,10 @@ export const CampaignChannelStep: FC<CampaignChannelStepProps> = ({ onNext }) =>
         >
           <div className="space-y-4">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-secondary-container">
-              <span className="material-symbols-outlined text-4xl text-secondary">
-                sms
-              </span>
+              <span className="material-symbols-outlined text-4xl text-secondary">sms</span>
             </div>
             <div className="text-left space-y-2">
-              <h3 className="font-headline font-bold text-xl text-on-surface">
-                SMS
-              </h3>
+              <h3 className="font-headline font-bold text-xl text-on-surface">SMS</h3>
               <p className="text-on-surface-variant text-sm">
                 Messages texte haute priorité, taux de livraison 99%.
               </p>
@@ -119,14 +108,10 @@ export const CampaignChannelStep: FC<CampaignChannelStepProps> = ({ onNext }) =>
         >
           <div className="space-y-4">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-tertiary-container">
-              <span className="material-symbols-outlined text-4xl text-tertiary">
-                mail
-              </span>
+              <span className="material-symbols-outlined text-4xl text-tertiary">mail</span>
             </div>
             <div className="text-left space-y-2">
-              <h3 className="font-headline font-bold text-xl text-on-surface">
-                EMAIL
-              </h3>
+              <h3 className="font-headline font-bold text-xl text-on-surface">EMAIL</h3>
               <p className="text-on-surface-variant text-sm">
                 Campagnes richement formatées avec images & CTA.
               </p>
@@ -151,9 +136,7 @@ export const CampaignChannelStep: FC<CampaignChannelStepProps> = ({ onNext }) =>
           className="px-12 py-4 bg-primary text-on-primary font-bold rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 transition-all active:scale-95"
         >
           Continuer
-          <span className="material-symbols-outlined text-sm ml-2 align-middle">
-            arrow_forward
-          </span>
+          <span className="material-symbols-outlined text-sm ml-2 align-middle">arrow_forward</span>
         </button>
       </div>
 

@@ -27,7 +27,10 @@
     process.exit(1);
   }
 
-  const authHeader = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+  const authHeader = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  };
 
   console.log('Creating automation');
   const createAutoRes = await fetch(`${base}/automations`, {
@@ -47,7 +50,8 @@
     console.error('Create automation failed', createAutoRes.status, autoJson);
     process.exit(1);
   }
-  const automationId = autoJson.id || (autoJson.data && autoJson.data.id) || autoJson.id;
+  const automationId =
+    autoJson.id || (autoJson.data && autoJson.data.id) || autoJson.id;
   console.log('Automation created', automationId);
 
   console.log('Creating contact');
@@ -79,7 +83,11 @@
       console.error('Failed to fetch automation', checkRes.status, checkJson);
       process.exit(1);
     }
-    const sendCount = checkJson.sendCount ?? checkJson.send_count ?? (checkJson.data && checkJson.data.sendCount) ?? (checkJson.data && checkJson.data.send_count);
+    const sendCount =
+      checkJson.sendCount ??
+      checkJson.send_count ??
+      (checkJson.data && checkJson.data.sendCount) ??
+      (checkJson.data && checkJson.data.send_count);
     console.log('Current sendCount:', sendCount);
     if (sendCount && Number(sendCount) > 0) {
       console.log('SUCCESS: automation executed, sendCount=', sendCount);

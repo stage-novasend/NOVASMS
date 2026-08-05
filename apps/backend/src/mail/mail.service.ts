@@ -55,7 +55,10 @@ export class MailService {
       </div>
     `;
 
-    const testRecipient = process.env.RESEND_TEST_RECIPIENT;
+    const testRecipient =
+      process.env.NODE_ENV !== 'production'
+        ? process.env.RESEND_TEST_RECIPIENT
+        : undefined;
     const toRecipients = testRecipient ? [testRecipient] : [email];
 
     if (testRecipient && ![email].includes(testRecipient)) {
@@ -113,7 +116,10 @@ export class MailService {
 
     const from = process.env.RESEND_FROM || 'NovaSMS <onboarding@resend.dev>';
 
-    const testRecipient = process.env.RESEND_TEST_RECIPIENT;
+    const testRecipient =
+      process.env.NODE_ENV !== 'production'
+        ? process.env.RESEND_TEST_RECIPIENT
+        : undefined;
     const toRecipients = testRecipient ? [testRecipient] : [email];
     if (testRecipient && ![email].includes(testRecipient)) {
       this.logger.warn(
@@ -181,7 +187,10 @@ export class MailService {
       </div>
     `;
 
-    const testRecipient = process.env.RESEND_TEST_RECIPIENT;
+    const testRecipient =
+      process.env.NODE_ENV !== 'production'
+        ? process.env.RESEND_TEST_RECIPIENT
+        : undefined;
     const toRecipients = testRecipient ? [testRecipient] : [email];
     if (testRecipient && ![email].includes(testRecipient)) {
       this.logger.warn(
@@ -279,10 +288,12 @@ export class MailService {
       return;
     }
 
+    const fromNotif =
+      process.env.RESEND_FROM || 'NovaSMS <onboarding@resend.dev>';
     if (this.resend) {
       try {
         await this.resend.emails.send({
-          from: 'NovaSMS <onboarding@resend.dev>',
+          from: fromNotif,
           to: email,
           subject,
           html: htmlContent,
@@ -341,10 +352,12 @@ export class MailService {
       return;
     }
 
+    const fromConfirm =
+      process.env.RESEND_FROM || 'NovaSMS <onboarding@resend.dev>';
     if (this.resend) {
       try {
         await this.resend.emails.send({
-          from: 'NovaSMS <onboarding@resend.dev>',
+          from: fromConfirm,
           to: email,
           subject,
           html: htmlContent,
@@ -379,7 +392,10 @@ export class MailService {
     `;
 
     // En mode test, rediriger vers RESEND_TEST_RECIPIENT (comme les autres emails)
-    const testRecipient = process.env.RESEND_TEST_RECIPIENT;
+    const testRecipient =
+      process.env.NODE_ENV !== 'production'
+        ? process.env.RESEND_TEST_RECIPIENT
+        : undefined;
     const toRecipients = testRecipient ? [testRecipient] : [email];
     if (testRecipient && testRecipient !== email) {
       this.logger.warn(

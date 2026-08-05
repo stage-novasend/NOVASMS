@@ -10,7 +10,9 @@ async function main() {
     });
 
     if (!send) {
-      send = await prisma.send.findFirst({ include: { campaign: true, contact: true } });
+      send = await prisma.send.findFirst({
+        include: { campaign: true, contact: true },
+      });
     }
 
     if (!send) {
@@ -18,13 +20,19 @@ async function main() {
       process.exit(2);
     }
 
-    console.log(JSON.stringify({
-      campaignId: send.campaignId,
-      contactId: send.contactId,
-      campaignName: send.campaign?.name ?? null,
-      contactEmail: send.contact?.email ?? null,
-      sendStatus: send.status,
-    }, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          campaignId: send.campaignId,
+          contactId: send.contactId,
+          campaignName: send.campaign?.name ?? null,
+          contactEmail: send.contact?.email ?? null,
+          sendStatus: send.status,
+        },
+        null,
+        2,
+      ),
+    );
   } catch (err) {
     console.error('Error querying Prisma:', err);
     process.exit(1);

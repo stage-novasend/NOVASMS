@@ -9,7 +9,7 @@ interface CampaignState {
   scheduledAt: string | null;
   timezone: string;
   smsText: string;
-  
+
   setCampaignField: (field: string, value: unknown) => void;
   addBlock: (block: CampaignBlock) => void;
   updateBlock: (id: string, updates: Partial<CampaignBlock>) => void;
@@ -26,34 +26,52 @@ export const useCampaignStore = create<CampaignState>()(
     (set) => ({
       currentCampaign: null,
       blocks: [],
-      abConfig: { subjectA: '', subjectB: '', splitPct: 20, victoryMetric: 'open', testDuration: 4 },
+      abConfig: {
+        subjectA: '',
+        subjectB: '',
+        splitPct: 20,
+        victoryMetric: 'open',
+        testDuration: 4,
+      },
       scheduledAt: null,
       timezone: 'Africa/Abidjan',
       smsText: '',
 
-      setCampaignField: (field, value) => set((state) => ({
-        currentCampaign: { ...state.currentCampaign, [field]: value }
-      })),
+      setCampaignField: (field, value) =>
+        set((state) => ({
+          currentCampaign: { ...state.currentCampaign, [field]: value },
+        })),
       addBlock: (block) => set((state) => ({ blocks: [...state.blocks, block] })),
-      updateBlock: (id, updates) => set((state) => ({
-        blocks: state.blocks.map(b => b.id === id ? { ...b, ...updates } : b)
-      })),
-      removeBlock: (id) => set((state) => ({ blocks: state.blocks.filter(b => b.id !== id) })),
-      reorderBlocks: (from, to) => set((state) => {
-        const newBlocks = [...state.blocks];
-        const [moved] = newBlocks.splice(from, 1);
-        newBlocks.splice(to, 0, moved);
-        return { blocks: newBlocks };
-      }),
+      updateBlock: (id, updates) =>
+        set((state) => ({
+          blocks: state.blocks.map((b) => (b.id === id ? { ...b, ...updates } : b)),
+        })),
+      removeBlock: (id) => set((state) => ({ blocks: state.blocks.filter((b) => b.id !== id) })),
+      reorderBlocks: (from, to) =>
+        set((state) => {
+          const newBlocks = [...state.blocks];
+          const [moved] = newBlocks.splice(from, 1);
+          newBlocks.splice(to, 0, moved);
+          return { blocks: newBlocks };
+        }),
       setABConfig: (config) => set((state) => ({ abConfig: { ...state.abConfig, ...config } })),
       setSchedule: (date, tz) => set({ scheduledAt: date, timezone: tz }),
       setSmsText: (text) => set({ smsText: text }),
-      resetCampaign: () => set({ 
-        currentCampaign: null, blocks: [], 
-        abConfig: { subjectA: '', subjectB: '', splitPct: 20, victoryMetric: 'open', testDuration: 4 },
-        scheduledAt: null, smsText: '',
-      }),
+      resetCampaign: () =>
+        set({
+          currentCampaign: null,
+          blocks: [],
+          abConfig: {
+            subjectA: '',
+            subjectB: '',
+            splitPct: 20,
+            victoryMetric: 'open',
+            testDuration: 4,
+          },
+          scheduledAt: null,
+          smsText: '',
+        }),
     }),
-    { name: 'nova-campaign-draft' }
-  )
+    { name: 'nova-campaign-draft' },
+  ),
 );

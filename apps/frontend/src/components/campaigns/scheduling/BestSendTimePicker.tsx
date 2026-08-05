@@ -1,14 +1,16 @@
 import type { FC } from 'react';
 import { useState, useCallback } from 'react';
-import { analyzeBestSendTime, formatBestTime, type BestTimeData } from '@/types/advanced-scheduling';
+import {
+  analyzeBestSendTime,
+  formatBestTime,
+  type BestTimeData,
+} from '@/types/advanced-scheduling';
 
 interface BestSendTimePickerProps {
   onTimeSelect: (isOptimal: boolean, data?: BestTimeData) => void;
 }
 
-export const BestSendTimePicker: FC<BestSendTimePickerProps> = ({
-  onTimeSelect,
-}) => {
+export const BestSendTimePicker: FC<BestSendTimePickerProps> = ({ onTimeSelect }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [bestTime, setBestTime] = useState<BestTimeData | null>(null);
   const [useOptimal, setUseOptimal] = useState(false);
@@ -62,11 +64,10 @@ export const BestSendTimePicker: FC<BestSendTimePickerProps> = ({
             <div className="space-y-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-bold text-on-surface">
-                    {formatBestTime(bestTime)}
-                  </p>
+                  <p className="text-sm font-bold text-on-surface">{formatBestTime(bestTime)}</p>
                   <p className="text-xs text-on-surface-variant mt-1">
-                    Taux d'ouverture estimé: <strong>{bestTime.estimatedOpenRate.toFixed(1)}%</strong>
+                    Taux d'ouverture estimé:{' '}
+                    <strong>{bestTime.estimatedOpenRate.toFixed(1)}%</strong>
                   </p>
                 </div>
                 <span className="material-symbols-outlined text-green-600">check_circle</span>
